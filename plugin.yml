@@ -1,0 +1,280 @@
+name: NuggetMC-Core
+main: net.nuggetmc.core.Main
+version: 2.0
+commands:
+   warp:
+      description: Blank description.
+      usage: /warp <location>
+   discord:
+      description: Blank description.
+      usage: /discord
+   stats:
+      description: Blank description.
+      usage: /stats
+   boat:
+      description: Blank description.
+      usage: /boat
+   setup:
+      description: Blank description.
+      permission: nmc.setup
+      usage: /setup
+   map:
+      description: Blank description.
+      usage: /map
+   tag:
+      description: Blank description.
+      usage: /tag
+   suicide:
+      description: Blank description.
+      usage: /suicide
+   horse:
+      description: Blank description.
+      permission: nmc.horse
+      usage: /horse
+   alert:
+      description: Blank description.
+      permission: nmc.alert
+      usage: /alert
+   smite:
+      description: Blank description.
+      permission: nmc.smite
+      usage: /smite
+   mod:
+      description: Blank description.
+      permission: nmc.mod
+      usage: /mod
+   coords:
+      description: Blank description.
+      usage: /coords
+   spec:
+      description: Blank description.
+      permission: nmc.spec
+      usage: /spec
+   return:
+      description: Blank description.
+      permission: nmc.return
+      usage: /return
+   rank:
+      description: Blank description.
+      permission: nmc.rank
+      usage: /rank
+   gmc:
+      description: Blank description.
+      permission: nmc.gm
+      usage: /gmc
+   gms:
+      description: Blank description.
+      permission: nmc.gm
+      usage: /gms
+   spoon:
+      description: Blank description.
+      permission: nmc.spoon
+      usage: /spoon
+   donki:
+      description: Blank description.
+      permission: nmc.donki
+      usage: /donki
+   donkey:
+      description: Blank description.
+      permission: nmc.donkey
+      usage: /donkey
+   lava:
+      description: Blank description.
+      permission: nmc.lava
+      usage: /lava
+   help:
+      description: Blank description.
+      usage: /help
+   head:
+      description: Blank description.
+      permission: nmc.head
+      usage: /head
+   rules:
+      description: Blank description.
+      usage: /rules
+   blocks:
+      description: Blank description.
+      usage: /blocks
+   heal:
+      description: Blank description.
+      permission: nmc.heal
+      usage: /heal
+   meetup:
+      description: Blank description.
+      permission: nmc.meetup
+      usage: /meetup
+   spawn:
+      description: Blank description.
+      usage: /spawn
+   msg:
+      description: Blank description.
+      usage: /msg
+   r:
+      description: Blank description.
+      usage: /r
+   mute:
+      description: Blank description.
+      usage: /mute
+   unmute:
+      description: Blank description.
+      usage: /unmute
+   refresh:
+      description: Blank description.
+      usage: /refresh
+   refresht:
+      description: Blank description.
+      usage: /refresht
+   setprefix:
+      description: Blank description.
+      usage: /setprefix
+   levels:
+      description: Blank description.
+      usage: /levels
+   smute:
+      description: Blank description.
+      permission: nmc.smute
+      usage: /smute
+   sunmute:
+      description: Blank description.
+      permission: nmc.smute
+      usage: /sunmute
+   smutes:
+      description: Blank description.
+      permission: nmc.smute
+      usage: /smutes
+   points:
+      description: Blank description.
+      permission: nmc.points
+      usage: /points
+   votealert:
+      description: Blank description.
+      permission: nmc.votealert
+      usage: /votealert
+   justice:
+      description: Blank description.
+      permission: nmc.justice
+      usage: /justice
+   setstats:
+      description: Blank description.
+      permission: nmc.setstats
+      usage: /setstats
+   staffchat:
+      description: Blank description.
+      permission: nmc.staffchat
+      usage: /staffchat
+      aliases: [sc]
+   mutes:
+      description: Blank description.
+      usage: /mutes
+permissions:
+  nmc.*:
+    description: Blank description.
+    children:
+      nmc.setup: true
+      nmc.horse: true
+      nmc.alert: true
+      nmc.smite: true
+      nmc.mod: true
+      nmc.spec: true
+      nmc.return: true
+      nmc.rank: true
+      nmc.spoon: true
+      nmc.donki: true
+      nmc.donkey: true
+      nmc.lava: true
+      nmc.head: true
+      nmc.warn: true
+      nmc.heal: true
+      nmc.meetup: true
+      nmc.refresh: true
+      nmc.setprefix: true
+      nmc.smute: true
+      nmc.sunmute: true
+      nmc.points: true
+      nmc.votealert: true
+      nmc.staffchat: true
+      nmc.smutes: true
+      nmc.justice: true
+      nmc.setstats: true
+      nmc.gm: true
+  nmc.setup:
+    description: Blank description.
+    default: op
+  nmc.setstats:
+    description: Blank description.
+    default: op
+  nmc.horse:
+    description: Blank description.
+    default: op
+  nmc.alert:
+    description: Blank description.
+    default: op
+  nmc.smite:
+    description: Blank description.
+    default: op
+  nmc.mod:
+    description: Blank description.
+    default: op
+  nmc.spec:
+    description: Blank description.
+    default: op
+  nmc.return:
+    description: Blank description.
+    default: op
+  nmc.rank:
+    description: Blank description.
+    default: op
+  nmc.spoon:
+    description: Blank description.
+    default: op
+  nmc.donki:
+    description: Blank description.
+    default: op
+  nmc.donkey:
+    description: Blank description.
+    default: op
+  nmc.lava:
+    description: Blank description.
+    default: op
+  nmc.head:
+    description: Blank description.
+    default: op
+  nmc.warn:
+    description: Blank description.
+    default: op
+  nmc.heal:
+    description: Blank description.
+    default: op
+  nmc.meetup:
+    description: Blank description.
+    default: op
+  nmc.refresh:
+    description: Blank description.
+    default: op
+  nmc.setprefix:
+    description: Blank description.
+    default: op
+  nmc.smute:
+    description: Blank description.
+    default: op
+  nmc.points:
+    description: Blank description.
+    default: op
+  nmc.votealert:
+    description: Blank description.
+    default: op
+  nmc.staffchat:
+    description: Blank description.
+    default: op
+  nmc.smutes:
+    description: Blank description.
+    default: op
+  nmc.sunmute:
+    description: Blank description.
+    default: op
+  nmc.justice:
+    description: Blank description.
+    default: op
+  nmc.gm:
+    description: Blank description.
+    default: op
