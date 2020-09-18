@@ -2,12 +2,11 @@ package net.nuggetmc.core.util;
 
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 
 import net.minecraft.server.v1_8_R3.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 
-public class ActionBar implements Listener {
+public class ActionBar {
 	
 	private PacketPlayOutChat packet;
 	
