@@ -57,7 +57,6 @@ public class ConfigManager {
 		
 		file = new File(absoluteDir + "\\" + yml);
 		
-		
 		if (!file.exists()) {
 			try {
 				try {

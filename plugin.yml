@@ -2,14 +2,24 @@ name: NuggetMC-Core
 main: net.nuggetmc.core.Main
 version: 2.0
 commands:
-   debug:
-      description: A command used to inject code when debugging.
-      usage: /debug
+  debug:
+    description: A command used to inject code when debugging.
+    permission: nmc.rank
+    usage: /debug
+  nuggetmc:
+    description: The plugin-hook configuration settings.
+    premission: nmc.nuggetmc
+    usage: /nuggetmc
+    aliases: [nmc]
 permissions:
   nmc.*:
     description: Blank description.
     children:
       nmc.debug: true
+      nmc.nuggetmc: true
   nmc.debug:
     description: A command used to inject code when debugging.
+    default: op
+  nmc.nuggetmc:
+    description: The plugin-hook configuration settings.
     default: op

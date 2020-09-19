@@ -1,0 +1,9 @@
+prefix: §8[§4Alert§8]§f
+messages:
+- <prefix> Don't forget to vote! §e/vote§r
+- <prefix> You can do §e/help §fto view the general commands.§r
+- <prefix> Do §e/rules §fto view the rules.§r
+- <prefix> Do §e/kit §fto recieve a kit.§r
+time:
+  delay: 1s
+  period: 3m 20s

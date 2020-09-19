@@ -5,7 +5,8 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.nuggetmc.core.data.ConfigManager;
+import net.nuggetmc.core.commands.nmc;
+import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.dnf.NoFall;
 import net.nuggetmc.core.dnf.listeners.FallListener;
 import net.nuggetmc.core.dnf.listeners.MoveListener;
@@ -15,18 +16,18 @@ import net.nuggetmc.core.util.debug;
 public class Main extends JavaPlugin {
 	
 	private Logger logger;
-	private ConfigManager configManager;
 	
 	public Announcements announcements;
+	public Configs configs;
 	public FallListener fallListener;
 	public NoFall noFall;
 	public MoveListener moveListener;
 	
 	public void onEnable() {
+		loadConfigs();
 		announcementsEnable();
 		commandsEnable();
 		listenersEnable();
-		loadConfigManager();
 		loggerEnable();
 		noFallEnable();
 		return;
@@ -34,12 +35,13 @@ public class Main extends JavaPlugin {
 	
 	public void announcementsEnable() {
 		this.announcements = new Announcements(this);
+		announcements.setup();
 		announcements.run();
 		return;
 	}
 	
 	public void noFallEnable() {
-		this.noFall = new NoFall();
+		this.noFall = new NoFall(this);
 		this.fallListener = new FallListener(this);
 		this.moveListener = new MoveListener(this);
 	}
@@ -59,15 +61,14 @@ public class Main extends JavaPlugin {
 		return;
 	}
 	
-	public void loadConfigManager() {
-		configManager = new ConfigManager(this);
-		configManager.setup("nofall\\config.yml");
-		configManager.setup("stats\\playerdata.yml");
+	public void loadConfigs() {
+		this.configs = new Configs(this);
 		return;
 	}
 	
 	public void commandsEnable() {
 		getCommand("debug").setExecutor(new debug(this));
+		getCommand("nuggetmc").setExecutor(new nmc(this));
 		return;
 	}
 }

@@ -1,40 +1,68 @@
 package net.nuggetmc.core.dnf.listeners;
 
-import java.util.List;
-
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import net.nuggetmc.core.Main;
-import net.nuggetmc.core.data.ConfigManager;
 
 public class MoveListener implements Listener {
 	
 	private Main plugin;
-	private ConfigManager configManager;
 	
 	public MoveListener(Main plugin) {
 		this.plugin = plugin;
-		configManager = new ConfigManager(plugin);
-		configManager.setup("nofall\\config.yml");
+		run();
 	}
 	
 	public void unassign(Player player) {
-		List<String> worlds = configManager.getConfig().getStringList("world-names");
-		for (int i = 0; i < worlds.size(); i++) {
-			if (player.getWorld().getName().equals("world")) {
-				if (player.getLocation().getBlockY() >= configManager.getConfig().getInt("y-level")) {
+		
+		for (int i = 0; i < plugin.noFall.worlds.size(); i++) {
+			if (player.getWorld().getName().equals(plugin.noFall.worlds.get(i))) {
+				if (player.getLocation().getBlockY() >= plugin.configs.nofall.getConfig().getInt("y-level")) {
 					if (plugin.noFall.fallList.contains(player)) {
 						plugin.noFall.fallList.remove(player);
+						plugin.noFall.downTime.remove(player);
 					}
 				}
 				break;
 			}
 		}
+		return;
+	}
+	
+	public void run() {
+		BukkitRunnable runnable = new BukkitRunnable() {
+			public void run() {
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					for (int i = 0; i < plugin.noFall.worlds.size(); i++) {
+						if (player.getWorld().getName().equals(plugin.noFall.worlds.get(i))) {
+							if (player.getLocation().getBlockY() < plugin.configs.nofall.getConfig().getInt("y-level")) {
+								if (!plugin.noFall.fallList.contains(player)) {
+									if (!plugin.noFall.downTime.containsKey(player)) {
+										plugin.noFall.downTime.put(player, (byte) 0);
+									}
+									else {
+										plugin.noFall.downTime.put(player, (byte) (plugin.noFall.downTime.get(player) + 1));
+									}
+									
+									if (plugin.noFall.downTime.get(player) >= 5) {
+										plugin.noFall.fallList.add(player);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		};
+		
+		runnable.runTaskTimer(plugin, 0, 20);
 		return;
 	}
 	
