@@ -8,13 +8,17 @@ public class Configs {
 	
 	public ConfigManager announcements;
 	public ConfigManager nofall;
-	public ConfigManager playerdata;
+	public ConfigManager playerstats;
+	public ConfigManager worldconfig;
+	public ConfigManager inventories;
 	
 	public Configs(Main plugin) {
 		this.plugin = plugin;
 		announcementsSetup();
+		inventoriesSetup();
 		noFallSetup();
-		playerdataSetup();
+		playerstatsSetup();
+		worldconfigSetup();
 	}
 	
 	public ConfigManager get(String path) {
@@ -23,8 +27,12 @@ public class Configs {
 			return announcements;
 		case "nofall\\config.yml":
 			return nofall;
-		case "stats\\playerdata.yml":
-			return playerdata;
+		case "playerdata\\inventories.yml":
+			return inventories;
+		case "playerdata\\stats.yml":
+			return playerstats;
+		case "worldconfig.yml":
+			return worldconfig;
 		}
 		return null;
 	}
@@ -44,15 +52,27 @@ public class Configs {
 		return;
 	}
 	
+	public void inventoriesSetup() {
+		inventories = new ConfigManager(plugin);
+		inventories.setup("playerdata\\inventories.yml");
+		return;
+	}
+	
 	public void noFallSetup() {
 		nofall = new ConfigManager(plugin);
 		nofall.setup("nofall\\config.yml");
 		return;
 	}
 	
-	public void playerdataSetup() {
-		playerdata = new ConfigManager(plugin);
-		playerdata.setup("stats\\playerdata.yml");
+	public void playerstatsSetup() {
+		playerstats = new ConfigManager(plugin);
+		playerstats.setup("playerdata\\stats.yml");
+		return;
+	}
+	
+	public void worldconfigSetup() {
+		worldconfig = new ConfigManager(plugin);
+		worldconfig.setup("worldconfig.yml");
 		return;
 	}
 }

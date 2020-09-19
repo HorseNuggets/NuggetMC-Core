@@ -1,9 +1,12 @@
 package net.nuggetmc.core.util;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.ConfigManager;
@@ -22,19 +25,11 @@ public class debug implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
-		timeConverter = new TimeConverter();
-		String argsStr = "";
-		
-		for(int i = 0; i < args.length; i++) {
-		    argsStr = argsStr + args[i];
-		    if (!(i == args.length - 1)) {
-		    	argsStr = argsStr + " ";
-		    }
-		}
-		
-		Bukkit.broadcastMessage("" + timeConverter.stringToInt(argsStr));
-		
-		
+		//Bukkit.getServer().getWorlds().add("main");
+		new WorldCreator("main").createWorld();
+		Player player = (Player) sender;
+		Location loc = new Location(Bukkit.getServer().getWorld("main"), 0.5, 223, 0.5);
+		player.teleport(loc);
 		
 		return true;
 	}

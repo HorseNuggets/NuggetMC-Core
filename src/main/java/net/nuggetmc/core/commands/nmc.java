@@ -46,43 +46,58 @@ public class nmc implements CommandExecutor {
 	}
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (args.length >= 2) {
+		if (args.length == 0) {
+			
+			// [TODO] talking about subcommands
+			
+			return true;
+		}
+		else if (args.length >= 1) {
 			switch (args[0].toLowerCase()) {
 			case "reload":
-				try {
-					String absoluteDir = plugin.getDataFolder().getAbsoluteFile().toString();
-					String pathDisplay = args[1].replaceAll(Pattern.quote("\\"), "/");
-					String pathCode = args[1].replaceAll("/", "\\\\");
-					
-					File file = new File(absoluteDir + "\\" + args[1]);
-					
-					if (!file.exists()) {
-						sender.sendMessage(ChatColor.RED + pathDisplay + " does not exist!");
+				if (args.length >= 2) {
+					try {
+						String absoluteDir = plugin.getDataFolder().getAbsoluteFile().toString();
+						String pathDisplay = args[1].replaceAll(Pattern.quote("\\"), "/");
+						String pathCode = args[1].replaceAll("/", "\\\\");
+						
+						File file = new File(absoluteDir + "\\" + args[1]);
+						
+						if (!file.exists()) {
+							sender.sendMessage(ChatColor.RED + pathDisplay + " does not exist!");
+							return true;
+						}
+						
+						HashMap<String, String> oldSettings = new HashMap<String, String>();
+						HashMap<String, String> newSettings = new HashMap<String, String>();
+						
+						ConfigManager configManager = plugin.configs.get(pathCode);
+						configIteration(oldSettings, configManager);
+						configManager.reloadConfig();
+						configIteration(newSettings, configManager);
+						
+						sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
+						sender.sendMessage(ChatColor.GOLD + "[RELOADED] " + ChatColor.RESET + pathDisplay);
+						
+						ArrayList<Boolean> checks = new ArrayList<Boolean>();
+						oldSettings.forEach((keyOld, entryOld) -> newSettings.forEach((keyNew, entryNew) -> checks.add(checkDifferences(sender, keyOld, entryOld, keyNew, entryNew))));
+						if (!checks.contains(true)) {
+							sender.sendMessage("");
+							sender.sendMessage(ChatColor.YELLOW + "[CHANGED] " + ChatColor.RESET + "No changes have been made.");
+						}
+						sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
+						plugin.configs.special(pathCode);
+					} catch (NullPointerException e) {
+						sender.sendMessage(ChatColor.RED + args[1] + " does not exist!");
 						return true;
 					}
-					
-					HashMap<String, String> oldSettings = new HashMap<String, String>();
-					HashMap<String, String> newSettings = new HashMap<String, String>();
-					
-					ConfigManager configManager = plugin.configs.get(pathCode);
-					configIteration(oldSettings, configManager);
-					configManager.reloadConfig();
-					configIteration(newSettings, configManager);
+				}
+				else {
+					plugin.loadConfigs();
 					
 					sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
-					sender.sendMessage(ChatColor.GOLD + "[RELOADED] " + ChatColor.RESET + pathDisplay);
-					
-					ArrayList<Boolean> checks = new ArrayList<Boolean>();
-					oldSettings.forEach((keyOld, entryOld) -> newSettings.forEach((keyNew, entryNew) -> checks.add(checkDifferences(sender, keyOld, entryOld, keyNew, entryNew))));
-					if (!checks.contains(true)) {
-						sender.sendMessage("");
-						sender.sendMessage(ChatColor.YELLOW + "[CHANGED] " + ChatColor.RESET + "No changes have been made.");
-					}
+					sender.sendMessage(ChatColor.GOLD + "[RELOADED] " + ChatColor.RESET + "All configuration files have been reloaded.");
 					sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
-					plugin.configs.special(pathCode);
-				} catch (NullPointerException e) {
-					sender.sendMessage(ChatColor.RED + args[1] + " does not exist!");
-					return true;
 				}
 				break;
 			}

@@ -1,0 +1,16 @@
+enabled-worlds:
+- main
+- world_nether
+- world_the_end
+spawn:
+  world: main
+  region:
+    pos1:
+      x: -296
+      y: 140
+      z: -214
+    pos2:
+      x: 99
+      y: 500
+      z: 489
+  outer-distance: 10
