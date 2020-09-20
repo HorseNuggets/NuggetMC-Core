@@ -1,0 +1,6 @@
+on-first-join:
+  points: 100
+  inventory: #KEY
+on-kill:
+  points: [8, 12]
+  nuggets: [22, 32]

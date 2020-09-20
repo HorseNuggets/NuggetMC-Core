@@ -23,9 +23,11 @@ public class Announcements {
 	}
 	
 	public void setup() {
-		messages = plugin.configs.announcements.getConfig().getStringList("messages");
-		for (int i = 0; i < messages.size(); i++) {
-			messages.set(i, messages.get(i).replaceAll("<prefix>", plugin.configs.announcements.getConfig().getString("prefix")));
+		if (plugin.configs.mainconfig.getConfig().getBoolean("enabled.announcements")) {
+			messages = plugin.configs.announcements.getConfig().getStringList("messages");
+			for (int i = 0; i < messages.size(); i++) {
+				messages.set(i, messages.get(i).replaceAll("<prefix>", plugin.configs.announcements.getConfig().getString("prefix")));
+			}
 		}
 		return;
 	}

@@ -6,15 +6,19 @@ public class Configs {
 	
 	private Main plugin;
 	
+	public ConfigManager mainconfig;
 	public ConfigManager announcements;
+	public ConfigManager defaults;
+	public ConfigManager inventories;
 	public ConfigManager nofall;
 	public ConfigManager playerstats;
 	public ConfigManager worldconfig;
-	public ConfigManager inventories;
 	
 	public Configs(Main plugin) {
 		this.plugin = plugin;
+		mainconfigSetup();
 		announcementsSetup();
+		defaultsSetup();
 		inventoriesSetup();
 		noFallSetup();
 		playerstatsSetup();
@@ -23,10 +27,14 @@ public class Configs {
 	
 	public ConfigManager get(String path) {
 		switch (path) {
+		case "config.yml":
+			return mainconfig;
 		case "announcements.yml":
 			return announcements;
 		case "nofall\\config.yml":
 			return nofall;
+		case "playerdata\\defaults\\config.yml":
+			return defaults;
 		case "playerdata\\inventories.yml":
 			return inventories;
 		case "playerdata\\stats.yml":
@@ -46,9 +54,21 @@ public class Configs {
 		return;
 	}
 	
+	public void mainconfigSetup() {
+		mainconfig = new ConfigManager(plugin);
+		mainconfig.setup("config.yml");
+		return;
+	}
+	
 	public void announcementsSetup() {
 		announcements = new ConfigManager(plugin);
 		announcements.setup("announcements.yml");
+		return;
+	}
+	
+	public void defaultsSetup() {
+		defaults = new ConfigManager(plugin);
+		defaults.setup("playerdata\\defaults\\config.yml");
 		return;
 	}
 	

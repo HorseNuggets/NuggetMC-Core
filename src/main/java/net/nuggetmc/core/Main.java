@@ -11,9 +11,23 @@ import net.nuggetmc.core.dnf.NoFall;
 import net.nuggetmc.core.dnf.listeners.FallListener;
 import net.nuggetmc.core.dnf.listeners.MoveListener;
 import net.nuggetmc.core.setup.Announcements;
+import net.nuggetmc.core.tools.PlayerTracker;
 import net.nuggetmc.core.util.debug;
 
 public class Main extends JavaPlugin {
+	
+	/**
+	 * NuggetMC-Core
+	 * Version: 2.0
+	 * The core plugin for the NuggetMC Network [nuggetmc.net].
+	 * 
+	 * @author HorseNuggets
+	 * @since 2/22/2017
+	 * 
+	 * [DISCORD] @HorseNuggets#3141
+	 * [PHONE] +1 (346) 233-7975
+	 * [EMAIL] batchprogrammer314@gmail.com
+	 */
 	
 	private Logger logger;
 	
@@ -22,6 +36,7 @@ public class Main extends JavaPlugin {
 	public FallListener fallListener;
 	public NoFall noFall;
 	public MoveListener moveListener;
+	public PlayerTracker playerTracker;
 	
 	public void onEnable() {
 		loadConfigs();
@@ -30,6 +45,7 @@ public class Main extends JavaPlugin {
 		listenersEnable();
 		loggerEnable();
 		noFallEnable();
+		toolsEnable();
 		return;
 	}
 	
@@ -69,6 +85,16 @@ public class Main extends JavaPlugin {
 	public void commandsEnable() {
 		getCommand("debug").setExecutor(new debug(this));
 		getCommand("nuggetmc").setExecutor(new nmc(this));
+		return;
+	}
+	
+	public void toolsEnable() {
+		if (configs.mainconfig.getConfig().getBoolean("enabled.playertracker")) {
+			this.playerTracker = new PlayerTracker(this);
+		}
+		else {
+			this.playerTracker = null;
+		}
 		return;
 	}
 }
