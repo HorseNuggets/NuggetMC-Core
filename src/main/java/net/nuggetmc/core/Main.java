@@ -39,20 +39,20 @@ public class Main extends JavaPlugin {
 	public PlayerTracker playerTracker;
 	
 	public void onEnable() {
-		loadConfigs();
-		announcementsEnable();
-		commandsEnable();
-		listenersEnable();
-		loggerEnable();
-		noFallEnable();
-		toolsEnable();
+		this.loadConfigs();
+		this.announcementsEnable();
+		this.commandsEnable();
+		this.listenersEnable();
+		this.loggerEnable();
+		this.noFallEnable();
+		this.toolsEnable();
 		return;
 	}
 	
 	public void announcementsEnable() {
 		this.announcements = new Announcements(this);
-		announcements.setup();
-		announcements.run();
+		this.announcements.setup();
+		this.announcements.run();
 		return;
 	}
 	
@@ -68,12 +68,12 @@ public class Main extends JavaPlugin {
 	}
 	
 	public void loggerEnable() {
-		logger = getLogger();
+		this.logger = getLogger();
 		return;
 	}
 	
 	public void log(String message) {
-		logger.info(message);
+		this.logger.info(message);
 		return;
 	}
 	
@@ -82,15 +82,23 @@ public class Main extends JavaPlugin {
 		return;
 	}
 	
+	public void reloadConfigs() {
+		this.configs = new Configs(this);
+		this.toolsEnable();
+		return;
+	}
+	
 	public void commandsEnable() {
-		getCommand("debug").setExecutor(new debug(this));
-		getCommand("nuggetmc").setExecutor(new nmc(this));
+		this.getCommand("debug").setExecutor(new debug(this));
+		this.getCommand("nuggetmc").setExecutor(new nmc(this));
 		return;
 	}
 	
 	public void toolsEnable() {
 		if (configs.mainconfig.getConfig().getBoolean("enabled.playertracker")) {
-			this.playerTracker = new PlayerTracker(this);
+			if (this.playerTracker == null) {
+				this.playerTracker = new PlayerTracker(this);
+			}
 		}
 		else {
 			this.playerTracker = null;

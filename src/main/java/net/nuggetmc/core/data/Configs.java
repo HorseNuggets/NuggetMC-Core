@@ -47,6 +47,9 @@ public class Configs {
 	
 	public void special(String path) {
 		switch (path) {
+		case "config.yml":
+			plugin.reloadConfigs();
+			break;
 		case "announcements.yml":
 			plugin.announcements.reset();
 			break;
