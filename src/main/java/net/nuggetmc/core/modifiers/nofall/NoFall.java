@@ -1,4 +1,4 @@
-package net.nuggetmc.core.dnf;
+package net.nuggetmc.core.modifiers.nofall;
 
 import java.util.ArrayList;
 import java.util.HashMap;

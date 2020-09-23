@@ -7,9 +7,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.nuggetmc.core.commands.nmc;
 import net.nuggetmc.core.data.Configs;
-import net.nuggetmc.core.dnf.NoFall;
-import net.nuggetmc.core.dnf.listeners.FallListener;
-import net.nuggetmc.core.dnf.listeners.MoveListener;
+import net.nuggetmc.core.modifiers.HealthBoost;
+import net.nuggetmc.core.modifiers.nofall.NoFall;
+import net.nuggetmc.core.modifiers.nofall.listeners.FallListener;
+import net.nuggetmc.core.modifiers.nofall.listeners.MoveListener;
 import net.nuggetmc.core.setup.Announcements;
 import net.nuggetmc.core.tools.PlayerTracker;
 import net.nuggetmc.core.util.debug;
@@ -31,6 +32,7 @@ public class Main extends JavaPlugin {
 	
 	private Logger logger;
 	
+	public HealthBoost healthboost;
 	public Announcements announcements;
 	public Configs configs;
 	public FallListener fallListener;
@@ -44,30 +46,24 @@ public class Main extends JavaPlugin {
 		this.commandsEnable();
 		this.listenersEnable();
 		this.loggerEnable();
-		this.noFallEnable();
+		this.modifiersEnable();
 		this.toolsEnable();
 		return;
 	}
 	
-	public void announcementsEnable() {
+	private void announcementsEnable() {
 		this.announcements = new Announcements(this);
 		this.announcements.setup();
 		this.announcements.run();
 		return;
 	}
 	
-	public void noFallEnable() {
-		this.noFall = new NoFall(this);
-		this.fallListener = new FallListener(this);
-		this.moveListener = new MoveListener(this);
-	}
-	
-	public void listenersEnable() {
+	private void listenersEnable() {
 		Bukkit.getServer().getPluginManager().registerEvents(new Listeners(this), this);
 		return;
 	}
 	
-	public void loggerEnable() {
+	private void loggerEnable() {
 		this.logger = getLogger();
 		return;
 	}
@@ -82,13 +78,20 @@ public class Main extends JavaPlugin {
 		return;
 	}
 	
+	private void modifiersEnable() {
+		this.fallListener = new FallListener(this);
+		this.healthboost = new HealthBoost(this);
+		this.moveListener = new MoveListener(this);
+		this.noFall = new NoFall(this);
+	}
+	
 	public void reloadConfigs() {
 		this.configs = new Configs(this);
 		this.toolsEnable();
 		return;
 	}
 	
-	public void commandsEnable() {
+	private void commandsEnable() {
 		this.getCommand("debug").setExecutor(new debug(this));
 		this.getCommand("nuggetmc").setExecutor(new nmc(this));
 		return;

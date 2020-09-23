@@ -1,4 +1,4 @@
-package net.nuggetmc.core.dnf.listeners;
+package net.nuggetmc.core.modifiers.nofall.listeners;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;

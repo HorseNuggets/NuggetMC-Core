@@ -1,4 +1,4 @@
-package net.nuggetmc.core.dnf.listeners;
+package net.nuggetmc.core.modifiers.nofall.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

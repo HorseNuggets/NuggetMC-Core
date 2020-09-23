@@ -36,12 +36,14 @@ public class Listeners implements Listener {
 	
 	@EventHandler
 	public void playerRespawnEvent(PlayerRespawnEvent event) {
+		plugin.healthboost.onRespawn(event);
 		plugin.moveListener.onRespawn(event);
 		return;
 	}
 	
 	@EventHandler
 	public void playerJoinEvent(PlayerJoinEvent event) {
+		plugin.healthboost.onJoin(event);
 		plugin.moveListener.onJoin(event);
 		return;
 	}

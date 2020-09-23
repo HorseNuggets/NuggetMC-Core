@@ -12,7 +12,7 @@ public class Configs {
 	public ConfigManager inventories;
 	public ConfigManager nofall;
 	public ConfigManager playerstats;
-	public ConfigManager worldconfig;
+	public ConfigManager worldsettings;
 	
 	public Configs(Main plugin) {
 		this.plugin = plugin;
@@ -22,7 +22,7 @@ public class Configs {
 		inventoriesSetup();
 		noFallSetup();
 		playerstatsSetup();
-		worldconfigSetup();
+		worldsettingsSetup();
 	}
 	
 	public ConfigManager get(String path) {
@@ -31,7 +31,7 @@ public class Configs {
 			return mainconfig;
 		case "announcements.yml":
 			return announcements;
-		case "nofall\\config.yml":
+		case "modifiers\\nofall.yml":
 			return nofall;
 		case "playerdata\\defaults\\config.yml":
 			return defaults;
@@ -39,8 +39,8 @@ public class Configs {
 			return inventories;
 		case "playerdata\\stats.yml":
 			return playerstats;
-		case "worldconfig.yml":
-			return worldconfig;
+		case "worldsettings.yml":
+			return worldsettings;
 		}
 		return null;
 	}
@@ -57,45 +57,45 @@ public class Configs {
 		return;
 	}
 	
-	public void mainconfigSetup() {
+	private void mainconfigSetup() {
 		mainconfig = new ConfigManager(plugin);
 		mainconfig.setup("config.yml");
 		return;
 	}
 	
-	public void announcementsSetup() {
+	private void announcementsSetup() {
 		announcements = new ConfigManager(plugin);
 		announcements.setup("announcements.yml");
 		return;
 	}
 	
-	public void defaultsSetup() {
+	private void defaultsSetup() {
 		defaults = new ConfigManager(plugin);
 		defaults.setup("playerdata\\defaults\\config.yml");
 		return;
 	}
 	
-	public void inventoriesSetup() {
+	private void inventoriesSetup() {
 		inventories = new ConfigManager(plugin);
 		inventories.setup("playerdata\\inventories.yml");
 		return;
 	}
 	
-	public void noFallSetup() {
+	private void noFallSetup() {
 		nofall = new ConfigManager(plugin);
-		nofall.setup("nofall\\config.yml");
+		nofall.setup("modifiers\\nofall.yml");
 		return;
 	}
 	
-	public void playerstatsSetup() {
+	private void playerstatsSetup() {
 		playerstats = new ConfigManager(plugin);
 		playerstats.setup("playerdata\\stats.yml");
 		return;
 	}
 	
-	public void worldconfigSetup() {
-		worldconfig = new ConfigManager(plugin);
-		worldconfig.setup("worldconfig.yml");
+	private void worldsettingsSetup() {
+		worldsettings = new ConfigManager(plugin);
+		worldsettings.setup("worldsettings.yml");
 		return;
 	}
 }

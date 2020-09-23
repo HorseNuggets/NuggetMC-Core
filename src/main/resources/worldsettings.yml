@@ -1,4 +1,6 @@
-uhckitpvp-worlds:
+extra-worlds:
+- main
+uhckit-worlds:
 - main
 - world_nether
 - world_the_end
