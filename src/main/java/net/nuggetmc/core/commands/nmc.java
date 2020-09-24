@@ -1,6 +1,10 @@
 package net.nuggetmc.core.commands;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -10,6 +14,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.ConfigManager;
@@ -48,12 +53,57 @@ public class nmc implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (args.length == 0) {
 			
-			// [TODO] talking about subcommands
+			sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
+			sender.sendMessage(ChatColor.GOLD + "NuggetMC-Core " + ChatColor.GRAY + "[" + ChatColor.YELLOW + "v2.0" + ChatColor.GRAY + "]");
+			sender.sendMessage("");
+			sender.sendMessage(ChatColor.GRAY + "Plugin Manager Subcommands:");
+			sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "info" + ChatColor.GRAY + " » Information about the plugin.");
+			sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "reload <filename>" + ChatColor.GRAY + " » Reload one/all configuration file(s).");
+			sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
 			
 			return true;
 		}
 		else if (args.length >= 1) {
 			switch (args[0].toLowerCase()) {
+			case "info":
+				sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
+				sender.sendMessage(ChatColor.GOLD + "NuggetMC-Core " + ChatColor.GRAY + "[" + ChatColor.YELLOW + "v2.0" + ChatColor.GRAY + "]");
+				sender.sendMessage("");
+				sender.sendMessage(ChatColor.GRAY + "Plugin Information:");
+				sender.sendMessage(ChatColor.GRAY + "Author » " + ChatColor.YELLOW + "HorseNuggets");
+				sender.sendMessage(ChatColor.GRAY + "Since » " + ChatColor.YELLOW + "2/22/2017");
+				
+				Method getFileMethod = null;
+				try {
+					getFileMethod = JavaPlugin.class.getDeclaredMethod("getFile");
+				} catch (NoSuchMethodException | SecurityException e) {
+					e.printStackTrace();
+				}
+				
+				getFileMethod.setAccessible(true);
+				
+				File jarFile = null;
+				try {
+					jarFile = (File) getFileMethod.invoke(plugin);
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					e.printStackTrace();
+				}
+				
+				try {
+					
+		            int bytes = (int) Files.size(jarFile.toPath());
+		            double kiloBytes = bytes / 1000;
+		            
+		            sender.sendMessage(ChatColor.GRAY + "Filesize » " + ChatColor.YELLOW + kiloBytes + " KB");
+
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+				
+				sender.sendMessage(ChatColor.GRAY + "Source Code » " + ChatColor.YELLOW + "git.io/JU2IS");
+				sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
+				
+				break;
 			case "reload":
 				if (args.length >= 2) {
 					try {

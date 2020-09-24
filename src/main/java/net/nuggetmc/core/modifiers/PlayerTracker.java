@@ -1,4 +1,4 @@
-package net.nuggetmc.core.tools;
+package net.nuggetmc.core.modifiers;
 
 import java.util.HashMap;
 

@@ -26,7 +26,7 @@ public class debug implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
 		//Bukkit.getServer().getWorlds().add("main");
-		new WorldCreator("main").createWorld();
+		//new WorldCreator("main").createWorld();
 		Player player = (Player) sender;
 		Location loc = new Location(Bukkit.getServer().getWorld("main"), 0.5, 223, 0.5);
 		player.teleport(loc);

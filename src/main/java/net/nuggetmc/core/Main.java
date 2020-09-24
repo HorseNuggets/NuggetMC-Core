@@ -8,11 +8,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.nuggetmc.core.commands.nmc;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.modifiers.HealthBoost;
+import net.nuggetmc.core.modifiers.PlayerTracker;
 import net.nuggetmc.core.modifiers.nofall.NoFall;
 import net.nuggetmc.core.modifiers.nofall.listeners.FallListener;
 import net.nuggetmc.core.modifiers.nofall.listeners.MoveListener;
+import net.nuggetmc.core.player.PlayerChat;
+import net.nuggetmc.core.player.PlayerJoin;
+import net.nuggetmc.core.protocol.PacketHandler;
 import net.nuggetmc.core.setup.Announcements;
-import net.nuggetmc.core.tools.PlayerTracker;
+import net.nuggetmc.core.setup.WorldManager;
 import net.nuggetmc.core.util.debug;
 
 public class Main extends JavaPlugin {
@@ -38,7 +42,11 @@ public class Main extends JavaPlugin {
 	public FallListener fallListener;
 	public NoFall noFall;
 	public MoveListener moveListener;
+	public PacketHandler packetHandler;
+	public PlayerChat playerChat;
+	public PlayerJoin playerJoin;
 	public PlayerTracker playerTracker;
+	public WorldManager worldManager;
 	
 	public void onEnable() {
 		this.loadConfigs();
@@ -47,7 +55,10 @@ public class Main extends JavaPlugin {
 		this.listenersEnable();
 		this.loggerEnable();
 		this.modifiersEnable();
+		this.packetHandlerEnable();
+		this.playerEventsEnable();
 		this.toolsEnable();
+		this.worldsEnable();
 		return;
 	}
 	
@@ -68,6 +79,29 @@ public class Main extends JavaPlugin {
 		return;
 	}
 	
+	private void modifiersEnable() {
+		this.fallListener = new FallListener(this);
+		this.healthboost = new HealthBoost(this);
+		this.moveListener = new MoveListener(this);
+		this.noFall = new NoFall(this);
+	}
+	
+	private void packetHandlerEnable() {
+		this.packetHandler = new PacketHandler();
+		return;
+	}
+	
+	private void playerEventsEnable() {
+		this.playerChat = new PlayerChat(this);
+		this.playerJoin = new PlayerJoin(this);
+	}
+	
+	private void commandsEnable() {
+		this.getCommand("debug").setExecutor(new debug(this));
+		this.getCommand("nuggetmc").setExecutor(new nmc(this));
+		return;
+	}
+	
 	public void log(String message) {
 		this.logger.info(message);
 		return;
@@ -78,22 +112,9 @@ public class Main extends JavaPlugin {
 		return;
 	}
 	
-	private void modifiersEnable() {
-		this.fallListener = new FallListener(this);
-		this.healthboost = new HealthBoost(this);
-		this.moveListener = new MoveListener(this);
-		this.noFall = new NoFall(this);
-	}
-	
 	public void reloadConfigs() {
 		this.configs = new Configs(this);
 		this.toolsEnable();
-		return;
-	}
-	
-	private void commandsEnable() {
-		this.getCommand("debug").setExecutor(new debug(this));
-		this.getCommand("nuggetmc").setExecutor(new nmc(this));
 		return;
 	}
 	
@@ -106,6 +127,12 @@ public class Main extends JavaPlugin {
 		else {
 			this.playerTracker = null;
 		}
+		return;
+	}
+	
+	public void worldsEnable() {
+		this.worldManager = new WorldManager(this);
+		this.worldManager.loadAllWorlds();
 		return;
 	}
 }
