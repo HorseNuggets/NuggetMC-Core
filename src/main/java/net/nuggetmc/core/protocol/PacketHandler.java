@@ -40,15 +40,19 @@ public class PacketHandler {
 						Field field = cls.getDeclaredField("a");
 						field.setAccessible(true);
 						Object object = field.get(chatPacket);
-						ChatComponentText textComponent = (ChatComponentText) object;
 						
-						if (textComponent.a().size() > 0) {
-							String message = textComponent.a().get(0).getText();
+						if (object instanceof ChatComponentText) {
+							ChatComponentText textComponent = (ChatComponentText) object;
 							
-							if (message.equals(" ")) {
-								return;
+							if (textComponent.a().size() > 0) {
+								String message = textComponent.a().get(0).getText();
+								
+								if (message.equals(" ")) {
+									return;
+								}
 							}
 						}
+						
 					} catch (ClassNotFoundException | NoSuchFieldException | SecurityException | ClassCastException e) {
 						e.printStackTrace();
 					}

@@ -1,0 +1,34 @@
+heads:
+  enabled: true
+  drop-heads: true
+  head-name: <username>'s Head
+  edible: true
+  head-effects:
+    speed:
+      duration: 12
+      amplifier: 0
+    regeneration:
+      duration: 8
+      amplifier: 1
+    saturation:
+      duration: 1
+      amplifier: 2
+gheads:
+  enabled: true
+  craftable: true
+  ghead-name: §eGolden Head
+  ghead-texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTQ3OTZjMWRkOTM3NDk2NGIzNWIzNGIzMzI5ZTJkNTNhZGY4ZDQ3NDc1NTZkN2FkNDJlMzU5ZWRjN2UzZWQ2MiJ9fX0=
+  edible: true
+  ghead-effects:
+    speed:
+      duration: 12
+      amplifier: 0
+    regeneration:
+      duration: 8
+      amplifier: 2
+    saturation:
+      duration: 1
+      amplifier: 2
+    absorption:
+      duration: 12
+      amplifier: 0

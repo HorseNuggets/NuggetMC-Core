@@ -1,4 +1,4 @@
-package net.nuggetmc.core.util;
+package net.nuggetmc.core.commands.admin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.ConfigManager;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.util.TimeConverter;
 
 @SuppressWarnings("all")
 public class debug implements CommandExecutor {

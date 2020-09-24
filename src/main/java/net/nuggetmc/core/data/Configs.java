@@ -9,6 +9,7 @@ public class Configs {
 	public static ConfigManager mainconfig;
 	public static ConfigManager announcements;
 	public static ConfigManager defaults;
+	public static ConfigManager gheads;
 	public static ConfigManager inventories;
 	public static ConfigManager nofall;
 	public static ConfigManager playerstats;
@@ -19,6 +20,7 @@ public class Configs {
 		mainconfigSetup();
 		announcementsSetup();
 		defaultsSetup();
+		gheadsSetup();
 		inventoriesSetup();
 		noFallSetup();
 		playerstatsSetup();
@@ -31,6 +33,8 @@ public class Configs {
 			return mainconfig;
 		case "announcements.yml":
 			return announcements;
+		case "modifiers\\gheads.yml":
+			return gheads;
 		case "modifiers\\nofall.yml":
 			return nofall;
 		case "playerdata\\defaults\\config.yml":
@@ -72,6 +76,12 @@ public class Configs {
 	private void defaultsSetup() {
 		defaults = new ConfigManager(plugin);
 		defaults.setup("playerdata\\defaults\\config.yml");
+		return;
+	}
+	
+	private void gheadsSetup() {
+		gheads = new ConfigManager(plugin);
+		gheads.setup("modifiers\\gheads.yml");
 		return;
 	}
 	

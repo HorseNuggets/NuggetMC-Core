@@ -2,13 +2,19 @@ package net.nuggetmc.core;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+
+import net.nuggetmc.core.modifiers.gheads.GHeads;
 
 public class Listeners implements Listener {
 	
@@ -25,8 +31,32 @@ public class Listeners implements Listener {
 	}
 	
 	@EventHandler
+	public void blockPlaceEvent(BlockPlaceEvent event) {
+		plugin.gheads.onHeadPlace(event);
+		return;
+	}
+	
+	@EventHandler
+	public void entityDamageByEntityEvent(EntityDamageByEntityEvent event) {
+		plugin.gheads.headDetectPhysical(event);
+		return;
+	}
+	
+	@EventHandler
 	public void entityDamageEvent(EntityDamageEvent event) {
 		plugin.fallListener.onFall(event);
+		return;
+	}
+	
+	@EventHandler
+	public void playerDeathEvent(PlayerDeathEvent event) {
+		plugin.gheads.onDeath(event);
+		event.setDeathMessage(null);
+	}
+	
+	@EventHandler
+	public void playerInteractEvent(PlayerInteractEvent event) {
+		plugin.gheads.headDetectInteract(event);
 		return;
 	}
 	

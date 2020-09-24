@@ -1,4 +1,4 @@
-package net.nuggetmc.core.commands;
+package net.nuggetmc.core.commands.admin;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -34,6 +35,14 @@ public class nmc implements CommandExecutor {
 		}
 		
 		else if (args.length >= 1) {
+			switch (args[0].toLowerCase()) {
+			case "jr":
+				args[0] = "jarreload";
+				break;
+			case "r":
+				args[0] = "reload";
+				break;
+			}
 			switch (args[0].toLowerCase()) {
 			case "info":
 				info(sender);
@@ -175,7 +184,10 @@ public class nmc implements CommandExecutor {
 	}
 	
 	private void jarreload(CommandSender sender) {
-		
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "reloader reload NuggetMC-Core");
+		sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
+		sender.sendMessage(ChatColor.GOLD + "[RELOADED] " + ChatColor.RESET + "NuggetMC-Core.jar has been reloaded.");
+		sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
 		return;
 	}
 }

@@ -5,10 +5,14 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.nuggetmc.core.commands.nmc;
+import net.nuggetmc.core.commands.admin.debug;
+import net.nuggetmc.core.commands.admin.ghead;
+import net.nuggetmc.core.commands.admin.head;
+import net.nuggetmc.core.commands.admin.nmc;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.modifiers.HealthBoost;
 import net.nuggetmc.core.modifiers.PlayerTracker;
+import net.nuggetmc.core.modifiers.gheads.GHeads;
 import net.nuggetmc.core.modifiers.nofall.NoFall;
 import net.nuggetmc.core.modifiers.nofall.listeners.FallListener;
 import net.nuggetmc.core.modifiers.nofall.listeners.MoveListener;
@@ -19,7 +23,6 @@ import net.nuggetmc.core.protocol.PacketHandler;
 import net.nuggetmc.core.setup.Announcements;
 import net.nuggetmc.core.setup.WorldManager;
 import net.nuggetmc.core.util.ItemSerializers;
-import net.nuggetmc.core.util.debug;
 
 public class Main extends JavaPlugin {
 	
@@ -42,6 +45,7 @@ public class Main extends JavaPlugin {
 	public Announcements announcements;
 	public Configs configs;
 	public FallListener fallListener;
+	public GHeads gheads;
 	public ItemSerializers itemSerializers;
 	public NoFall noFall;
 	public MoveListener moveListener;
@@ -76,6 +80,8 @@ public class Main extends JavaPlugin {
 	
 	private void commandsEnable() {
 		this.getCommand("debug").setExecutor(new debug(this));
+		this.getCommand("ghead").setExecutor(new ghead());
+		this.getCommand("head").setExecutor(new head());
 		this.getCommand("nuggetmc").setExecutor(new nmc(this));
 		return;
 	}
@@ -95,6 +101,10 @@ public class Main extends JavaPlugin {
 		this.healthboost = new HealthBoost(this);
 		this.moveListener = new MoveListener(this);
 		this.noFall = new NoFall(this);
+		
+		if (Configs.mainconfig.getConfig().getBoolean("enabled.heads-gheads")) {
+			this.gheads = new GHeads(this);
+		}
 	}
 	
 	private void packetHandlerEnable() {

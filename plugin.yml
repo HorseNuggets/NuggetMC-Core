@@ -6,6 +6,14 @@ commands:
     description: A command used to inject code when debugging.
     permission: nmc.rank
     usage: /debug
+  ghead:
+    description: Gives a player a Golden Head.
+    usage: /ghead <Username>
+    permission: nmc.ghead
+  head:
+    description: Gives a player a player's head.
+    usage: /head <Username> <Username>
+    permission: nmc.head
   nuggetmc:
     description: The plugin-hook configuration settings.
     premission: nmc.nuggetmc
@@ -16,9 +24,17 @@ permissions:
     description: Blank description.
     children:
       nmc.debug: true
+      nmc.ghead: true
+      nmc.head: true
       nmc.nuggetmc: true
   nmc.debug:
     description: A command used to inject code when debugging.
+    default: op
+  ghead.ghead:
+    description: Gives a player a Golden Head.
+    default: op
+  ghead.head:
+    description: Gives a player a player's head.
     default: op
   nmc.nuggetmc:
     description: The plugin-hook configuration settings.

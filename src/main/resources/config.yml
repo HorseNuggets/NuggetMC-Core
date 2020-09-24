@@ -1,5 +1,6 @@
 enabled:
   announcements: true
+  heads-gheads: true
   playertracker: true
 joinmsg:
 - "§7--------------------------------------"
