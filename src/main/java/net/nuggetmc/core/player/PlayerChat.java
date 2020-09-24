@@ -1,7 +1,5 @@
 package net.nuggetmc.core.player;
 
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -11,16 +9,13 @@ import net.nuggetmc.core.Main;
 
 public class PlayerChat {
 	
-	private Main plugin;
-	
 	public PlayerChat(Main plugin) {
-		this.plugin = plugin;
+		return;
 	}
 	
 	public void onChat(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
 		String playername = player.getName();
-		UUID PlayerUUID = player.getUniqueId();
 		String message = event.getMessage();
 		
 		event.setCancelled(true);

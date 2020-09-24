@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.nuggetmc.core.Main;
+import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.util.TimeConverter;
 
 public class Announcements {
@@ -23,10 +24,10 @@ public class Announcements {
 	}
 	
 	public void setup() {
-		if (plugin.configs.mainconfig.getConfig().getBoolean("enabled.announcements")) {
-			messages = plugin.configs.announcements.getConfig().getStringList("messages");
+		if (Configs.mainconfig.getConfig().getBoolean("enabled.announcements")) {
+			messages = Configs.announcements.getConfig().getStringList("messages");
 			for (int i = 0; i < messages.size(); i++) {
-				messages.set(i, messages.get(i).replaceAll("<prefix>", plugin.configs.announcements.getConfig().getString("prefix")));
+				messages.set(i, messages.get(i).replaceAll("<prefix>", Configs.announcements.getConfig().getString("prefix")));
 			}
 		}
 		return;
@@ -50,8 +51,8 @@ public class Announcements {
 			}
 		};
 		
-		runnable.runTaskTimer(plugin, 20 * timeConverter.stringToInt(plugin.configs.announcements.getConfig().getString("time.delay")),
-				20 * timeConverter.stringToInt(plugin.configs.announcements.getConfig().getString("time.period")));
+		runnable.runTaskTimer(plugin, 20 * timeConverter.stringToInt(Configs.announcements.getConfig().getString("time.delay")),
+				20 * timeConverter.stringToInt(Configs.announcements.getConfig().getString("time.period")));
 		return;
 	}
 	

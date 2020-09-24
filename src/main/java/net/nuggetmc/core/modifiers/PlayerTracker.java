@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -39,7 +38,6 @@ public class PlayerTracker implements Listener {
 		return;
 	}
 	
-	@EventHandler
 	public void onLeave(PlayerQuitEvent event){
 		for (Player key : targets.keySet()) {
 			if (key == event.getPlayer() || (targets.get(key) == event.getPlayer())) {
@@ -49,8 +47,7 @@ public class PlayerTracker implements Listener {
 		return;
 	}
 	
-	@EventHandler 
-	public void onPlayerJoin(final PlayerJoinEvent event) {
+	public void onJoin(final PlayerJoinEvent event) {
 		final Player player = event.getPlayer();
 		task.put(player, new BukkitRunnable() {
 			Player target;
@@ -82,7 +79,6 @@ public class PlayerTracker implements Listener {
 		return;
 	}
 	
-	@EventHandler
 	public void onMove(PlayerMoveEvent event){
 		if (targets.get(event.getPlayer()) != null) {
 			if (!event.getPlayer().getCompassTarget().equals(targets.get(event.getPlayer()).getLocation())) {

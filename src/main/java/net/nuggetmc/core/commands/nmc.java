@@ -26,29 +26,6 @@ public class nmc implements CommandExecutor {
 	public nmc(Main plugin) {
 		this.plugin = plugin;
 	}
-	
-	public boolean checkDifferences(CommandSender sender, String keyOld, String entryOld, String keyNew, String entryNew) {
-		if (keyOld.equals(keyNew)) {
-			if (!entryOld.equals(entryNew)) {
-				sender.sendMessage("");
-				sender.sendMessage(ChatColor.YELLOW + "[CHANGED] " + ChatColor.RESET + keyNew);
-				sender.sendMessage(ChatColor.RED + "[OLD] " + ChatColor.RESET + entryOld);
-				sender.sendMessage(ChatColor.GREEN + "[NEW] " + ChatColor.RESET + entryNew);
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public void configIteration(HashMap<String, String> settings, ConfigManager configManager) {
-		for(String key : configManager.getConfig().getConfigurationSection("").getKeys(true)) {
-			if (!(configManager.getConfig().get(key) instanceof MemorySection)) {
-				String entry = configManager.getConfig().get(key).toString();
-				settings.put(key, entry);
-			}
-		}
-		return;
-	}
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (args.length == 0) {
@@ -61,6 +38,9 @@ public class nmc implements CommandExecutor {
 			case "info":
 				info(sender);
 				break;
+			case "jarreload":
+				jarreload(sender);
+				break;
 			case "reload":
 				reload(sender, args);
 				break;
@@ -69,19 +49,20 @@ public class nmc implements CommandExecutor {
 		return true;
 	}
 	
-	public void nullInput(CommandSender sender) {
+	private void nullInput(CommandSender sender) {
 		sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
 		sender.sendMessage(ChatColor.GOLD + "NuggetMC-Core " + ChatColor.GRAY + "[" + ChatColor.YELLOW + "v2.0" + ChatColor.GRAY + "]");
 		sender.sendMessage("");
 		sender.sendMessage(ChatColor.GRAY + "Plugin Manager Subcommands:");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "info" + ChatColor.GRAY + " » Information about the plugin.");
+		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "jarreload" + ChatColor.GRAY + " » Reloads the plugin .jar file.");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "reload <filename>" + ChatColor.GRAY + " » Reloads one/all configuration file(s).");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "world <worldname>" + ChatColor.GRAY + " » Travels to a specific world.");
 		sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
 		return;
 	}
 	
-	public void info(CommandSender sender) {
+	private void info(CommandSender sender) {
 		sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
 		sender.sendMessage(ChatColor.GOLD + "NuggetMC-Core " + ChatColor.GRAY + "[" + ChatColor.YELLOW + "v2.0" + ChatColor.GRAY + "]");
 		sender.sendMessage("");
@@ -121,7 +102,30 @@ public class nmc implements CommandExecutor {
 		return;
 	}
 	
-	public void reload(CommandSender sender, String[] args) {
+	private boolean checkDifferences(CommandSender sender, String keyOld, String entryOld, String keyNew, String entryNew) {
+		if (keyOld.equals(keyNew)) {
+			if (!entryOld.equals(entryNew)) {
+				sender.sendMessage("");
+				sender.sendMessage(ChatColor.YELLOW + "[CHANGED] " + ChatColor.RESET + keyNew);
+				sender.sendMessage(ChatColor.RED + "[OLD] " + ChatColor.RESET + entryOld);
+				sender.sendMessage(ChatColor.GREEN + "[NEW] " + ChatColor.RESET + entryNew);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private void configIteration(HashMap<String, String> settings, ConfigManager configManager) {
+		for(String key : configManager.getConfig().getConfigurationSection("").getKeys(true)) {
+			if (!(configManager.getConfig().get(key) instanceof MemorySection)) {
+				String entry = configManager.getConfig().get(key).toString();
+				settings.put(key, entry);
+			}
+		}
+		return;
+	}
+	
+	private void reload(CommandSender sender, String[] args) {
 		if (args.length >= 2) {
 			try {
 				String absoluteDir = plugin.getDataFolder().getAbsoluteFile().toString();
@@ -167,6 +171,11 @@ public class nmc implements CommandExecutor {
 			sender.sendMessage(ChatColor.GOLD + "[RELOADED] " + ChatColor.RESET + "All configuration files have been reloaded.");
 			sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
 		}
+		return;
+	}
+	
+	private void jarreload(CommandSender sender) {
+		
 		return;
 	}
 }

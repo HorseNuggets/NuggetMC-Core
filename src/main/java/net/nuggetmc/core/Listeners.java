@@ -37,6 +37,9 @@ public class Listeners implements Listener {
 		plugin.packetHandler.injectPlayer(event.getPlayer());
 		plugin.playerJoin.onJoin(event);
 		plugin.playerSpawnLocation.setSpawn(event.getPlayer());
+		if (plugin.playerTracker != null) {
+			plugin.playerTracker.onJoin(event);
+		}
 		event.setJoinMessage(null);
 		return;
 	}
@@ -44,6 +47,9 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void playerMoveEvent(PlayerMoveEvent event) {
 		plugin.moveListener.onMove(event);
+		if (plugin.playerTracker != null) {
+			plugin.playerTracker.onMove(event);
+		}
 		return;
 	}
 	
@@ -64,6 +70,9 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void playerQuitEvent(PlayerQuitEvent event) {
 		plugin.packetHandler.removePlayer(event.getPlayer());
+		if (plugin.playerTracker != null) {
+			plugin.playerTracker.onLeave(event);
+		}
 		event.setQuitMessage(null);
 		return;
 	}

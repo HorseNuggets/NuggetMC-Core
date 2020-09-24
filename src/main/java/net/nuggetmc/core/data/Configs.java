@@ -6,13 +6,13 @@ public class Configs {
 	
 	private Main plugin;
 	
-	public ConfigManager mainconfig;
-	public ConfigManager announcements;
-	public ConfigManager defaults;
-	public ConfigManager inventories;
-	public ConfigManager nofall;
-	public ConfigManager playerstats;
-	public ConfigManager worldsettings;
+	public static ConfigManager mainconfig;
+	public static ConfigManager announcements;
+	public static ConfigManager defaults;
+	public static ConfigManager inventories;
+	public static ConfigManager nofall;
+	public static ConfigManager playerstats;
+	public static ConfigManager worldsettings;
 	
 	public Configs(Main plugin) {
 		this.plugin = plugin;

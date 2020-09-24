@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.nuggetmc.core.Main;
+import net.nuggetmc.core.data.Configs;
 
 public class MoveListener implements Listener {
 	
@@ -24,7 +25,7 @@ public class MoveListener implements Listener {
 		
 		for (int i = 0; i < plugin.noFall.worlds.size(); i++) {
 			if (player.getWorld().getName().equals(plugin.noFall.worlds.get(i))) {
-				if (player.getLocation().getBlockY() >= plugin.configs.nofall.getConfig().getInt("y-level")) {
+				if (player.getLocation().getBlockY() >= Configs.nofall.getConfig().getInt("y-level")) {
 					if (plugin.noFall.fallList.contains(player)) {
 						plugin.noFall.fallList.remove(player);
 						plugin.noFall.downTime.remove(player);
@@ -42,7 +43,7 @@ public class MoveListener implements Listener {
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					for (int i = 0; i < plugin.noFall.worlds.size(); i++) {
 						if (player.getWorld().getName().equals(plugin.noFall.worlds.get(i))) {
-							if (player.getLocation().getBlockY() < plugin.configs.nofall.getConfig().getInt("y-level")) {
+							if (player.getLocation().getBlockY() < Configs.nofall.getConfig().getInt("y-level")) {
 								if (!plugin.noFall.fallList.contains(player)) {
 									if (!plugin.noFall.downTime.containsKey(player)) {
 										plugin.noFall.downTime.put(player, (byte) 0);

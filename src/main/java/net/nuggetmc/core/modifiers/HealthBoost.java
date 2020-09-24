@@ -22,9 +22,11 @@ public class HealthBoost {
 
 	public void healthSetup(final Player player) {
 		if (!player.hasPotionEffect(PotionEffectType.HEALTH_BOOST)) {
-			player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 1000000, 4, true));
+			player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 1000000, 4, true, false));
 		}
 		player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 6));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 1000000, 0, true, false));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 1, 6));
 		hpdisplay.enable(player);
 		return;
 	}

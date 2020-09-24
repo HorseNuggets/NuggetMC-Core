@@ -7,6 +7,7 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import net.nuggetmc.core.Main;
+import net.nuggetmc.core.data.Configs;
 
 public class NoFall {
 	
@@ -15,6 +16,6 @@ public class NoFall {
 	public List<String> worlds;
 
 	public NoFall(Main plugin) {
-		worlds = plugin.configs.nofall.getConfig().getStringList("enabled-worlds");
+		worlds = Configs.nofall.getConfig().getStringList("enabled-worlds");
 	}
 }

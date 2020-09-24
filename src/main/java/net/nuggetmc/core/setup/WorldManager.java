@@ -5,17 +5,16 @@ import java.util.List;
 import org.bukkit.WorldCreator;
 
 import net.nuggetmc.core.Main;
+import net.nuggetmc.core.data.Configs;
 
 public class WorldManager {
-	
-	private Main plugin;
 
 	public WorldManager(Main plugin) {
-		this.plugin = plugin;
+		return;
 	}
 	
 	public void loadAllWorlds() {
-		List<String> worlds = plugin.configs.worldsettings.getConfig().getStringList("non-default-worlds");
+		List<String> worlds = Configs.worldsettings.getConfig().getStringList("non-default-worlds");
 		for (int i = 0; i < worlds.size(); i++) {
 			new WorldCreator(worlds.get(i)).createWorld();
 		}

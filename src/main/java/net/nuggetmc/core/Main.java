@@ -18,6 +18,7 @@ import net.nuggetmc.core.player.PlayerSpawnLocation;
 import net.nuggetmc.core.protocol.PacketHandler;
 import net.nuggetmc.core.setup.Announcements;
 import net.nuggetmc.core.setup.WorldManager;
+import net.nuggetmc.core.util.ItemSerializers;
 import net.nuggetmc.core.util.debug;
 
 public class Main extends JavaPlugin {
@@ -41,6 +42,7 @@ public class Main extends JavaPlugin {
 	public Announcements announcements;
 	public Configs configs;
 	public FallListener fallListener;
+	public ItemSerializers itemSerializers;
 	public NoFall noFall;
 	public MoveListener moveListener;
 	public PacketHandler packetHandler;
@@ -52,6 +54,7 @@ public class Main extends JavaPlugin {
 	
 	public void onEnable() {
 		this.loadConfigs();
+		this.worldsEnable();
 		this.announcementsEnable();
 		this.commandsEnable();
 		this.listenersEnable();
@@ -60,7 +63,7 @@ public class Main extends JavaPlugin {
 		this.packetHandlerEnable();
 		this.playerEventsEnable();
 		this.toolsEnable();
-		this.worldsEnable();
+		this.utilsEnable();
 		return;
 	}
 	
@@ -68,6 +71,12 @@ public class Main extends JavaPlugin {
 		this.announcements = new Announcements(this);
 		this.announcements.setup();
 		this.announcements.run();
+		return;
+	}
+	
+	private void commandsEnable() {
+		this.getCommand("debug").setExecutor(new debug(this));
+		this.getCommand("nuggetmc").setExecutor(new nmc(this));
 		return;
 	}
 	
@@ -99,9 +108,8 @@ public class Main extends JavaPlugin {
 		this.playerSpawnLocation = new PlayerSpawnLocation(this);
 	}
 	
-	private void commandsEnable() {
-		this.getCommand("debug").setExecutor(new debug(this));
-		this.getCommand("nuggetmc").setExecutor(new nmc(this));
+	private void utilsEnable() {
+		this.itemSerializers = new ItemSerializers();
 		return;
 	}
 	
@@ -122,7 +130,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	public void toolsEnable() {
-		if (configs.mainconfig.getConfig().getBoolean("enabled.playertracker")) {
+		if (Configs.mainconfig.getConfig().getBoolean("enabled.playertracker")) {
 			if (this.playerTracker == null) {
 				this.playerTracker = new PlayerTracker(this);
 			}

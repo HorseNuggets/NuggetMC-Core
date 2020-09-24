@@ -6,11 +6,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.nuggetmc.core.Main;
+import net.nuggetmc.core.data.Configs;
 
 public class PlayerSpawnLocation {
 	
 	private Main plugin;
-	private Location spawn;
+	public Location spawn;
 	private String worldname;
 	
 	public PlayerSpawnLocation(Main plugin) {
@@ -19,12 +20,11 @@ public class PlayerSpawnLocation {
 	}
 	
 	public void spawnSetup() {
-		worldname = plugin.configs.worldsettings.getConfig().getString("spawn.world");
+		worldname = Configs.worldsettings.getConfig().getString("spawn.world");
 		spawn = new Location(Bukkit.getWorld(worldname), 0.5, 223, 0.5);
 	}
 	
 	public void setSpawn(Player player) {
-		
 		player.setBedSpawnLocation(spawn, true);
 		player.teleport(spawn);
 		
