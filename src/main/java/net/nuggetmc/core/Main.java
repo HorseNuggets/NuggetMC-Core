@@ -14,6 +14,7 @@ import net.nuggetmc.core.modifiers.nofall.listeners.FallListener;
 import net.nuggetmc.core.modifiers.nofall.listeners.MoveListener;
 import net.nuggetmc.core.player.PlayerChat;
 import net.nuggetmc.core.player.PlayerJoin;
+import net.nuggetmc.core.player.PlayerSpawnLocation;
 import net.nuggetmc.core.protocol.PacketHandler;
 import net.nuggetmc.core.setup.Announcements;
 import net.nuggetmc.core.setup.WorldManager;
@@ -45,6 +46,7 @@ public class Main extends JavaPlugin {
 	public PacketHandler packetHandler;
 	public PlayerChat playerChat;
 	public PlayerJoin playerJoin;
+	public PlayerSpawnLocation playerSpawnLocation;
 	public PlayerTracker playerTracker;
 	public WorldManager worldManager;
 	
@@ -94,6 +96,7 @@ public class Main extends JavaPlugin {
 	private void playerEventsEnable() {
 		this.playerChat = new PlayerChat(this);
 		this.playerJoin = new PlayerJoin(this);
+		this.playerSpawnLocation = new PlayerSpawnLocation(this);
 	}
 	
 	private void commandsEnable() {

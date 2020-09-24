@@ -1,3 +1,11 @@
 enabled:
   announcements: true
   playertracker: true
+joinmsg:
+- "§7--------------------------------------"
+- ""
+- "§e              Welcome to §6§lNuggetMC§r§e!"
+- "§7          Discord: §9discord.gg/H6P8JT2"
+- ""
+- "§7--------------------------------------"
+- "Remember to §e/vote §fto win free items!"

@@ -25,8 +25,11 @@ public class PlayerChat {
 		
 		event.setCancelled(true);
 		
-		message = ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "IX" + ChatColor.DARK_GRAY + "] " + ChatColor.RED + "[OWNER] "
-				+ playername + ChatColor.GRAY + " [" + ChatColor.YELLOW + "EPIC" + ChatColor.GRAY + "]" + ChatColor.WHITE + ": " + message;
+		message = playername + ChatColor.WHITE + ": " + message;
+		
+		if (player.isOp()) {
+			// add ADMIN tag unless they are horsenuggets
+		}
 		
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			all.sendMessage(message);

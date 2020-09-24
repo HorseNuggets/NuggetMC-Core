@@ -36,6 +36,8 @@ public class Listeners implements Listener {
 		plugin.moveListener.onJoin(event);
 		plugin.packetHandler.injectPlayer(event.getPlayer());
 		plugin.playerJoin.onJoin(event);
+		plugin.playerSpawnLocation.setSpawn(event.getPlayer());
+		event.setJoinMessage(null);
 		return;
 	}
 	
@@ -55,12 +57,14 @@ public class Listeners implements Listener {
 	public void playerRespawnEvent(PlayerRespawnEvent event) {
 		plugin.healthboost.onRespawn(event);
 		plugin.moveListener.onRespawn(event);
+		plugin.playerSpawnLocation.setSpawn(event.getPlayer());
 		return;
 	}
 	
 	@EventHandler
 	public void playerQuitEvent(PlayerQuitEvent event) {
 		plugin.packetHandler.removePlayer(event.getPlayer());
+		event.setQuitMessage(null);
 		return;
 	}
 }
