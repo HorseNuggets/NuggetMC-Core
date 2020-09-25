@@ -23,17 +23,20 @@ public class GHeadEffects {
 		if (headEffects != null) headEffects.clear();
 		if (gheadEffects != null) gheadEffects.clear();
 		
-		for(String key : config.getConfigurationSection("heads.head-effects").getKeys(false)) {
+		String hkey = "heads.head-effects";
+		String gkey = "gheads.ghead-effects";
+		
+		for(String key : config.getConfigurationSection(hkey).getKeys(false)) {
 			Integer[] meta = new Integer[2];
-			meta[0] = config.getInt("heads.head-effects." + key + ".duration");
-			meta[1] = config.getInt("heads.head-effects." + key + ".amplifier");
+			meta[0] = config.getInt(hkey + "." + key + ".duration");
+			meta[1] = config.getInt(hkey + "." + key + ".amplifier");
 			headEffects.put(key, meta);
 		}
 		
-		for(String key : config.getConfigurationSection("gheads.ghead-effects").getKeys(false)) {
+		for(String key : config.getConfigurationSection(gkey).getKeys(false)) {
 			Integer[] meta = new Integer[2];
-			meta[0] = config.getInt("heads.head-effects." + key + ".duration");
-			meta[1] = config.getInt("heads.head-effects." + key + ".amplifier");
+			meta[0] = config.getInt(gkey + "." + key + ".duration");
+			meta[1] = config.getInt(gkey + "." + key + ".amplifier");
 			gheadEffects.put(key, meta);
 		}
 		return;

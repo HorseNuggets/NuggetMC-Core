@@ -39,10 +39,9 @@ public class PlayerJoin {
 		
 		if (!config.contains("players." + uuid)) {
 			config.set("players." + uuid + ".name", playername);
-			config.set("players." + uuid + ".kills", 0);
 			config.set("players." + uuid + ".level", 1);
+			config.set("players." + uuid + ".kills", 0);
 			config.set("players." + uuid + ".nuggets", 100);
-			config.set("players." + uuid + ".respawnstatus", 0);
 			Configs.playerstats.saveConfig();
 			
 			ItemStack items[] = ItemSerializers.stringToItems(defaults.getString("on-first-join.inventory.items"));

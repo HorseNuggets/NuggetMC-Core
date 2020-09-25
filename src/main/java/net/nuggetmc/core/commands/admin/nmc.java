@@ -29,12 +29,7 @@ public class nmc implements CommandExecutor {
 	}
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (args.length == 0) {
-			nullInput(sender);
-			return true;
-		}
-		
-		else if (args.length >= 1) {
+		if (args.length >= 1) {
 			switch (args[0].toLowerCase()) {
 			case "jr":
 				args[0] = "jarreload";
@@ -46,15 +41,16 @@ public class nmc implements CommandExecutor {
 			switch (args[0].toLowerCase()) {
 			case "info":
 				info(sender);
-				break;
+				return true;
 			case "jarreload":
 				jarreload(sender);
-				break;
+				return true;
 			case "reload":
 				reload(sender, args);
-				break;
+				return true;
 			}
 		}
+		nullInput(sender);
 		return true;
 	}
 	

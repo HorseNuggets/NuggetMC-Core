@@ -14,8 +14,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import net.nuggetmc.core.modifiers.gheads.GHeads;
-
 public class Listeners implements Listener {
 	
 	private Main plugin;
@@ -67,6 +65,7 @@ public class Listeners implements Listener {
 		plugin.packetHandler.injectPlayer(event.getPlayer());
 		plugin.playerJoin.onJoin(event);
 		plugin.playerSpawnLocation.setSpawn(event.getPlayer());
+		plugin.sidebar.enable(event.getPlayer());
 		if (plugin.playerTracker != null) {
 			plugin.playerTracker.onJoin(event);
 		}

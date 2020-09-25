@@ -10,6 +10,10 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.ConfigManager;
@@ -30,7 +34,22 @@ public class debug implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
-		Bukkit.broadcastMessage(plugin.playerSpawnLocation.spawn.toString());
+		Player player = (Player) sender;
+		
+		final Scoreboard scoreboard = player.getScoreboard();
+		/*for (Objective o : scoreboard.getObjectives()) {
+			Bukkit.broadcastMessage(o.getName());
+		}*/
+		
+		/*for (Score s : scoreboard.getScores("stats")) {
+			Bukkit.broadcastMessage(ChatColor.GREEN + s.toString());
+			Bukkit.broadcastMessage(s.getEntry());
+		}*/
+		//Objective stats = scoreboard.getObjective(DisplaySlot.SIDEBAR);
+		
+		for (String entry : scoreboard.getEntries()) {
+			Bukkit.broadcastMessage(entry);
+		}
 		
 		return true;
 	}

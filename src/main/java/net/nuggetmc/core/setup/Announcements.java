@@ -12,7 +12,6 @@ import net.nuggetmc.core.util.TimeConverter;
 public class Announcements {
 	
 	private Main plugin;
-	private TimeConverter timeConverter;
 	private List<String> messages;
 	
 	public byte cycle = 0;
@@ -20,7 +19,6 @@ public class Announcements {
 	
 	public Announcements(Main plugin) {
 		this.plugin = plugin;
-		timeConverter = new TimeConverter();
 	}
 	
 	public void setup() {
@@ -51,8 +49,8 @@ public class Announcements {
 			}
 		};
 		
-		runnable.runTaskTimer(plugin, 20 * timeConverter.stringToInt(Configs.announcements.getConfig().getString("time.delay")),
-				20 * timeConverter.stringToInt(Configs.announcements.getConfig().getString("time.period")));
+		runnable.runTaskTimer(plugin, 20 * TimeConverter.stringToInt(Configs.announcements.getConfig().getString("time.delay")),
+				20 * TimeConverter.stringToInt(Configs.announcements.getConfig().getString("time.period")));
 		return;
 	}
 	

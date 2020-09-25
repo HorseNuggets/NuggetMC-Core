@@ -9,6 +9,7 @@ import net.nuggetmc.core.commands.admin.debug;
 import net.nuggetmc.core.commands.admin.ghead;
 import net.nuggetmc.core.commands.admin.head;
 import net.nuggetmc.core.commands.admin.nmc;
+import net.nuggetmc.core.commands.admin.rank;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.modifiers.HealthBoost;
 import net.nuggetmc.core.modifiers.PlayerTracker;
@@ -19,7 +20,9 @@ import net.nuggetmc.core.modifiers.nofall.listeners.MoveListener;
 import net.nuggetmc.core.player.PlayerChat;
 import net.nuggetmc.core.player.PlayerJoin;
 import net.nuggetmc.core.player.PlayerSpawnLocation;
+import net.nuggetmc.core.player.PlayerStats;
 import net.nuggetmc.core.protocol.PacketHandler;
+import net.nuggetmc.core.scoreboard.Sidebar;
 import net.nuggetmc.core.setup.Announcements;
 import net.nuggetmc.core.setup.WorldManager;
 import net.nuggetmc.core.util.ItemSerializers;
@@ -53,7 +56,9 @@ public class Main extends JavaPlugin {
 	public PlayerChat playerChat;
 	public PlayerJoin playerJoin;
 	public PlayerSpawnLocation playerSpawnLocation;
+	public PlayerStats playerStats;
 	public PlayerTracker playerTracker;
+	public Sidebar sidebar;
 	public WorldManager worldManager;
 	
 	public void onEnable() {
@@ -66,6 +71,7 @@ public class Main extends JavaPlugin {
 		this.modifiersEnable();
 		this.packetHandlerEnable();
 		this.playerEventsEnable();
+		this.sidebarEnable();
 		this.toolsEnable();
 		this.utilsEnable();
 		return;
@@ -83,6 +89,7 @@ public class Main extends JavaPlugin {
 		this.getCommand("ghead").setExecutor(new ghead());
 		this.getCommand("head").setExecutor(new head());
 		this.getCommand("nuggetmc").setExecutor(new nmc(this));
+		this.getCommand("rank").setExecutor(new rank(this));
 		return;
 	}
 	
@@ -116,6 +123,12 @@ public class Main extends JavaPlugin {
 		this.playerChat = new PlayerChat(this);
 		this.playerJoin = new PlayerJoin(this);
 		this.playerSpawnLocation = new PlayerSpawnLocation(this);
+		this.playerStats = new PlayerStats(this);
+	}
+	
+	private void sidebarEnable() {
+		this.sidebar = new Sidebar(this);
+		return;
 	}
 	
 	private void utilsEnable() {

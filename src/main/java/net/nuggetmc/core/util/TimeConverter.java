@@ -1,16 +1,13 @@
 package net.nuggetmc.core.util;
 
 public class TimeConverter {
-	
-	public int stringToInt(String input) {
-		
+	public static int stringToInt(String input) {
 		String[] args = input.split(" ");
 		
 		int finalTimeSec = 0;
 		for (int i = 0; i < args.length; i++) {
 			
 			int factor = 0;
-			
 			switch (args[i].charAt(args[i].length() - 1)) {
 			case 's':
 				factor = 1;
@@ -31,9 +28,7 @@ public class TimeConverter {
 			} catch (NumberFormatException e) {
 				continue;
 			}
-			
 		}
-		
 		return finalTimeSec;
 	}
 	

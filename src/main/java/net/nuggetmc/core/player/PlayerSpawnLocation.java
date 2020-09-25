@@ -2,6 +2,7 @@ package net.nuggetmc.core.player;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -11,17 +12,23 @@ import net.nuggetmc.core.data.Configs;
 public class PlayerSpawnLocation {
 	
 	private Main plugin;
-	public Location spawn;
 	private String worldname;
+	private ConfigurationSection config;
+	
+	public Location spawn;
 	
 	public PlayerSpawnLocation(Main plugin) {
 		this.plugin = plugin;
+		this.config = Configs.worldsettings.getConfig();
 		spawnSetup();
 	}
 	
 	public void spawnSetup() {
-		worldname = Configs.worldsettings.getConfig().getString("spawn.world");
-		spawn = new Location(Bukkit.getWorld(worldname), 0.5, 223, 0.5);
+		worldname = config.getString("spawn.world");
+		double x = config.getDouble("spawn.coordinates.x");
+		double y = config.getDouble("spawn.coordinates.y");
+		double z = config.getDouble("spawn.coordinates.z");
+		spawn = new Location(Bukkit.getWorld(worldname), x, y, z);
 	}
 	
 	public void setSpawn(Player player) {

@@ -8,16 +8,13 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import net.nuggetmc.core.Main;
-import net.nuggetmc.core.scoreboard.HPDisplay;
 
 public class HealthBoost {
 	
 	private Main plugin;
-	private HPDisplay hpdisplay;
 	
 	public HealthBoost(Main plugin) {
 		this.plugin = plugin;
-		this.hpdisplay = new HPDisplay(plugin);
 	}
 
 	public void healthSetup(final Player player) {
@@ -27,7 +24,6 @@ public class HealthBoost {
 		player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 6));
 		player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 1000000, 0, true, false));
 		player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 1, 6));
-		hpdisplay.enable(player);
 		return;
 	}
 	

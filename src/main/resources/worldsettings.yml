@@ -6,6 +6,10 @@ uhckit-worlds:
 - world_the_end
 spawn:
   world: main
+  coordinates:
+    x: 0.5
+    y: 223
+    z: 0.5
   region:
     pos1:
       x: -296
