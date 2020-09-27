@@ -1,24 +1,33 @@
 package net.nuggetmc.core;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.nuggetmc.core.commands.admin.debug;
 import net.nuggetmc.core.commands.admin.ghead;
 import net.nuggetmc.core.commands.admin.head;
+import net.nuggetmc.core.commands.admin.invconvert;
 import net.nuggetmc.core.commands.admin.nmc;
 import net.nuggetmc.core.commands.admin.rank;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.misc.TabComplete;
 import net.nuggetmc.core.modifiers.HealthBoost;
 import net.nuggetmc.core.modifiers.PlayerTracker;
+import net.nuggetmc.core.modifiers.autorespawn.AutoRespawn;
 import net.nuggetmc.core.modifiers.gheads.GHeads;
 import net.nuggetmc.core.modifiers.nofall.NoFall;
 import net.nuggetmc.core.modifiers.nofall.listeners.FallListener;
 import net.nuggetmc.core.modifiers.nofall.listeners.MoveListener;
 import net.nuggetmc.core.player.PlayerChat;
 import net.nuggetmc.core.player.PlayerJoin;
+import net.nuggetmc.core.player.PlayerKill;
 import net.nuggetmc.core.player.PlayerSpawnLocation;
 import net.nuggetmc.core.player.PlayerStats;
 import net.nuggetmc.core.protocol.PacketHandler;
@@ -27,7 +36,7 @@ import net.nuggetmc.core.setup.Announcements;
 import net.nuggetmc.core.setup.WorldManager;
 import net.nuggetmc.core.util.ItemSerializers;
 
-public class Main extends JavaPlugin {
+public class Main extends JavaPlugin implements TabCompleter {
 	
 	/**
 	 * NuggetMC-Core
@@ -46,6 +55,7 @@ public class Main extends JavaPlugin {
 	
 	public HealthBoost healthboost;
 	public Announcements announcements;
+	public AutoRespawn autoRespawn;
 	public Configs configs;
 	public FallListener fallListener;
 	public GHeads gheads;
@@ -55,10 +65,12 @@ public class Main extends JavaPlugin {
 	public PacketHandler packetHandler;
 	public PlayerChat playerChat;
 	public PlayerJoin playerJoin;
+	public PlayerKill playerKill;
 	public PlayerSpawnLocation playerSpawnLocation;
 	public PlayerStats playerStats;
 	public PlayerTracker playerTracker;
 	public Sidebar sidebar;
+	public TabComplete tabComplete;
 	public WorldManager worldManager;
 	
 	public void onEnable() {
@@ -72,8 +84,10 @@ public class Main extends JavaPlugin {
 		this.packetHandlerEnable();
 		this.playerEventsEnable();
 		this.sidebarEnable();
+		this.tabCompleteEnable();
 		this.toolsEnable();
 		this.utilsEnable();
+		this.refreshSidebars();
 		return;
 	}
 	
@@ -88,8 +102,16 @@ public class Main extends JavaPlugin {
 		this.getCommand("debug").setExecutor(new debug(this));
 		this.getCommand("ghead").setExecutor(new ghead());
 		this.getCommand("head").setExecutor(new head());
+		this.getCommand("invconvert").setExecutor(new invconvert(this));
 		this.getCommand("nuggetmc").setExecutor(new nmc(this));
 		this.getCommand("rank").setExecutor(new rank(this));
+		return;
+	}
+	
+	private void tabCompleteEnable() {
+		this.tabComplete = new TabComplete(this);
+		this.getCommand("nuggetmc").setTabCompleter(this);
+		this.getCommand("rank").setTabCompleter(this);
 		return;
 	}
 	
@@ -104,6 +126,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	private void modifiersEnable() {
+		this.autoRespawn = new AutoRespawn(this);
 		this.fallListener = new FallListener(this);
 		this.healthboost = new HealthBoost(this);
 		this.moveListener = new MoveListener(this);
@@ -121,9 +144,19 @@ public class Main extends JavaPlugin {
 	
 	private void playerEventsEnable() {
 		this.playerChat = new PlayerChat(this);
-		this.playerJoin = new PlayerJoin(this);
+		this.playerJoin = new PlayerJoin();
+		this.playerKill = new PlayerKill(this);
 		this.playerSpawnLocation = new PlayerSpawnLocation(this);
 		this.playerStats = new PlayerStats(this);
+	}
+	
+	private void refreshSidebars() {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				this.sidebar.enable(player);
+			}
+		}, 10);
+		return;
 	}
 	
 	private void sidebarEnable() {
@@ -144,6 +177,11 @@ public class Main extends JavaPlugin {
 	public void loadConfigs() {
 		this.configs = new Configs(this);
 		return;
+	}
+	
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+		return this.tabComplete.onTabComplete(sender, command, label, args);
 	}
 	
 	public void reloadConfigs() {

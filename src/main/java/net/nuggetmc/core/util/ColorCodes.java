@@ -10,6 +10,8 @@ import net.luckperms.api.model.user.User;
 
 public class ColorCodes {
 	
+	private static LuckPerms api = LuckPermsProvider.get();
+	
 	public static String rankNameSidebar(UUID uuid) {
 		String rank = ChatColor.WHITE + "Default";
 		
@@ -51,7 +53,6 @@ public class ColorCodes {
 	public static String colorName(UUID uuid, String name) {
 		String rank = ChatColor.WHITE + name;
 		
-		LuckPerms api = LuckPermsProvider.get();
 		User user = api.getUserManager().getUser(uuid);
 		
 		switch (user.getPrimaryGroup()) {
@@ -89,7 +90,6 @@ public class ColorCodes {
 	public static String rankNameTag(UUID uuid) {
 		String rank = "";
 		
-		LuckPerms api = LuckPermsProvider.get();
 		User user = api.getUserManager().getUser(uuid);
 		
 		switch (user.getPrimaryGroup()) {

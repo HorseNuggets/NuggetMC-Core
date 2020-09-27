@@ -32,6 +32,12 @@ public class PlayerSpawnLocation {
 	}
 	
 	public void setSpawn(Player player) {
+		if (player.isDead()) {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+				player.spigot().respawn();
+			}, 20);
+		}
+		
 		player.setBedSpawnLocation(spawn, true);
 		player.teleport(spawn);
 		
@@ -47,6 +53,18 @@ public class PlayerSpawnLocation {
 			public void run() {
 				player.teleport(spawn);
 				if (player.getWorld().getName().equals(worldname)) {
+					
+					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+						for (Player all : Bukkit.getOnlinePlayers()) {
+							
+							/*
+							 * [TODO] Unless they are vanished, show the player.
+							 */
+							
+							all.showPlayer(player);
+						}
+					}, 20);
+					
 					this.cancel();
 					return;
 				}

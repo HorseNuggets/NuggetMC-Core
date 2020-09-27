@@ -7,9 +7,11 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerChatTabCompleteEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -47,9 +49,16 @@ public class Listeners implements Listener {
 	}
 	
 	@EventHandler
+	public void playerChatTabCompleteEvent(PlayerChatTabCompleteEvent event) {
+		plugin.tabComplete.tab(event);
+		return;
+	}
+	
+	@EventHandler
 	public void playerDeathEvent(PlayerDeathEvent event) {
+		plugin.autoRespawn.onPlayerDeath(event);
 		plugin.gheads.onDeath(event);
-		event.setDeathMessage(null);
+		plugin.playerKill.onKill(event);
 	}
 	
 	@EventHandler
@@ -60,16 +69,16 @@ public class Listeners implements Listener {
 	
 	@EventHandler
 	public void playerJoinEvent(PlayerJoinEvent event) {
+		event.setJoinMessage(null);
+		plugin.playerSpawnLocation.setSpawn(event.getPlayer());
 		plugin.healthboost.onJoin(event);
 		plugin.moveListener.onJoin(event);
 		plugin.packetHandler.injectPlayer(event.getPlayer());
 		plugin.playerJoin.onJoin(event);
-		plugin.playerSpawnLocation.setSpawn(event.getPlayer());
 		plugin.sidebar.enable(event.getPlayer());
 		if (plugin.playerTracker != null) {
 			plugin.playerTracker.onJoin(event);
 		}
-		event.setJoinMessage(null);
 		return;
 	}
 	
@@ -79,6 +88,12 @@ public class Listeners implements Listener {
 		if (plugin.playerTracker != null) {
 			plugin.playerTracker.onMove(event);
 		}
+		return;
+	}
+	
+	@EventHandler
+	public void playerPortalEvent(PlayerPortalEvent event) {
+		plugin.worldManager.worldPortal(event);
 		return;
 	}
 	
@@ -98,11 +113,11 @@ public class Listeners implements Listener {
 	
 	@EventHandler
 	public void playerQuitEvent(PlayerQuitEvent event) {
+		event.setQuitMessage(null);
 		plugin.packetHandler.removePlayer(event.getPlayer());
 		if (plugin.playerTracker != null) {
 			plugin.playerTracker.onLeave(event);
 		}
-		event.setQuitMessage(null);
 		return;
 	}
 }

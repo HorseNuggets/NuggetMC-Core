@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -21,11 +20,9 @@ import net.nuggetmc.core.util.ColorCodes;
 public class Sidebar {
 	
 	private Main plugin;
-	private FileConfiguration config;
 	
 	public Sidebar(Main plugin) {
 		this.plugin = plugin;
-		this.config = Configs.playerstats.getConfig();
 	}
 	
 	public void enable(Player player) {
@@ -42,21 +39,21 @@ public class Sidebar {
 		String playername = player.getName();
 		Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 		
-		int playerkillsnum = config.getInt("players." + uuid + ".kills");
-		int playernuggetsnum = config.getInt("players." + uuid + ".nuggets");
+		int playerkillsnum = Configs.playerstats.getConfig().getInt("players." + uuid + ".kills");
+		int playernuggetsnum = Configs.playerstats.getConfig().getInt("players." + uuid + ".nuggets");
 		
 		plugin.playerStats.allign(player, uuid, playerkillsnum);
 		
 		String playerkills = NumberFormat.getNumberInstance(Locale.US).format(playerkillsnum);
 		String playernuggets = NumberFormat.getNumberInstance(Locale.US).format(playernuggetsnum);
 		
-		int playerlevel = config.getInt("players." + uuid + ".level");
-		
 		String rank = ColorCodes.rankNameSidebar(uuid);
 		
 		Objective stats = scoreboard.registerNewObjective("stats", "dummy");
 		stats.setDisplayName("§6§l NuggetMC §r");
 		stats.setDisplaySlot(DisplaySlot.SIDEBAR);
+		
+		int playerlevel = Configs.playerstats.getConfig().getInt("players." + uuid + ".level");
 		
 		Score[] lines = new Score[15];
 		lines[12] = stats.getScore(ChatColor.WHITE + "" + ChatColor.GRAY + "" + ChatColor.BOLD + "----------------");

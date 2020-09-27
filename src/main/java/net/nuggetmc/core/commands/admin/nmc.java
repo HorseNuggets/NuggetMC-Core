@@ -7,14 +7,18 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.nuggetmc.core.Main;
@@ -23,6 +27,8 @@ import net.nuggetmc.core.data.ConfigManager;
 public class nmc implements CommandExecutor {
 
 	private Main plugin;
+	private String linspace = (ChatColor.GRAY + "--------------------------------------");
+	private String header = ChatColor.GOLD + "NuggetMC-Core " + ChatColor.GRAY + "[" + ChatColor.YELLOW + "v2.0" + ChatColor.GRAY + "]";
 
 	public nmc(Main plugin) {
 		this.plugin = plugin;
@@ -37,16 +43,22 @@ public class nmc implements CommandExecutor {
 			case "r":
 				args[0] = "reload";
 				break;
+			case "worlds":
+				args[0] = "world";
+				break;
 			}
 			switch (args[0].toLowerCase()) {
 			case "info":
 				info(sender);
 				return true;
 			case "jarreload":
-				jarreload(sender);
+				jarreload(sender, args);
 				return true;
 			case "reload":
 				reload(sender, args);
+				return true;
+			case "world":
+				world(sender, args);
 				return true;
 			}
 		}
@@ -55,21 +67,21 @@ public class nmc implements CommandExecutor {
 	}
 	
 	private void nullInput(CommandSender sender) {
-		sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
-		sender.sendMessage(ChatColor.GOLD + "NuggetMC-Core " + ChatColor.GRAY + "[" + ChatColor.YELLOW + "v2.0" + ChatColor.GRAY + "]");
+		sender.sendMessage(linspace);
+		sender.sendMessage(header);
 		sender.sendMessage("");
 		sender.sendMessage(ChatColor.GRAY + "Plugin Manager Subcommands:");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "info" + ChatColor.GRAY + " » Information about the plugin.");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "jarreload" + ChatColor.GRAY + " » Reloads the plugin .jar file.");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "reload <filename>" + ChatColor.GRAY + " » Reloads one/all configuration file(s).");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "world <worldname>" + ChatColor.GRAY + " » Travels to a specific world.");
-		sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
+		sender.sendMessage(linspace);
 		return;
 	}
 	
 	private void info(CommandSender sender) {
-		sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
-		sender.sendMessage(ChatColor.GOLD + "NuggetMC-Core " + ChatColor.GRAY + "[" + ChatColor.YELLOW + "v2.0" + ChatColor.GRAY + "]");
+		sender.sendMessage(linspace);
+		sender.sendMessage(header);
 		sender.sendMessage("");
 		sender.sendMessage(ChatColor.GRAY + "Plugin Information:");
 		sender.sendMessage(ChatColor.GRAY + "Author » " + ChatColor.YELLOW + "HorseNuggets");
@@ -103,7 +115,7 @@ public class nmc implements CommandExecutor {
         }
 		
 		sender.sendMessage(ChatColor.GRAY + "Source Code » " + ChatColor.YELLOW + "git.io/JU2IS");
-		sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
+		sender.sendMessage(linspace);
 		return;
 	}
 	
@@ -152,7 +164,9 @@ public class nmc implements CommandExecutor {
 				configManager.reloadConfig();
 				configIteration(newSettings, configManager);
 				
-				sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
+				sender.sendMessage(linspace);
+				sender.sendMessage(header);
+				sender.sendMessage("");
 				sender.sendMessage(ChatColor.GOLD + "[RELOADED] " + ChatColor.RESET + pathDisplay);
 				
 				ArrayList<Boolean> checks = new ArrayList<Boolean>();
@@ -161,7 +175,7 @@ public class nmc implements CommandExecutor {
 					sender.sendMessage("");
 					sender.sendMessage(ChatColor.YELLOW + "[CHANGED] " + ChatColor.RESET + "No changes have been made.");
 				}
-				sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
+				sender.sendMessage(linspace);
 				plugin.configs.special(pathCode);
 			} catch (NullPointerException e) {
 				sender.sendMessage(ChatColor.RED + args[1] + " does not exist!");
@@ -172,18 +186,67 @@ public class nmc implements CommandExecutor {
 		else {
 			plugin.loadConfigs();
 			
-			sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
+			sender.sendMessage(linspace);
+			sender.sendMessage(header);
+			sender.sendMessage("");
 			sender.sendMessage(ChatColor.GOLD + "[RELOADED] " + ChatColor.RESET + "All configuration files have been reloaded.");
-			sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
+			sender.sendMessage(linspace);
 		}
 		return;
 	}
 	
-	private void jarreload(CommandSender sender) {
+	private void jarreload(CommandSender sender, String[] args) {
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "reloader reload NuggetMC-Core");
-		sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
+		
+		sender.sendMessage(linspace);
+		sender.sendMessage(header);
+		sender.sendMessage("");
 		sender.sendMessage(ChatColor.GOLD + "[RELOADED] " + ChatColor.RESET + "NuggetMC-Core.jar has been reloaded.");
-		sender.sendMessage(ChatColor.GRAY + "--------------------------------------");
+		sender.sendMessage(linspace);
+		return;
+	}
+	
+	private void world(CommandSender sender, String[] args) {
+		if (args.length >= 2) {
+			if (sender instanceof Player) {
+				Player player = (Player) sender;
+				switch (args[1].toLowerCase()) {
+				case "world_nether":
+					Location nether = new Location(Bukkit.getWorld(args[1]), 0.5, 128, 0.5);
+					player.teleport(nether);
+					return;
+				case "main":
+					Location main = new Location(Bukkit.getWorld(args[1]), 0.5, 223, 0.5);
+					player.teleport(main);
+					return;
+				case "world_the_end":
+					Location end = new Location(Bukkit.getWorld(args[1]), 0.5, 64, 0.5);
+					player.teleport(end);
+					return;
+				case "world":
+					Location world = new Location(Bukkit.getWorld(args[1]), 0.5, 65, 0.5);
+					player.teleport(world);
+					return;
+				case "alpha":
+					Location alpha = new Location(Bukkit.getWorld(args[1]), 0.5, 65, 0.5);
+					player.teleport(alpha);
+					return;
+				}
+			}
+		}
+		
+		List<World> worlds = Bukkit.getWorlds();
+		
+		sender.sendMessage(linspace);
+		sender.sendMessage(header);
+		sender.sendMessage("");
+		sender.sendMessage(ChatColor.YELLOW + "[WORLDS]");
+		
+		for (int i = 0; i < worlds.size(); i++) {
+			sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.WHITE + worlds.get(i).getName());
+		}
+		
+		sender.sendMessage(linspace);
 		return;
 	}
 }

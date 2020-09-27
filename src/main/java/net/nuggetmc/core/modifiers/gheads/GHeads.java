@@ -1,5 +1,9 @@
 package net.nuggetmc.core.modifiers.gheads;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,12 +21,15 @@ import net.nuggetmc.core.modifiers.gheads.util.TextureProfileField;
 
 public class GHeads {
 	
+	private Main plugin;
 	private FileConfiguration config;
+	private Set<Player> headList = new HashSet<Player>();
 	
 	public GHeadCraft gheadCraft;
 	public GHeadEffects gheadEffects;
 	
 	public GHeads(Main plugin) {
+		this.plugin = plugin;
 		this.config = Configs.gheads.getConfig();
 		this.gheadEffects = new GHeadEffects();
 		this.setup();
@@ -68,13 +75,19 @@ public class GHeads {
 		if (config.getBoolean("heads.enabled")) {
 			if (config.getBoolean("heads.drop-heads")) {
 				if (event.getEntity() instanceof Player) {
-					
 					Player player = event.getEntity();
-					Location location = player.getLocation();
-					location.setY(location.getY() + 1);
 					
-					TextureProfileField TextureProfileField = new TextureProfileField();
-					player.getWorld().dropItemNaturally(location, TextureProfileField.headPlayer(player));
+					if (!headList.contains(player)) {
+						Location location = player.getLocation();
+						TextureProfileField TextureProfileField = new TextureProfileField();
+						location.setY(location.getY() + 1);
+						player.getWorld().dropItemNaturally(location, TextureProfileField.headPlayer(player));
+						
+						headList.add(player);
+						Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+							headList.remove(player);
+						}, 600);
+					}
 				}
 			}
 		}

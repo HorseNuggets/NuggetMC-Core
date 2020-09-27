@@ -1,0 +1,10 @@
+slot-0:
+  material: DIAMOND_SWORD
+  meta:
+    name: ur mom
+  buy:
+    price: 42
+    amount: 1
+  sell:
+    price: 18
+    amount: 1

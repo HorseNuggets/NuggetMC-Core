@@ -1,5 +1,6 @@
 non-default-worlds:
 - main
+- alpha
 uhckit-worlds:
 - main
 - world_nether

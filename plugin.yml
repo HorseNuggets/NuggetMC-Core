@@ -14,6 +14,11 @@ commands:
     description: Gives a player a player's head.
     usage: /head <player> <player>
     permission: nmc.head
+  invconvert:
+    description: A developer tool to serialize player inventories.
+    usage: /invconvert <get/set> <file> (path)
+    permission: nmc.ic
+    aliases: [ic]
   nuggetmc:
     description: The plugin-hook configuration settings.
     premission: nmc.nuggetmc
@@ -30,6 +35,7 @@ permissions:
       nmc.debug: true
       nmc.ghead: true
       nmc.head: true
+      nmc.ic: true
       nmc.nuggetmc: true
       nmc.rank: true
   nmc.debug:
@@ -40,6 +46,9 @@ permissions:
     default: op
   nmc.head:
     description: Gives a player a player's head.
+    default: op
+  nmc.ic:
+    description: A developer tool to serialize player inventories.
     default: op
   nmc.nuggetmc:
     description: The plugin-hook configuration settings.

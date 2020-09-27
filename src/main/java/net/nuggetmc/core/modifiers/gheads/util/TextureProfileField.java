@@ -67,7 +67,7 @@ public class TextureProfileField {
 			profileField.set(headMeta, profile);
 			
 		}
-		catch (IllegalArgumentException|NoSuchFieldException|SecurityException | IllegalAccessException e) {
+		catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
 		headMeta.setDisplayName(config.getString("gheads.ghead-name"));

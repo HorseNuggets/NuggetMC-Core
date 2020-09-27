@@ -3,6 +3,8 @@ package net.nuggetmc.core.player;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,8 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.util.ColorCodes;
 import net.nuggetmc.core.util.ItemSerializers;
 import net.nuggetmc.core.util.SuperRandom;
 
@@ -22,7 +24,7 @@ public class PlayerJoin {
 	private FileConfiguration config;
 	private FileConfiguration defaults;
 	
-	public PlayerJoin(Main plugin) {
+	public PlayerJoin() {
 		this.config = Configs.playerstats.getConfig();
 		this.defaults = Configs.defaults.getConfig();
 		this.joinmsg = Configs.mainconfig.getConfig().getStringList("joinmsg");
@@ -32,6 +34,12 @@ public class PlayerJoin {
 		Player player = event.getPlayer();
 		String playername = player.getName();
 		UUID uuid = player.getUniqueId();
+		
+		for (Player all : Bukkit.getOnlinePlayers()) {
+			if (player != all) {
+				player.sendMessage(ColorCodes.colorName(uuid, playername) + ChatColor.WHITE + " joined the game.");
+			}
+		}
 		
 		if (!(player.getGameMode() != GameMode.SURVIVAL)) {
 			player.setGameMode(GameMode.SURVIVAL);
