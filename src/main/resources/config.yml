@@ -2,7 +2,7 @@ enabled:
   announcements: true
   heads-gheads: true
   playertracker: true
-joinmsg:
+join-msg:
 - "§7--------------------------------------"
 - ""
 - "§e              Welcome to §6§lNuggetMC§r§e!"
@@ -10,4 +10,11 @@ joinmsg:
 - ""
 - "§7--------------------------------------"
 - "Remember to §e/vote §fto win free items!"
+levelup-msg:
+- "§2--------------------------------------"
+- ""
+- "§e                   §kX§r§e LEVEL UP §kX"
+- "§2                 You are §eLevel <level>§2!"
+- ""
+- "§2--------------------------------------"
 autorespawn-ticks: 12

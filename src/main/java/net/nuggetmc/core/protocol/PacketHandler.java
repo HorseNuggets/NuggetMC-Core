@@ -48,19 +48,19 @@ public class PacketHandler {
 								String message = textComponent.a().get(0).getText();
 								
 								if (message.equals(" ")) {
-									return;
+										return;
+									}
 								}
 							}
+							
+						} catch (ClassNotFoundException | NoSuchFieldException | SecurityException | ClassCastException e) {
+							e.printStackTrace();
 						}
-						
-					} catch (ClassNotFoundException | NoSuchFieldException | SecurityException | ClassCastException e) {
-						e.printStackTrace();
 					}
+					super.write(channelHandlerContext, packet, channelPromise);
+					return;
 				}
-				super.write(channelHandlerContext, packet, channelPromise);
-				return;
-			}
-		};
+			};
 
 		ChannelPipeline pipeline = ((CraftPlayer) player).getHandle().playerConnection.networkManager.channel.pipeline();
 		pipeline.addBefore("packet_handler", player.getName(), channelDuplexHandler);

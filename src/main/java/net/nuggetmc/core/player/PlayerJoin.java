@@ -1,6 +1,8 @@
 package net.nuggetmc.core.player;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -27,7 +29,7 @@ public class PlayerJoin {
 	public PlayerJoin() {
 		this.config = Configs.playerstats.getConfig();
 		this.defaults = Configs.defaults.getConfig();
-		this.joinmsg = Configs.mainconfig.getConfig().getStringList("joinmsg");
+		this.joinmsg = Configs.mainconfig.getConfig().getStringList("join-msg");
 	}
 	
 	public void onJoin(PlayerJoinEvent event) {
@@ -37,7 +39,7 @@ public class PlayerJoin {
 		
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			if (player != all) {
-				player.sendMessage(ColorCodes.colorName(uuid, playername) + ChatColor.WHITE + " joined the game.");
+				all.sendMessage(ColorCodes.colorName(uuid, playername) + ChatColor.WHITE + " joined the game.");
 			}
 		}
 		
@@ -50,7 +52,13 @@ public class PlayerJoin {
 			config.set("players." + uuid + ".level", 1);
 			config.set("players." + uuid + ".kills", 0);
 			config.set("players." + uuid + ".nuggets", 100);
+			
+			int count = config.getInt("count") + 1;
+			config.set("count", count);
 			Configs.playerstats.saveConfig();
+			
+			Bukkit.broadcastMessage("Welcome " + playername + " to NuggetMC! " + ChatColor.GRAY + "(" + ChatColor.YELLOW + "#"
+					+ NumberFormat.getNumberInstance(Locale.US).format(count) + ChatColor.GRAY + ")");
 			
 			ItemStack items[] = ItemSerializers.stringToItems(defaults.getString("on-first-join.inventory.items"));
 			ItemStack armor[] = ItemSerializers.stringToItems(defaults.getString("on-first-join.inventory.armor"));

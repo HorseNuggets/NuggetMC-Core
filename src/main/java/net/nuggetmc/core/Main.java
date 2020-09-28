@@ -10,12 +10,15 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.nuggetmc.core.commands.admin.admincmd;
+import net.nuggetmc.core.commands.admin.ban;
 import net.nuggetmc.core.commands.admin.debug;
 import net.nuggetmc.core.commands.admin.ghead;
 import net.nuggetmc.core.commands.admin.head;
 import net.nuggetmc.core.commands.admin.invconvert;
 import net.nuggetmc.core.commands.admin.nmc;
 import net.nuggetmc.core.commands.admin.rank;
+import net.nuggetmc.core.commands.def.defaultcmd;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.misc.TabComplete;
 import net.nuggetmc.core.modifiers.HealthBoost;
@@ -25,6 +28,7 @@ import net.nuggetmc.core.modifiers.gheads.GHeads;
 import net.nuggetmc.core.modifiers.nofall.NoFall;
 import net.nuggetmc.core.modifiers.nofall.listeners.FallListener;
 import net.nuggetmc.core.modifiers.nofall.listeners.MoveListener;
+import net.nuggetmc.core.player.Levelup;
 import net.nuggetmc.core.player.PlayerChat;
 import net.nuggetmc.core.player.PlayerJoin;
 import net.nuggetmc.core.player.PlayerKill;
@@ -60,8 +64,9 @@ public class Main extends JavaPlugin implements TabCompleter {
 	public FallListener fallListener;
 	public GHeads gheads;
 	public ItemSerializers itemSerializers;
-	public NoFall noFall;
+	public Levelup levelup;
 	public MoveListener moveListener;
+	public NoFall noFall;
 	public PacketHandler packetHandler;
 	public PlayerChat playerChat;
 	public PlayerJoin playerJoin;
@@ -99,12 +104,19 @@ public class Main extends JavaPlugin implements TabCompleter {
 	}
 	
 	private void commandsEnable() {
+		this.getCommand("ban").setExecutor(new ban(this));
 		this.getCommand("debug").setExecutor(new debug(this));
 		this.getCommand("ghead").setExecutor(new ghead());
+		this.getCommand("gma").setExecutor(new admincmd(this));
+		this.getCommand("gmc").setExecutor(new admincmd(this));
+		this.getCommand("gms").setExecutor(new admincmd(this));
+		this.getCommand("gmsp").setExecutor(new admincmd(this));
 		this.getCommand("head").setExecutor(new head());
 		this.getCommand("invconvert").setExecutor(new invconvert(this));
 		this.getCommand("nuggetmc").setExecutor(new nmc(this));
 		this.getCommand("rank").setExecutor(new rank(this));
+		this.getCommand("spawn").setExecutor(new defaultcmd(this));
+		this.getCommand("tpall").setExecutor(new admincmd(this));
 		return;
 	}
 	
@@ -143,6 +155,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 	}
 	
 	private void playerEventsEnable() {
+		this.levelup = new Levelup();
 		this.playerChat = new PlayerChat(this);
 		this.playerJoin = new PlayerJoin();
 		this.playerKill = new PlayerKill(this);

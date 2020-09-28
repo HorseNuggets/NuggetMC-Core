@@ -165,4 +165,46 @@ public class ColorCodes {
 		
 		return title;
 	}
+	
+	public static String levelToName(int level) {
+		String title = ChatColor.WHITE + "Novice";
+		
+		switch (level) {
+		case 2:
+			title = ChatColor.GREEN + "Initiate";
+			break;
+		case 3:
+			title = ChatColor.AQUA + "Knight";
+			break;
+		case 4:
+			title = ChatColor.DARK_AQUA + "Rogue";
+			break;
+		case 5:
+			title = ChatColor.DARK_PURPLE + "Barbarian";
+			break;
+		case 6:
+			title = ChatColor.RED + "Warrior";
+			break;
+		case 7:
+			title = ChatColor.YELLOW + "Paladin";
+			break;
+		case 8:
+			title = ChatColor.DARK_BLUE + "Gladiator";
+			break;
+		case 9:
+			title = ChatColor.DARK_RED + "Battleborn";
+			break;
+		case 10:
+			title = ChatColor.BLACK + "Annihilator";
+			break;
+		case 11:
+			title = ChatColor.GOLD + "Emperor";
+			break;
+		case 12:
+			title = ChatColor.LIGHT_PURPLE + "cereal killer";
+			break;
+		}
+		
+		return title;
+	}
 }

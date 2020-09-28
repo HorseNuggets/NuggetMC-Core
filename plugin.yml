@@ -2,14 +2,37 @@ name: NuggetMC-Core
 main: net.nuggetmc.core.Main
 version: 2.0
 commands:
+  spawn:
+    description: Teleports to spawn.
+    usage: /spawn
+  ban:
+    description: Bans a player.
+    usage: /ban <player> <time> <reason> (--ip)
+    permission: nmc.mod.ban
   debug:
     description: A command used to inject code when debugging.
-    permission: nmc.rank
     usage: /debug
+    permission: nmc.rank
   ghead:
     description: Gives a player a Golden Head.
     usage: /ghead <player>
     permission: nmc.ghead
+  gma:
+    description: Adventure mode.
+    usage: /gma
+    permission: nmc.gma
+  gmc:
+    description: Creative mode.
+    usage: /gmc
+    permission: nmc.gmc
+  gms:
+    description: Survival mode.
+    usage: /gms
+    permission: nmc.gms
+  gmsp:
+    description: Spectator mode.
+    usage: /gmsp
+    permission: nmc.gmsp
   head:
     description: Gives a player a player's head.
     usage: /head <player> <player>
@@ -21,28 +44,53 @@ commands:
     aliases: [ic]
   nuggetmc:
     description: The plugin-hook configuration settings.
-    premission: nmc.nuggetmc
     usage: /nuggetmc
+    premission: nmc.nuggetmc
     aliases: [nmc]
   rank:
     description: Manually assigns ranks to players.
-    permission: nmc.rank
     usage: /rank <player> <rank>
+    permission: nmc.rank
+  tpall:
+    description: Teleports all players to you.
+    usage: /tpall
+    permission: nmc.tpall
 permissions:
   nmc.*:
     description: Blank description.
     children:
+      nmc.mod.ban: true
       nmc.debug: true
       nmc.ghead: true
+      nmc.gma: true
+      nmc.gmc: true
+      nmc.gms: true
+      nmc.gmsp: true
       nmc.head: true
       nmc.ic: true
       nmc.nuggetmc: true
       nmc.rank: true
+      nmc.tpall: true
+  nmc.mod.ban:
+    description: Bans a player.
+    default: op
   nmc.debug:
     description: A command used to inject code when debugging.
     default: op
   nmc.ghead:
     description: Gives a player a Golden Head.
+    default: op
+  nmc.gma:
+    description: Adventure mode.
+    default: op
+  nmc.gmc:
+    description: Creative mode.
+    default: op
+  nmc.gms:
+    description: Survival mode.
+    default: op
+  nmc.gmsp:
+    description: Spectator mode.
     default: op
   nmc.head:
     description: Gives a player a player's head.
@@ -55,4 +103,7 @@ permissions:
     default: op
   nmc.rank:
     description: Manually assigns ranks to players.
+    default: op
+  nmc.tpall:
+    description: Teleports all players to you.
     default: op

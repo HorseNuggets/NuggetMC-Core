@@ -243,7 +243,14 @@ public class nmc implements CommandExecutor {
 		sender.sendMessage(ChatColor.YELLOW + "[WORLDS]");
 		
 		for (int i = 0; i < worlds.size(); i++) {
-			sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.WHITE + worlds.get(i).getName());
+			String worldname = worlds.get(i).getName();
+			if (sender instanceof Player) {
+				Player player = (Player) sender;
+				if (player.getWorld().getName().equals(worldname)) {
+					worldname = ChatColor.GREEN + worldname + " (current)";
+				}
+			}
+			sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.WHITE + worldname);
 		}
 		
 		sender.sendMessage(linspace);
