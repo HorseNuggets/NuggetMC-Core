@@ -54,6 +54,7 @@ public class ColorCodes {
 		String rank = ChatColor.WHITE + name;
 		
 		User user = api.getUserManager().getUser(uuid);
+		if (user == null) return rank;
 		
 		switch (user.getPrimaryGroup()) {
 		case "xd":

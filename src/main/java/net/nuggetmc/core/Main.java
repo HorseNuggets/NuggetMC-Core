@@ -30,6 +30,7 @@ import net.nuggetmc.core.modifiers.nofall.listeners.FallListener;
 import net.nuggetmc.core.modifiers.nofall.listeners.MoveListener;
 import net.nuggetmc.core.player.Levelup;
 import net.nuggetmc.core.player.PlayerChat;
+import net.nuggetmc.core.player.PlayerHomes;
 import net.nuggetmc.core.player.PlayerJoin;
 import net.nuggetmc.core.player.PlayerKill;
 import net.nuggetmc.core.player.PlayerSpawnLocation;
@@ -69,6 +70,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 	public NoFall noFall;
 	public PacketHandler packetHandler;
 	public PlayerChat playerChat;
+	public PlayerHomes playerHomes;
 	public PlayerJoin playerJoin;
 	public PlayerKill playerKill;
 	public PlayerSpawnLocation playerSpawnLocation;
@@ -105,6 +107,8 @@ public class Main extends JavaPlugin implements TabCompleter {
 	
 	private void commandsEnable() {
 		this.getCommand("ban").setExecutor(new ban(this));
+		this.getCommand("banlist").setExecutor(new ban(this));
+		this.getCommand("ban-ip").setExecutor(new ban(this));
 		this.getCommand("debug").setExecutor(new debug(this));
 		this.getCommand("ghead").setExecutor(new ghead());
 		this.getCommand("gma").setExecutor(new admincmd(this));
@@ -113,6 +117,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.getCommand("gmsp").setExecutor(new admincmd(this));
 		this.getCommand("head").setExecutor(new head());
 		this.getCommand("invconvert").setExecutor(new invconvert(this));
+		this.getCommand("ipbanlist").setExecutor(new ban(this));
 		this.getCommand("nuggetmc").setExecutor(new nmc(this));
 		this.getCommand("rank").setExecutor(new rank(this));
 		this.getCommand("spawn").setExecutor(new defaultcmd(this));
@@ -157,6 +162,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 	private void playerEventsEnable() {
 		this.levelup = new Levelup();
 		this.playerChat = new PlayerChat(this);
+		this.playerHomes = new PlayerHomes(this);
 		this.playerJoin = new PlayerJoin();
 		this.playerKill = new PlayerKill(this);
 		this.playerSpawnLocation = new PlayerSpawnLocation(this);

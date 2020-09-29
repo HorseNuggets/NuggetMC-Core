@@ -7,6 +7,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerChatTabCompleteEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -15,6 +16,8 @@ import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+
+import net.nuggetmc.core.commands.admin.ban;
 
 public class Listeners implements Listener {
 	
@@ -27,6 +30,12 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void asyncPlayerChatEvent(AsyncPlayerChatEvent event) {
 		plugin.playerChat.onChat(event);
+		return;
+	}
+	
+	@EventHandler
+	public void asyncPlayerPreLoginEvent(AsyncPlayerPreLoginEvent event) {
+		ban.onConnect(event);
 		return;
 	}
 	

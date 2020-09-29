@@ -1,10 +1,11 @@
 package net.nuggetmc.core.util;
 
 public class TimeConverter {
+	
 	public static int stringToInt(String input) {
 		String[] args = input.split(" ");
 		
-		int finalTimeSec = 0;
+		int result = 0;
 		for (int i = 0; i < args.length; i++) {
 			
 			int factor = 0;
@@ -24,67 +25,23 @@ public class TimeConverter {
 			}
 			
 			try {
-				finalTimeSec = finalTimeSec + (Integer.parseInt(args[i].substring(0, args[i].length() - 1)) * factor);
+				result = result + (Integer.parseInt(args[i].substring(0, args[i].length() - 1)) * factor);
 			} catch (NumberFormatException e) {
 				continue;
 			}
 		}
-		return finalTimeSec;
+		return result;
 	}
 	
-	/*
-	 * 
-	 * [ARCHIVE]
-	 * 
-	 * 
-	 * public int stringToInt(String input) {
+	public static String intToString(int input) {
+		int minutes = input / 60;
+		int secondsRemaining = input % 60;
 		
-		String[] args = input.split(" ");
-		
-		for (int i = 0; i < args.length; i++) {
-			Bukkit.broadcastMessage(ChatColor.GREEN + args[i]);
-		}
-		
-		String TimeR = " 1d";
-		int TimeSeconds = 86400;
-			
-		int FINALTIMESEC = 0;
-		for (int i = 0; i < args.length; i++) {
-			if (args[i].endsWith("s")) {
-				String TS = args[i].substring(0, args[i].length() - 1);
-				int parsesec = Integer.parseInt(TS);
-				FINALTIMESEC = FINALTIMESEC + parsesec;
-			}
-			if (args[i].endsWith("m")) {
-				String TS = args[i].substring(0, args[i].length() - 1);
-				int parsesec = Integer.parseInt(TS) * 60;
-				FINALTIMESEC = FINALTIMESEC + parsesec;
-			}
-			if (args[i].endsWith("h")) {
-				String TS = args[i].substring(0, args[i].length() - 1);
-				int parsesec = Integer.parseInt(TS) * 3600;
-				FINALTIMESEC = FINALTIMESEC + parsesec;
-			}
-			if (args[i].endsWith("d")) {
-				String TS = args[i].substring(0, args[i].length() - 1);
-				int parsesec = Integer.parseInt(TS) * 3600 * 24;
-				FINALTIMESEC = FINALTIMESEC + parsesec;
-			}
-		}
-		
-		TimeSeconds = FINALTIMESEC;
-		
-		int TimeRemaining = TimeSeconds;
-		
-		int seconds = TimeRemaining;
-		int minutes = seconds / 60;
-		int secr = seconds % 60;
 		int hours = minutes / 60;
-		int minr = minutes % 60;
-		int days = hours / 24;
-		int hoursr = hours % 24;
+		int minutesRemaining = minutes % 60;
 		
-		String FINAL = days + "d " + hoursr + "h " + minr + "m " + secr + "s";
+		int days = hours / 24;
+		int hoursRemaining = hours % 24;
 		
 		String sdays = "";
 		String shours = "";
@@ -95,19 +52,63 @@ public class TimeConverter {
 			sdays = " " + days + "d";
 		}
 		
-		if (hoursr != 0) {
-			shours = " " + hoursr + "h";
+		if (hoursRemaining != 0) {
+			shours = " " + hoursRemaining + "h";
 		}
 		
-		if (minr != 0) {
-			smin = " " + minr + "m";
+		if (minutesRemaining != 0) {
+			smin = " " + minutesRemaining + "m";
 		}
 		
-		if (secr != 0) {
-			ssec = " " + secr + "s";
+		if (secondsRemaining != 0) {
+			ssec = " " + secondsRemaining + "s";
 		}
 		
-		TimeR = sdays + shours + smin + ssec;
-		return TimeSeconds;
-	}*/
+		String result = sdays + shours + smin + ssec;
+		return result;
+	}
+	
+	public static String intToStringElongated(int input) {
+		int minutes = input / 60;
+		int secondsRemaining = input % 60;
+		
+		int hours = minutes / 60;
+		int minutesRemaining = minutes % 60;
+		
+		int days = hours / 24;
+		int hoursRemaining = hours % 24;
+		
+		String sdays = "";
+		String shours = "";
+		String smin = "";
+		String ssec = "";
+		
+		if (days != 0) {
+			sdays = " " + days + " days,";
+		}
+		
+		if (hoursRemaining != 0) {
+			shours = " " + hoursRemaining + " hours,";
+		}
+		
+		if (minutesRemaining != 0) {
+			smin = " " + minutesRemaining + " minutes,";
+		}
+		
+		if (secondsRemaining != 0) {
+			ssec = " " + secondsRemaining + " seconds";
+		}
+		
+		if (days == 1) sdays = " " + days + " day,";
+		if (hoursRemaining == 1) shours = " " + hoursRemaining + " hour,";
+		if (minutesRemaining == 1) smin = " " + minutesRemaining + " minute,";
+		if (secondsRemaining == 1) ssec = " " + secondsRemaining + " second";
+		
+		String result = sdays + shours + smin + ssec;
+		
+		if (result.endsWith(",")) {
+			result = result.substring(0, result.length() - 1);
+		}
+		return result;
+	}
 }

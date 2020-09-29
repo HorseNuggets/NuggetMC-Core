@@ -2,108 +2,89 @@ name: NuggetMC-Core
 main: net.nuggetmc.core.Main
 version: 2.0
 commands:
+  home:
+    description: Warps to a personally-set waypoint.
+    usage: /home
+    aliases: [h]
+  homes:
+    description: Lists a player's set homes + extra home options.
+    usage: /homes <playername/remove> <homename>
+  sethome:
+    description: Sets a home.
+    usage: /sethome <name>
   spawn:
     description: Teleports to spawn.
     usage: /spawn
   ban:
     description: Bans a player.
-    usage: /ban <player> <time> <reason> (--ip)
-    permission: nmc.mod.ban
+    usage: /ban <player> <time> <reason>
+    permission: nmc.staff
+  banlist:
+    description: List all banned players.
+    usage: /banlist
+    permission: nmc.staff
+  ban-ip:
+    description: Bans an IP address.
+    usage: /ban-ip
+    permission: nmc.staff
+  ipbanlist:
+    description: List all banned IP addresses.
+    usage: /ipbanlist
+    permission: nmc.staff
   debug:
     description: A command used to inject code when debugging.
     usage: /debug
-    permission: nmc.rank
+    permission: nmc
   ghead:
     description: Gives a player a Golden Head.
     usage: /ghead <player>
-    permission: nmc.ghead
+    permission: nmc
   gma:
     description: Adventure mode.
     usage: /gma
-    permission: nmc.gma
+    permission: nmc
   gmc:
     description: Creative mode.
     usage: /gmc
-    permission: nmc.gmc
+    permission: nmc
   gms:
     description: Survival mode.
     usage: /gms
-    permission: nmc.gms
+    permission: nmc
   gmsp:
     description: Spectator mode.
     usage: /gmsp
-    permission: nmc.gmsp
+    permission: nmc
   head:
     description: Gives a player a player's head.
     usage: /head <player> <player>
-    permission: nmc.head
+    permission: nmc
   invconvert:
     description: A developer tool to serialize player inventories.
     usage: /invconvert <get/set> <file> (path)
-    permission: nmc.ic
+    permission: nmc
     aliases: [ic]
   nuggetmc:
     description: The plugin-hook configuration settings.
     usage: /nuggetmc
-    premission: nmc.nuggetmc
+    premission: nmc
     aliases: [nmc]
   rank:
     description: Manually assigns ranks to players.
     usage: /rank <player> <rank>
-    permission: nmc.rank
+    permission: nmc
   tpall:
     description: Teleports all players to you.
     usage: /tpall
-    permission: nmc.tpall
+    permission: nmc
 permissions:
   nmc.*:
     description: Blank description.
     children:
-      nmc.mod.ban: true
-      nmc.debug: true
-      nmc.ghead: true
-      nmc.gma: true
-      nmc.gmc: true
-      nmc.gms: true
-      nmc.gmsp: true
-      nmc.head: true
-      nmc.ic: true
-      nmc.nuggetmc: true
-      nmc.rank: true
-      nmc.tpall: true
-  nmc.mod.ban:
-    description: Bans a player.
+      nmc.staff: true
+  nmc:
+    description: Permission for all NuggetMC Administrator commands.
     default: op
-  nmc.debug:
-    description: A command used to inject code when debugging.
-    default: op
-  nmc.ghead:
-    description: Gives a player a Golden Head.
-    default: op
-  nmc.gma:
-    description: Adventure mode.
-    default: op
-  nmc.gmc:
-    description: Creative mode.
-    default: op
-  nmc.gms:
-    description: Survival mode.
-    default: op
-  nmc.gmsp:
-    description: Spectator mode.
-    default: op
-  nmc.head:
-    description: Gives a player a player's head.
-    default: op
-  nmc.ic:
-    description: A developer tool to serialize player inventories.
-    default: op
-  nmc.nuggetmc:
-    description: The plugin-hook configuration settings.
-    default: op
-  nmc.rank:
-    description: Manually assigns ranks to players.
-    default: op
-  nmc.tpall:
-    description: Teleports all players to you.
+  nmc.staff:
+    description: Permission for all NuggetMC Staff commands.
     default: op

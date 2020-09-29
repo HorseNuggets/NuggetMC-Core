@@ -34,6 +34,8 @@ public class PlayerKill {
 		Player victim = event.getEntity();
 		
 		if (victim.getKiller() instanceof Player) {
+			victim.getWorld().strikeLightningEffect(victim.getLocation());
+			
 			Player player = victim.getKiller();
 			String playername = player.getName();
 			UUID playerUUID = player.getUniqueId();
