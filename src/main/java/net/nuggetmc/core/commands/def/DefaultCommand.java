@@ -8,17 +8,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
 
-public class defaultcmd implements CommandExecutor {
+public class DefaultCommand implements CommandExecutor {
 	
-	private Main plugin;
 	private String spawnworld;
 	private Location spawnloc;
 
-	public defaultcmd(Main plugin) {
-		this.plugin = plugin;
+	public DefaultCommand() {
 		this.spawnworld = Configs.worldsettings.getConfig().getString("spawn.world");
 		double x = Configs.worldsettings.getConfig().getDouble("spawn.coordinates.x");
 		double y = Configs.worldsettings.getConfig().getDouble("spawn.coordinates.y");

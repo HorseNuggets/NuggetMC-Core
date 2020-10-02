@@ -1,6 +1,5 @@
 package net.nuggetmc.core.commands.admin;
 
-import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,22 +13,19 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
-import org.bukkit.event.player.PlayerPreLoginEvent;
 
 import net.nuggetmc.core.Main;
-import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.util.Checks;
 import net.nuggetmc.core.util.TimeConverter;
 
-public class ban implements CommandExecutor {
+public class BanCommand implements CommandExecutor {
 	
 	private Main plugin;
 	
-	public ban(Main plugin) {
+	public BanCommand(Main plugin) {
 		this.plugin = plugin;
 	}
 	
@@ -321,7 +317,6 @@ public class ban implements CommandExecutor {
 			return;
 		}
 		
-		InetAddress ip = event.getAddress();
 		BanList list = Bukkit.getBanList(BanList.Type.IP);
 		BanEntry entry = list.getBanEntry(player.getName());
 		

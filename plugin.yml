@@ -9,6 +9,9 @@ commands:
   homes:
     description: Lists a player's set homes + extra home options.
     usage: /homes <playername/remove> <homename>
+  kit:
+    description: Command for all kit-related actions.
+    usage: /kit
   sethome:
     description: Sets a home.
     usage: /sethome <name>

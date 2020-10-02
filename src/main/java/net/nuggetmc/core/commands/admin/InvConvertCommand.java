@@ -17,11 +17,11 @@ import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.ConfigManager;
 import net.nuggetmc.core.util.ItemSerializers;
 
-public class invconvert implements CommandExecutor {
+public class InvConvertCommand implements CommandExecutor {
 	
 	private Main plugin;
 
-	public invconvert(Main plugin) {
+	public InvConvertCommand(Main plugin) {
 		this.plugin = plugin;
 	}
 	

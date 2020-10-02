@@ -24,13 +24,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.ConfigManager;
 
-public class nmc implements CommandExecutor {
+public class NMCMainCommand implements CommandExecutor {
 
 	private Main plugin;
 	private String linspace = (ChatColor.GRAY + "--------------------------------------");
 	private String header = ChatColor.GOLD + "NuggetMC-Core " + ChatColor.GRAY + "[" + ChatColor.YELLOW + "v2.0" + ChatColor.GRAY + "]";
 
-	public nmc(Main plugin) {
+	public NMCMainCommand(Main plugin) {
 		this.plugin = plugin;
 	}
 
@@ -219,10 +219,6 @@ public class nmc implements CommandExecutor {
 					Location main = new Location(Bukkit.getWorld(args[1]), 0.5, 223, 0.5);
 					player.teleport(main);
 					return;
-				case "world_the_end":
-					Location end = new Location(Bukkit.getWorld(args[1]), 0.5, 64, 0.5);
-					player.teleport(end);
-					return;
 				case "world":
 					Location world = new Location(Bukkit.getWorld(args[1]), 0.5, 65, 0.5);
 					player.teleport(world);
@@ -232,7 +228,12 @@ public class nmc implements CommandExecutor {
 					player.teleport(alpha);
 					return;
 				}
+				World world = Bukkit.getWorld(args[1]);
+				if (world != null) {
+					player.teleport(world.getSpawnLocation());
+				}
 			}
+			return;
 		}
 		
 		List<World> worlds = Bukkit.getWorlds();

@@ -10,11 +10,11 @@ import net.nuggetmc.core.data.ConfigManager;
 import net.nuggetmc.core.util.TimeConverter;
 
 @SuppressWarnings("all")
-public class debug implements CommandExecutor {
+public class DebugCommand implements CommandExecutor {
 
 	private Main plugin;
 
-	public debug(Main plugin) {
+	public DebugCommand(Main plugin) {
 		this.plugin = plugin;
 	}
 

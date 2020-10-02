@@ -12,6 +12,7 @@ public class Configs {
 	public static ConfigManager gheads;
 	public static ConfigManager homes;
 	public static ConfigManager inventories;
+	public static ConfigManager kitsconfig;
 	public static ConfigManager nofall;
 	public static ConfigManager playerstats;
 	public static ConfigManager worldsettings;
@@ -24,6 +25,7 @@ public class Configs {
 		gheadsSetup();
 		homesSetup();
 		inventoriesSetup();
+		kitsconfigSetup();
 		noFallSetup();
 		playerstatsSetup();
 		worldsettingsSetup();
@@ -45,6 +47,8 @@ public class Configs {
 			return homes;
 		case "playerdata\\inventories.yml":
 			return inventories;
+		case "playerdata\\kits.yml":
+			return kitsconfig;
 		case "playerdata\\stats.yml":
 			return playerstats;
 		case "worldsettings.yml":
@@ -98,6 +102,12 @@ public class Configs {
 	private void inventoriesSetup() {
 		inventories = new ConfigManager(plugin);
 		inventories.setup("playerdata\\inventories.yml");
+		return;
+	}
+	
+	private void kitsconfigSetup() {
+		kitsconfig = new ConfigManager(plugin);
+		kitsconfig.setup("playerdata\\kits.yml");
 		return;
 	}
 	

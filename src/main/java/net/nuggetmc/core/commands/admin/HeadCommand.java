@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import net.nuggetmc.core.modifiers.gheads.util.TextureProfileField;
 
-public class head implements CommandExecutor {
+public class HeadCommand implements CommandExecutor {
 	
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

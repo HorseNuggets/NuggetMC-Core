@@ -8,11 +8,11 @@ import org.bukkit.command.CommandSender;
 
 import net.nuggetmc.core.Main;
 
-public class rank implements CommandExecutor {
+public class RankCommand implements CommandExecutor {
 	
 	private Main plugin;
 
-	public rank(Main plugin) {
+	public RankCommand(Main plugin) {
 		this.plugin = plugin;
 	}
 	

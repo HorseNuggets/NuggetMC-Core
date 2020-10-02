@@ -10,16 +10,17 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.nuggetmc.core.commands.admin.admincmd;
-import net.nuggetmc.core.commands.admin.ban;
-import net.nuggetmc.core.commands.admin.debug;
-import net.nuggetmc.core.commands.admin.ghead;
-import net.nuggetmc.core.commands.admin.head;
-import net.nuggetmc.core.commands.admin.invconvert;
-import net.nuggetmc.core.commands.admin.nmc;
-import net.nuggetmc.core.commands.admin.rank;
-import net.nuggetmc.core.commands.def.defaultcmd;
+import net.nuggetmc.core.commands.admin.AdminCommand;
+import net.nuggetmc.core.commands.admin.BanCommand;
+import net.nuggetmc.core.commands.admin.DebugCommand;
+import net.nuggetmc.core.commands.admin.GHeadCommand;
+import net.nuggetmc.core.commands.admin.HeadCommand;
+import net.nuggetmc.core.commands.admin.InvConvertCommand;
+import net.nuggetmc.core.commands.admin.NMCMainCommand;
+import net.nuggetmc.core.commands.admin.RankCommand;
+import net.nuggetmc.core.commands.def.DefaultCommand;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.economy.Kits;
 import net.nuggetmc.core.misc.TabComplete;
 import net.nuggetmc.core.modifiers.HealthBoost;
 import net.nuggetmc.core.modifiers.PlayerTracker;
@@ -65,6 +66,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 	public FallListener fallListener;
 	public GHeads gheads;
 	public ItemSerializers itemSerializers;
+	public Kits kits;
 	public Levelup levelup;
 	public MoveListener moveListener;
 	public NoFall noFall;
@@ -84,7 +86,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.loadConfigs();
 		this.worldsEnable();
 		this.announcementsEnable();
-		this.commandsEnable();
+		this.economyEnable();
 		this.listenersEnable();
 		this.loggerEnable();
 		this.modifiersEnable();
@@ -95,6 +97,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.toolsEnable();
 		this.utilsEnable();
 		this.refreshSidebars();
+		this.commandsEnable();
 		return;
 	}
 	
@@ -106,22 +109,29 @@ public class Main extends JavaPlugin implements TabCompleter {
 	}
 	
 	private void commandsEnable() {
-		this.getCommand("ban").setExecutor(new ban(this));
-		this.getCommand("banlist").setExecutor(new ban(this));
-		this.getCommand("ban-ip").setExecutor(new ban(this));
-		this.getCommand("debug").setExecutor(new debug(this));
-		this.getCommand("ghead").setExecutor(new ghead());
-		this.getCommand("gma").setExecutor(new admincmd(this));
-		this.getCommand("gmc").setExecutor(new admincmd(this));
-		this.getCommand("gms").setExecutor(new admincmd(this));
-		this.getCommand("gmsp").setExecutor(new admincmd(this));
-		this.getCommand("head").setExecutor(new head());
-		this.getCommand("invconvert").setExecutor(new invconvert(this));
-		this.getCommand("ipbanlist").setExecutor(new ban(this));
-		this.getCommand("nuggetmc").setExecutor(new nmc(this));
-		this.getCommand("rank").setExecutor(new rank(this));
-		this.getCommand("spawn").setExecutor(new defaultcmd(this));
-		this.getCommand("tpall").setExecutor(new admincmd(this));
+		this.getCommand("ban").setExecutor(new BanCommand(this));
+		this.getCommand("banlist").setExecutor(new BanCommand(this));
+		this.getCommand("ban-ip").setExecutor(new BanCommand(this));
+		this.getCommand("debug").setExecutor(new DebugCommand(this));
+		this.getCommand("ghead").setExecutor(new GHeadCommand());
+		this.getCommand("gma").setExecutor(new AdminCommand());
+		this.getCommand("gmc").setExecutor(new AdminCommand());
+		this.getCommand("gms").setExecutor(new AdminCommand());
+		this.getCommand("gmsp").setExecutor(new AdminCommand());
+		this.getCommand("head").setExecutor(new HeadCommand());
+		this.getCommand("invconvert").setExecutor(new InvConvertCommand(this));
+		this.getCommand("ipbanlist").setExecutor(new BanCommand(this));
+		this.getCommand("nuggetmc").setExecutor(new NMCMainCommand(this));
+		this.getCommand("rank").setExecutor(new RankCommand(this));
+		this.getCommand("spawn").setExecutor(new DefaultCommand());
+		this.getCommand("tpall").setExecutor(new AdminCommand());
+		this.getCommand("kit").setExecutor(kits);
+		return;
+	}
+	
+	private void economyEnable() {
+		this.kits = new Kits(this);
+		this.getServer().getPluginManager().registerEvents(kits, this);   //change this later to be called in listeners
 		return;
 	}
 	

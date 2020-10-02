@@ -1,29 +1,12 @@
 package net.nuggetmc.core.commands.admin;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.nuggetmc.core.Main;
-import net.nuggetmc.core.data.Configs;
-
-public class admincmd implements CommandExecutor {
-	
-	private Main plugin;
-	private String spawnworld;
-	private Location spawnloc;
-
-	public admincmd(Main plugin) {
-		this.plugin = plugin;
-		this.spawnworld = Configs.worldsettings.getConfig().getString("spawn.world");
-		double x = Configs.worldsettings.getConfig().getDouble("spawn.coordinates.x");
-		double y = Configs.worldsettings.getConfig().getDouble("spawn.coordinates.y");
-		double z = Configs.worldsettings.getConfig().getDouble("spawn.coordinates.z");
-		this.spawnloc = new Location(Bukkit.getWorld(spawnworld), x, y, z);
-	}
+public class AdminCommand implements CommandExecutor {
 	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		switch (label) {

@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import net.nuggetmc.core.modifiers.gheads.util.TextureProfileField;
 
-public class ghead implements CommandExecutor {
+public class GHeadCommand implements CommandExecutor {
 	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		TextureProfileField TextureProfileField = new TextureProfileField();

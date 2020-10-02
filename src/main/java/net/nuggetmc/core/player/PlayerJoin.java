@@ -27,9 +27,24 @@ public class PlayerJoin {
 	private FileConfiguration defaults;
 	
 	public PlayerJoin() {
+		this.configSetup();
+		this.defaultInvSetup();
+	}
+	
+	private void configSetup() {
 		this.config = Configs.playerstats.getConfig();
 		this.defaults = Configs.defaults.getConfig();
 		this.joinmsg = Configs.mainconfig.getConfig().getStringList("join-msg");
+		return;
+	}
+
+	private ItemStack[] items;
+	private ItemStack[] armor;
+	
+	private void defaultInvSetup() {
+		this.items = ItemSerializers.stringToItems(defaults.getString("on-first-join.inventory.items"));
+		this.armor = ItemSerializers.stringToItems(defaults.getString("on-first-join.inventory.armor"));
+		return;
 	}
 	
 	public void onJoin(PlayerJoinEvent event) {
@@ -59,9 +74,6 @@ public class PlayerJoin {
 			
 			Bukkit.broadcastMessage("Welcome " + playername + " to NuggetMC! " + ChatColor.GRAY + "(" + ChatColor.YELLOW + "#"
 					+ NumberFormat.getNumberInstance(Locale.US).format(count) + ChatColor.GRAY + ")");
-			
-			ItemStack items[] = ItemSerializers.stringToItems(defaults.getString("on-first-join.inventory.items"));
-			ItemStack armor[] = ItemSerializers.stringToItems(defaults.getString("on-first-join.inventory.armor"));
 			
 			player.getInventory().setContents(items);
 			player.getInventory().setArmorContents(armor);

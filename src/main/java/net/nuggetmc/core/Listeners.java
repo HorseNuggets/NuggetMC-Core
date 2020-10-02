@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import net.nuggetmc.core.commands.admin.ban;
+import net.nuggetmc.core.commands.admin.BanCommand;
 
 public class Listeners implements Listener {
 	
@@ -35,7 +35,7 @@ public class Listeners implements Listener {
 	
 	@EventHandler
 	public void asyncPlayerPreLoginEvent(AsyncPlayerPreLoginEvent event) {
-		ban.onConnect(event);
+		BanCommand.onConnect(event);
 		return;
 	}
 	
