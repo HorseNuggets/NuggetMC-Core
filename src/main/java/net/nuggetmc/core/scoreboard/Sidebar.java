@@ -55,6 +55,9 @@ public class Sidebar {
 		
 		int playerlevel = Configs.playerstats.getConfig().getInt("players." + uuid + ".level");
 		
+		if (playerkills.equals("69")) playerkills += ChatColor.LIGHT_PURPLE + " (NICE)";
+		if (playernuggets.equals("69")) playernuggets += ChatColor.LIGHT_PURPLE + " (NICE)";
+		
 		Score[] lines = new Score[15];
 		lines[12] = stats.getScore(ChatColor.WHITE + "" + ChatColor.GRAY + "" + ChatColor.BOLD + "----------------");
 		lines[11] = stats.getScore(ChatColor.GOLD + playername);

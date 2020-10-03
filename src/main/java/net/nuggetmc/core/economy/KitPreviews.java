@@ -13,6 +13,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class KitPreviews {
+	
+	/*
+	 * [TODO]
+	 * Eventually make private inventory variables with the inventories for all of the classes loaded,
+	 * so that a new one does not have to be created every time its method is called.
+	 * 
+	 */
+	
 	public static void swordsmank(Player p) {
 		Inventory inv = Bukkit.createInventory(null, 54, "Kit Preview - Swordsman");
 
@@ -1837,7 +1845,7 @@ public class KitPreviews {
 		ItemMeta bootsn = boots.getItemMeta();
 		bootsn.setDisplayName(ChatColor.GREEN + "Valkyrie Boots");
 		ArrayList<String> bootsl = new ArrayList<String>();
-		// bootsl.add(ChatColor.GRAY + "Protection I");
+		
 		bootsl.add(ChatColor.GRAY + "Speed I");
 		bootsl.add("");
 		bootsl.add(ChatColor.DARK_GRAY + "Hitting players will grant");

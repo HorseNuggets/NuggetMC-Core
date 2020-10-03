@@ -76,6 +76,16 @@ commands:
     description: Manually assigns ranks to players.
     usage: /rank <player> <rank>
     permission: nmc
+  setkills:
+    description: Change a player's recorded kills.
+    usage: /setkills <player> <kills>
+    permission: nmc
+    aliases: [setk]
+  setnuggets:
+    description: Change a player's recorded nuggets.
+    usage: /setnuggets <player> <nuggets>
+    permission: nmc
+    aliases: [setn]
   tpall:
     description: Teleports all players to you.
     usage: /tpall

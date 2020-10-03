@@ -118,17 +118,19 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.getCommand("ban-ip").setExecutor(new BanCommand(this));
 		this.getCommand("debug").setExecutor(new DebugCommand(this));
 		this.getCommand("ghead").setExecutor(new GHeadCommand());
-		this.getCommand("gma").setExecutor(new AdminCommand());
-		this.getCommand("gmc").setExecutor(new AdminCommand());
-		this.getCommand("gms").setExecutor(new AdminCommand());
-		this.getCommand("gmsp").setExecutor(new AdminCommand());
+		this.getCommand("gma").setExecutor(new AdminCommand(this));
+		this.getCommand("gmc").setExecutor(new AdminCommand(this));
+		this.getCommand("gms").setExecutor(new AdminCommand(this));
+		this.getCommand("gmsp").setExecutor(new AdminCommand(this));
 		this.getCommand("head").setExecutor(new HeadCommand());
 		this.getCommand("invconvert").setExecutor(new InvConvertCommand(this));
 		this.getCommand("ipbanlist").setExecutor(new BanCommand(this));
 		this.getCommand("nuggetmc").setExecutor(new NMCMainCommand(this));
 		this.getCommand("rank").setExecutor(new RankCommand(this));
+		this.getCommand("setkills").setExecutor(new AdminCommand(this));
+		this.getCommand("setnuggets").setExecutor(new AdminCommand(this));
 		this.getCommand("spawn").setExecutor(new DefaultCommand());
-		this.getCommand("tpall").setExecutor(new AdminCommand());
+		this.getCommand("tpall").setExecutor(new AdminCommand(this));
 		this.getCommand("kit").setExecutor(new KitCommand(this));
 		return;
 	}

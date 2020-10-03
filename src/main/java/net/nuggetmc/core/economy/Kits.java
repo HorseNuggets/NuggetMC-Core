@@ -74,11 +74,6 @@ public class Kits {
 			inventory.setItem(24, kitUnlock);
 		}
 		
-		/*
-		 * [TODO]
-		 * Manually unlock kits, with firework, but in GUI.
-		 */
-		
 		else {
 			ItemStack kitPurchase = new ItemStack(Material.EMERALD, 1);
 			ItemMeta kitPurchaseMeta = kitPurchase.getItemMeta();
