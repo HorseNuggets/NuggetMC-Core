@@ -19,8 +19,10 @@ import net.nuggetmc.core.commands.admin.InvConvertCommand;
 import net.nuggetmc.core.commands.admin.NMCMainCommand;
 import net.nuggetmc.core.commands.admin.RankCommand;
 import net.nuggetmc.core.commands.def.DefaultCommand;
+import net.nuggetmc.core.commands.def.KitCommand;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.economy.Kits;
+import net.nuggetmc.core.gui.GUIMain;
 import net.nuggetmc.core.misc.TabComplete;
 import net.nuggetmc.core.modifiers.HealthBoost;
 import net.nuggetmc.core.modifiers.PlayerTracker;
@@ -65,6 +67,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 	public Configs configs;
 	public FallListener fallListener;
 	public GHeads gheads;
+	public GUIMain guiMain;
 	public ItemSerializers itemSerializers;
 	public Kits kits;
 	public Levelup levelup;
@@ -87,6 +90,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.worldsEnable();
 		this.announcementsEnable();
 		this.economyEnable();
+		this.guiEnable();
 		this.listenersEnable();
 		this.loggerEnable();
 		this.modifiersEnable();
@@ -125,13 +129,17 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.getCommand("rank").setExecutor(new RankCommand(this));
 		this.getCommand("spawn").setExecutor(new DefaultCommand());
 		this.getCommand("tpall").setExecutor(new AdminCommand());
-		this.getCommand("kit").setExecutor(kits);
+		this.getCommand("kit").setExecutor(new KitCommand(this));
 		return;
 	}
 	
 	private void economyEnable() {
 		this.kits = new Kits(this);
-		this.getServer().getPluginManager().registerEvents(kits, this);   //change this later to be called in listeners
+		return;
+	}
+	
+	private void guiEnable() {
+		this.guiMain = new GUIMain(this);
 		return;
 	}
 	

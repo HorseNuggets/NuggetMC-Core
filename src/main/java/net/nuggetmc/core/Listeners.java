@@ -6,6 +6,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerChatTabCompleteEvent;
@@ -18,6 +21,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import net.nuggetmc.core.commands.admin.BanCommand;
+import net.nuggetmc.core.gui.GUIMain;
 
 public class Listeners implements Listener {
 	
@@ -58,6 +62,24 @@ public class Listeners implements Listener {
 	}
 	
 	@EventHandler
+	public void inventoryClickEvent(InventoryClickEvent event) {
+		plugin.guiMain.onClick(event);
+		return;
+	}
+	
+	@EventHandler
+	public void inventoryCloseEvent(InventoryCloseEvent event) {
+		plugin.guiMain.onClose(event);
+		return;
+	}
+	
+	@EventHandler
+	public void inventoryOpenEvent(InventoryOpenEvent event) {
+		plugin.guiMain.onOpen(event);
+		return;
+	}
+	
+	@EventHandler
 	public void playerChatTabCompleteEvent(PlayerChatTabCompleteEvent event) {
 		plugin.tabComplete.tab(event);
 		return;
@@ -67,11 +89,13 @@ public class Listeners implements Listener {
 	public void playerDeathEvent(PlayerDeathEvent event) {
 		plugin.autoRespawn.onPlayerDeath(event);
 		plugin.gheads.onDeath(event);
+		plugin.guiMain.hardRemove(event.getEntity());
 		plugin.playerKill.onKill(event);
 	}
 	
 	@EventHandler
 	public void playerInteractEvent(PlayerInteractEvent event) {
+		GUIMain.cancelAnvil(event);
 		plugin.gheads.headDetectInteract(event);
 		return;
 	}
@@ -115,6 +139,7 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void playerRespawnEvent(PlayerRespawnEvent event) {
 		plugin.healthboost.onRespawn(event);
+		plugin.kits.respawn(event);
 		plugin.moveListener.onRespawn(event);
 		plugin.playerSpawnLocation.setSpawn(event.getPlayer());
 		return;
@@ -123,6 +148,7 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void playerQuitEvent(PlayerQuitEvent event) {
 		event.setQuitMessage(null);
+		plugin.guiMain.hardRemove(event.getPlayer());
 		plugin.packetHandler.removePlayer(event.getPlayer());
 		if (plugin.playerTracker != null) {
 			plugin.playerTracker.onLeave(event);
