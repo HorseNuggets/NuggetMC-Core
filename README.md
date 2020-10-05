@@ -9,23 +9,23 @@ This plugin requires [Spigot 1.8.8](https://www.spigotmc.org/wiki/buildtools/#1-
 ## Core Features
 
 Some of the main features this plugin includes are:
-- Custom Nugget-Based Economy
-- Dropped Player-Heads + Craftable Golden Heads (Edible)
-- Dynamic Autorespawn
-- Dynamic Fall-Damage Cancellation
-- Essential Staff Commands
-- Inventory Serialization
-- Items with Custom Abilities
-- Multiworld Support
-- Optimized Combat Tracking
-- Optimized Player Homes
-- Optimized Player Vaults
-- Optimized TPA
-- Player Tracking Compasses
-- Player Warps
-- Separate Config Reloading Support
-- Temporary Mutes/Bans/IP-Bans
-- Vanish
+- [ ] Custom Nugget-Based Economy
+- [x] Dropped Player-Heads + Craftable Golden Heads (Edible)
+- [x] Dynamic Autorespawn
+- [x] Dynamic Fall-Damage Cancellation
+- [x] Essential Staff Commands
+- [x] Inventory Serialization
+- [ ] Items with Custom Abilities
+- [x] Multiworld Support
+- [ ] Optimized Combat Tracking
+- [ ] Optimized Player Homes
+- [ ] Optimized Player Vaults
+- [ ] Optimized TPA
+- [x] Player Tracking Compasses
+- [ ] Player Warps
+- [x] Separate Config Reloading Support
+- [x] Temporary Mutes/Bans/IP-Bans
+- [ ] Vanish
 
 ## Contributors
 
