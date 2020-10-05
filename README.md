@@ -11,8 +11,8 @@ This plugin requires [Spigot 1.8.8](https://www.spigotmc.org/wiki/buildtools/#1-
 Some of the main features this plugin includes is:
 - Dropped Player-Heads + Craftable Golden Heads (Edible)
 - Optimized TPA
-- Optimized Homes
-- Optimized Vaults
+- Optimized Player Homes
+- Optimized Player Vaults
 - Optimized Combat Tracking
 - Player Tracking Compasses
 - Items with Custom Abilities
@@ -23,3 +23,13 @@ Some of the main features this plugin includes is:
 - Multiworld Support
 - Vanish
 - Inventory Serialization
+- Essential Staff Commands
+- Player Warps
+
+## Contributors
+
+- [Project Owner] [@HorseNuggets](https://github.com/HorseNuggets) (Since February 22, 2017)
+
+## License
+
+This project is licensed under [MIT](https://github.com/HorseNuggets/NuggetMC-Core/blob/master/LICENSE).
