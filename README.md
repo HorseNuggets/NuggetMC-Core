@@ -1,6 +1,6 @@
 # NuggetMC-Core [v2.0]
 
-The *NuggetMC-Core* Spigot plugin is a multipurpose, highly-configurable plugin that contains virtually every aspect of a Minecraft KitPvP game mode, with support and intent for player terrain modification.
+The *NuggetMC-Core* Spigot plugin is a multipurpose, highly-configurable plugin that contains virtually every aspect of a Minecraft KitPvP game mode, with support and intent for BuildUHC-Style Combat.
 
 ## Requirements
 
