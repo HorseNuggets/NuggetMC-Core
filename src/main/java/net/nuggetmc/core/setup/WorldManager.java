@@ -46,18 +46,22 @@ public class WorldManager {
 			event.useTravelAgent(true);
 			event.getPortalTravelAgent().setCanCreatePortal(true);
 			Location location = null;
-			if (world == Bukkit.getWorld(spawnworld)) {
+			
+			if (world == Bukkit.getWorld("world_nether")) {
+				int y = event.getFrom().getBlockY();
+				if (y > 140) y = 140;
+				location = new Location(Bukkit.getWorld(spawnworld), event.getFrom().getBlockX() * 8,
+						y, event.getFrom().getBlockZ() * 8);
+			}
+			else {
 				location = new Location(Bukkit.getWorld("world_nether"), event.getFrom().getBlockX() / 8,
 						event.getFrom().getBlockY(), event.getFrom().getBlockZ() / 8);
-			} else {
-				location = new Location(Bukkit.getWorld(spawnworld), event.getFrom().getBlockX() * 8,
-						event.getFrom().getBlockY(), event.getFrom().getBlockZ() * 8);
 			}
 			event.setTo(event.getPortalTravelAgent().findOrCreate(location));
 		}
 
 		else if (event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL) {
-			if (player.getWorld() == Bukkit.getWorld(spawnworld)) {
+			if (world == Bukkit.getWorld(spawnworld)) {
 				Location loc = new Location(Bukkit.getWorld("world_the_end"), 100, 50, 0);
 				event.setTo(loc);
 				Block block = loc.getBlock();
@@ -75,7 +79,7 @@ public class WorldManager {
 						}
 					}
 				}
-			} else if (player.getWorld() == Bukkit.getWorld("world_the_end")) {
+			} else if (world == Bukkit.getWorld("world_the_end")) {
 				event.setTo(spawnloc);
 			}
 		}

@@ -766,7 +766,7 @@ public class KitCommand implements CommandExecutor {
 					sword.addEnchantment(Enchantment.DAMAGE_ALL, 5);
 					sword.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
 					ItemMeta swordn = sword.getItemMeta();
-					swordn.setDisplayName(ChatColor.DARK_GRAY + "Witherman Sword");
+					swordn.setDisplayName(ChatColor.DARK_GRAY + "Witherman " + ChatColor.DARK_GRAY + "Sword" + ChatColor.WHITE);
 					ArrayList<String> swordl = new ArrayList<String>();
 					swordl.add(ChatColor.GRAY + "Wither X");
 					swordn.setLore(swordl);

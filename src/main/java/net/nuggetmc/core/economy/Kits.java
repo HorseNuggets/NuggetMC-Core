@@ -26,7 +26,6 @@ public class Kits {
 	public Kits(Main plugin) {
 		this.plugin = plugin;
 		this.expiration = new HashMap<String, Long>();
-
 	}
 	
 	public void respawn(PlayerRespawnEvent event) {
