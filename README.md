@@ -8,7 +8,7 @@ This plugin requires [Spigot 1.8.8](https://www.spigotmc.org/wiki/buildtools/#1-
 
 ## Core Features
 
-Some of the main features this plugin includes is:
+Some of the main features this plugin includes are:
 - Dropped Player-Heads + Craftable Golden Heads (Edible)
 - Optimized TPA
 - Optimized Player Homes
