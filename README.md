@@ -22,6 +22,7 @@ Some of the main features this plugin includes are:
 - Separate Config Reloading Support
 - Multiworld Support
 - Vanish
+- Temporary Mutes/Bans/IP-Bans
 - Inventory Serialization
 - Essential Staff Commands
 - Player Warps
