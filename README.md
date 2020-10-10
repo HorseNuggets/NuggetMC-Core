@@ -28,7 +28,7 @@ Some of the main features this plugin includes are:
 - [x] Temporary Mutes/Bans/IP-Bans
 - [ ] Vanish
 
-I am currently in the process of adapting the remaining features from [NuggetMC 1.0](https://github.com/HorseNuggets/NuggetMC-1.0) (Warning: it's bad).
+The remaining features are currently being adapted from [NuggetMC 1.0](https://github.com/HorseNuggets/NuggetMC-1.0) (Warning: it's bad).
 
 ## Contributors
 
