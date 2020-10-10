@@ -28,7 +28,10 @@ public class MoveListener implements Listener {
 				if (player.getLocation().getBlockY() >= Configs.nofall.getConfig().getInt("y-level")) {
 					if (plugin.noFall.fallList.contains(player)) {
 						plugin.noFall.fallList.remove(player);
-						plugin.noFall.downTime.remove(player);
+						
+						if (plugin.noFall.downTime.containsKey(player)) {
+							plugin.noFall.downTime.remove(player);
+						}
 					}
 				}
 				break;
@@ -63,7 +66,7 @@ public class MoveListener implements Listener {
 			}
 		};
 		
-		runnable.runTaskTimer(plugin, 0, 20);
+		runnable.runTaskTimerAsynchronously(plugin, 0, 20);
 		return;
 	}
 	

@@ -1,6 +1,7 @@
 name: NuggetMC-Core
 main: net.nuggetmc.core.Main
 version: 2.0
+depend: [LuckPerms]
 commands:
   home:
     description: Warps to a personally-set waypoint.

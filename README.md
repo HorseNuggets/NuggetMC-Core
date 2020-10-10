@@ -16,6 +16,7 @@ Some of the main features this plugin includes are:
 - [x] Essential Staff Commands
 - [x] Inventory Serialization
 - [ ] Items with Custom Abilities
+- [ ] Map Reloading
 - [x] Multiworld Support
 - [ ] Optimized Combat Tracking
 - [ ] Optimized Player Homes
@@ -26,6 +27,8 @@ Some of the main features this plugin includes are:
 - [x] Separate Config Reloading Support
 - [x] Temporary Mutes/Bans/IP-Bans
 - [ ] Vanish
+
+I am still adapting the remaining features from [NuggetMC 1.0]() (Warning: it's bad).
 
 ## Contributors
 
