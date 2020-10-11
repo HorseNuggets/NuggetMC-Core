@@ -15,6 +15,7 @@ public class Configs {
 	public static ConfigManager kitsconfig;
 	public static ConfigManager nofall;
 	public static ConfigManager playerstats;
+	public static ConfigManager playerstatsArchive;
 	public static ConfigManager worldsettings;
 	
 	public Configs(Main plugin) {
@@ -28,6 +29,7 @@ public class Configs {
 		kitsconfigSetup();
 		noFallSetup();
 		playerstatsSetup();
+		playerstatsArchiveSetup();
 		worldsettingsSetup();
 	}
 	
@@ -51,6 +53,8 @@ public class Configs {
 			return kitsconfig;
 		case "playerdata\\stats.yml":
 			return playerstats;
+		case "playerdata\\archive\\config.yml":
+			return playerstatsArchive;
 		case "worldsettings.yml":
 			return worldsettings;
 		}
@@ -120,6 +124,12 @@ public class Configs {
 	private void playerstatsSetup() {
 		playerstats = new ConfigManager(plugin);
 		playerstats.setup("playerdata\\stats.yml");
+		return;
+	}
+	
+	private void playerstatsArchiveSetup() {
+		playerstatsArchive = new ConfigManager(plugin);
+		playerstatsArchive.setup("playerdata\\archive\\config.yml");
 		return;
 	}
 	

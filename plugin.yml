@@ -27,14 +27,6 @@ commands:
     description: List all banned players.
     usage: /banlist
     permission: nmc.staff
-  ban-ip:
-    description: Bans an IP address.
-    usage: /ban-ip
-    permission: nmc.staff
-  ipbanlist:
-    description: List all banned IP addresses.
-    usage: /ipbanlist
-    permission: nmc.staff
   debug:
     description: A command used to inject code when debugging.
     usage: /debug

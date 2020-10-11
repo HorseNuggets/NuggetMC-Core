@@ -51,12 +51,15 @@ public class Listeners implements Listener {
 	
 	@EventHandler
 	public void entityDamageByEntityEvent(EntityDamageByEntityEvent event) {
+		plugin.combatTracker.playerCombat(event);
+		plugin.combatTracker.playerCombatProjectiles(event);
 		plugin.gheads.headDetectPhysical(event);
 		return;
 	}
 	
 	@EventHandler
 	public void entityDamageEvent(EntityDamageEvent event) {
+		plugin.combatTracker.combatContinue(event);
 		plugin.fallListener.onFall(event);
 		return;
 	}
@@ -88,6 +91,7 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void playerDeathEvent(PlayerDeathEvent event) {
 		plugin.autoRespawn.onPlayerDeath(event);
+		plugin.combatTracker.onDeath(event);
 		plugin.gheads.onDeath(event);
 		plugin.guiMain.hardRemove(event.getEntity());
 		plugin.playerKill.onKill(event);
@@ -138,6 +142,7 @@ public class Listeners implements Listener {
 	
 	@EventHandler
 	public void playerRespawnEvent(PlayerRespawnEvent event) {
+		plugin.combatTracker.onRespawn(event);
 		plugin.healthboost.onRespawn(event);
 		plugin.kits.respawn(event);
 		plugin.moveListener.onRespawn(event);
@@ -148,6 +153,7 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void playerQuitEvent(PlayerQuitEvent event) {
 		event.setQuitMessage(null);
+		plugin.combatTracker.onQuit(event);
 		plugin.guiMain.hardRemove(event.getPlayer());
 		plugin.packetHandler.removePlayer(event.getPlayer());
 		if (plugin.playerTracker != null) {

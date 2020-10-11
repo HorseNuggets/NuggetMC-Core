@@ -155,6 +155,7 @@ public class BanCommand implements CommandExecutor {
 			break;
 			
 		case "banlist":
+			
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 				BanList list = Bukkit.getBanList(BanList.Type.NAME);
 				Set<BanEntry> entries = list.getBanEntries();

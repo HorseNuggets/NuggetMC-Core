@@ -15,6 +15,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.modifiers.CombatTracker;
 import net.nuggetmc.core.util.ColorCodes;
 
 public class Sidebar {
@@ -58,11 +59,18 @@ public class Sidebar {
 		if (playerkills.equals("69")) playerkills += ChatColor.LIGHT_PURPLE + " (NICE)";
 		if (playernuggets.equals("69")) playernuggets += ChatColor.LIGHT_PURPLE + " (NICE)";
 		
+		String status = ChatColor.GREEN + "Idle";
+		
+		if (CombatTracker.combatTime.containsKey(player)) {
+			int combatTime = CombatTracker.combatTime.get(player) - 1;
+			status = ChatColor.RED + "In combat! " + ChatColor.GRAY + "(" + ChatColor.YELLOW + combatTime + "s" + ChatColor.GRAY + ")";
+		}
+		
 		Score[] lines = new Score[15];
-		lines[12] = stats.getScore(ChatColor.WHITE + "" + ChatColor.GRAY + "" + ChatColor.BOLD + "----------------");
+		lines[12] = stats.getScore(ChatColor.WHITE + "" + ChatColor.GRAY + "" + ChatColor.BOLD + "--------------------");
 		lines[11] = stats.getScore(ChatColor.GOLD + playername);
 		lines[10] = stats.getScore(ChatColor.GRAY + " ▪ " + ChatColor.GRAY + "Rank: " + rank);
-		lines[9] = stats.getScore(ChatColor.GRAY + " ▪ " + ChatColor.GRAY + "Status: " + ChatColor.GREEN + "Idle");
+		lines[9] = stats.getScore(ChatColor.GRAY + " ▪ " + ChatColor.GRAY + "Status: " + status);
 		lines[8] = stats.getScore("");
 		lines[7] = stats.getScore(ChatColor.GOLD + "Stats");
 		lines[6] = stats.getScore(ChatColor.GRAY + " ▪ " + ChatColor.GRAY + "Level: " + ChatColor.YELLOW + playerlevel);
@@ -70,7 +78,7 @@ public class Sidebar {
 		lines[4] = stats.getScore(ChatColor.GRAY + " ▪ " + ChatColor.GRAY + "Nuggets: " + ChatColor.YELLOW + playernuggets);
 		lines[3] = stats.getScore(" ");
 		lines[2] = stats.getScore(ChatColor.GRAY + "nuggetmc.net");
-		lines[1] = stats.getScore(ChatColor.GRAY + "" + ChatColor.BOLD +                        "----------------");
+		lines[1] = stats.getScore(ChatColor.GRAY + "" + ChatColor.BOLD +                        "--------------------");
 		
 		for (int i = 1; i < 13; i++) {
 			lines[i].setScore(i);

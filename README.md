@@ -9,7 +9,7 @@ This plugin requires [Spigot 1.8.8](https://www.spigotmc.org/wiki/buildtools/#1-
 ## Core Features
 
 Some of the main features this plugin includes are:
-- [ ] Custom Nugget-Based Economy
+- [x] Custom Nugget-Based Economy
 - [x] Dropped Player-Heads + Craftable Golden Heads (Edible)
 - [x] Dynamic Autorespawn
 - [x] Dynamic Fall-Damage Cancellation
@@ -18,7 +18,7 @@ Some of the main features this plugin includes are:
 - [ ] Items with Custom Abilities
 - [ ] Map Reloading
 - [x] Multiworld Support
-- [ ] Optimized Combat Tracking
+- [x] Optimized Combat Tracking
 - [ ] Optimized Player Homes
 - [ ] Optimized Player Vaults
 - [ ] Optimized TPA

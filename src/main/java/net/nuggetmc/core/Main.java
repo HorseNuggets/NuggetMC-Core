@@ -24,6 +24,7 @@ import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.economy.Kits;
 import net.nuggetmc.core.gui.GUIMain;
 import net.nuggetmc.core.misc.TabComplete;
+import net.nuggetmc.core.modifiers.CombatTracker;
 import net.nuggetmc.core.modifiers.HealthBoost;
 import net.nuggetmc.core.modifiers.PlayerTracker;
 import net.nuggetmc.core.modifiers.autorespawn.AutoRespawn;
@@ -64,6 +65,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 	public HealthBoost healthboost;
 	public Announcements announcements;
 	public AutoRespawn autoRespawn;
+	public CombatTracker combatTracker;
 	public Configs configs;
 	public FallListener fallListener;
 	public GHeads gheads;
@@ -115,7 +117,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 	private void commandsEnable() {
 		this.getCommand("ban").setExecutor(new BanCommand(this));
 		this.getCommand("banlist").setExecutor(new BanCommand(this));
-		this.getCommand("ban-ip").setExecutor(new BanCommand(this));
+		//this.getCommand("ban-ip").setExecutor(new BanCommand(this));
 		this.getCommand("debug").setExecutor(new DebugCommand(this));
 		this.getCommand("ghead").setExecutor(new GHeadCommand());
 		this.getCommand("gma").setExecutor(new AdminCommand(this));
@@ -124,7 +126,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.getCommand("gmsp").setExecutor(new AdminCommand(this));
 		this.getCommand("head").setExecutor(new HeadCommand());
 		this.getCommand("invconvert").setExecutor(new InvConvertCommand(this));
-		this.getCommand("ipbanlist").setExecutor(new BanCommand(this));
+		//this.getCommand("ipbanlist").setExecutor(new BanCommand(this));
 		this.getCommand("nuggetmc").setExecutor(new NMCMainCommand(this));
 		this.getCommand("rank").setExecutor(new RankCommand(this));
 		this.getCommand("setkills").setExecutor(new AdminCommand(this));
@@ -168,6 +170,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.healthboost = new HealthBoost(this);
 		this.moveListener = new MoveListener(this);
 		this.noFall = new NoFall(this);
+		this.combatTracker = new CombatTracker(this);
 		
 		if (Configs.mainconfig.getConfig().getBoolean("enabled.heads-gheads")) {
 			this.gheads = new GHeads(this);
