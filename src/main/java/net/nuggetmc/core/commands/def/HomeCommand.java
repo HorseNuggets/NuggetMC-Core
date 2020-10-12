@@ -98,7 +98,14 @@ public class HomeCommand implements CommandExecutor {
 				}
 				
 				if (homes.getConfigurationSection(uuid + "." + key) == null) {
-					player.sendMessage(ChatColor.YELLOW + "That home does not exist!");
+					if (args.length == 0) {
+						player.sendMessage(ChatColor.YELLOW + "You do not currently have this home set. Do " + ChatColor.GOLD + "/sethome "
+								+ ChatColor.YELLOW + "to set a home.");
+					}
+					
+					else {
+						player.sendMessage(ChatColor.YELLOW + "That home does not exist!");
+					}
 					return true;
 				}
 				

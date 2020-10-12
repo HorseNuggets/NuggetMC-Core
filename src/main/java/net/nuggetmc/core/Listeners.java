@@ -21,7 +21,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import net.nuggetmc.core.commands.admin.BanCommand;
+import net.nuggetmc.core.commands.mod.BanCommand;
 import net.nuggetmc.core.gui.GUIMain;
 
 public class Listeners implements Listener {

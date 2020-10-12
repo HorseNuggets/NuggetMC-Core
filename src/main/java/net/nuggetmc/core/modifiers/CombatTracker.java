@@ -29,9 +29,9 @@ public class CombatTracker {
 	private Map<Player, BukkitRunnable> combatTask;
 	private FileConfiguration worldsettings;
 	private World spawnworld;
-	private Location pos1;
-	private Location pos2;
 	
+	public Location pos1;
+	public Location pos2;
 	public static Map<Player, Integer> combatTime;
 	
 	public CombatTracker(Main plugin) {
@@ -160,20 +160,6 @@ public class CombatTracker {
     public void combatContinue(EntityDamageEvent event) {
 		if (event.getEntity() instanceof Player) {
 	    	Player player = (Player) event.getEntity();
-	    	
-	    	// [TODO] exception for self-damages in spawn
-	    	
-	    	int x = player.getLocation().getBlockX();
-	    	int y = player.getLocation().getBlockY();
-	    	int z = player.getLocation().getBlockZ();
-	    	
-	    	if (player.getWorld() == spawnworld) {
-	    		if (x >= pos1.getBlockX() && x <= pos2.getBlockX() && y >= pos1.getBlockY()
-	    				&& y <= pos2.getBlockY() && z >= pos1.getBlockZ() && z <= pos2.getBlockZ()) {
-	    			return;
-	    		}
-	    	}
-	    	
 	    	if (combatTime.containsKey(player)) {
 		    	combatCount(player, 15);
 	    	}

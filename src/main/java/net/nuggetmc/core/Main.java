@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.nuggetmc.core.commands.admin.AdminCommand;
-import net.nuggetmc.core.commands.admin.BanCommand;
 import net.nuggetmc.core.commands.admin.DebugCommand;
 import net.nuggetmc.core.commands.admin.GHeadCommand;
 import net.nuggetmc.core.commands.admin.HeadCommand;
@@ -19,8 +18,11 @@ import net.nuggetmc.core.commands.admin.InvConvertCommand;
 import net.nuggetmc.core.commands.admin.NMCMainCommand;
 import net.nuggetmc.core.commands.admin.RankCommand;
 import net.nuggetmc.core.commands.def.DefaultCommand;
+import net.nuggetmc.core.commands.def.HelpCommand;
 import net.nuggetmc.core.commands.def.HomeCommand;
 import net.nuggetmc.core.commands.def.KitCommand;
+import net.nuggetmc.core.commands.def.TPACommand;
+import net.nuggetmc.core.commands.mod.BanCommand;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.economy.Kits;
 import net.nuggetmc.core.gui.GUIMain;
@@ -84,6 +86,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 	public PlayerTracker playerTracker;
 	public Sidebar sidebar;
 	public TabComplete tabComplete;
+	public TPACommand tpaCommand;
 	public WorldManager worldManager;
 	
 	public void onEnable() {
@@ -114,6 +117,11 @@ public class Main extends JavaPlugin implements TabCompleter {
 	}
 	
 	private void commandsEnable() {
+		this.tpaCommand = new TPACommand(this);
+		this.getCommand("tpa").setExecutor(tpaCommand);
+		this.getCommand("tphere").setExecutor(tpaCommand);
+		this.getCommand("tpyes").setExecutor(tpaCommand);
+		
 		this.getCommand("ban").setExecutor(new BanCommand(this));
 		this.getCommand("banlist").setExecutor(new BanCommand(this));
 		this.getCommand("debug").setExecutor(new DebugCommand(this));
@@ -124,6 +132,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.getCommand("gms").setExecutor(new AdminCommand(this));
 		this.getCommand("gmsp").setExecutor(new AdminCommand(this));
 		this.getCommand("head").setExecutor(new HeadCommand());
+		this.getCommand("help").setExecutor(new HelpCommand(this));
 		this.getCommand("home").setExecutor(new HomeCommand(this));
 		this.getCommand("homes").setExecutor(new HomeCommand(this));
 		this.getCommand("invconvert").setExecutor(new InvConvertCommand(this));

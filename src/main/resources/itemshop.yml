@@ -1,10 +1,8 @@
-slot-0:
-  material: DIAMOND_SWORD
-  meta:
-    name: ur mom
+Diamond_Sword:
+  name: "Diamond Sword"
+  nbt: "diamond_sword 1 0 {ench:[{id:16,lvl:4}]}"
   buy:
     price: 42
-    amount: 1
   sell:
     price: 18
     amount: 1

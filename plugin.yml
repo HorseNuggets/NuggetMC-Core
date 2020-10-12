@@ -3,6 +3,9 @@ main: net.nuggetmc.core.Main
 version: 2.0
 depend: ['LuckPerms']
 commands:
+  help:
+    description: Lists all commands and their purposes.
+    usage: /help
   home:
     description: Warps to a personally-set waypoint.
     usage: /home
@@ -18,6 +21,15 @@ commands:
     description: Deletes a home.
     usage: /delhome <name>
     aliases: [dh]
+  tpa:
+    description: Teleport request to a player.
+    usage: /tpa <player>
+  tphere:
+    description: Self-location teleport request to a player.
+    usage: /tphere <player>
+  tpyes:
+    description: Accept a teleport request.
+    usage: /tpyes (player)
   kit:
     description: Command for all kit-related actions.
     usage: /kit
@@ -31,6 +43,10 @@ commands:
   banlist:
     description: List all banned players.
     usage: /banlist
+    permission: nmc.staff
+  mod:
+    description: Lists all moderator commands and their purposes.
+    usage: /mod
     permission: nmc.staff
   debug:
     description: A command used to inject code when debugging.

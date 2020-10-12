@@ -1,4 +1,4 @@
-package net.nuggetmc.core.commands.admin;
+package net.nuggetmc.core.commands.mod;
 
 import java.util.Arrays;
 import java.util.Calendar;
