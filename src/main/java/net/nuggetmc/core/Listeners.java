@@ -12,6 +12,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerChatTabCompleteEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -79,6 +80,12 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void inventoryOpenEvent(InventoryOpenEvent event) {
 		plugin.guiMain.onOpen(event);
+		return;
+	}
+	
+	@EventHandler
+	public void playerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
+		plugin.combatTracker.inCombatCommand(event);
 		return;
 	}
 	

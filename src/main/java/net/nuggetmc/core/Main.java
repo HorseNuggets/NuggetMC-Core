@@ -19,6 +19,7 @@ import net.nuggetmc.core.commands.admin.InvConvertCommand;
 import net.nuggetmc.core.commands.admin.NMCMainCommand;
 import net.nuggetmc.core.commands.admin.RankCommand;
 import net.nuggetmc.core.commands.def.DefaultCommand;
+import net.nuggetmc.core.commands.def.HomeCommand;
 import net.nuggetmc.core.commands.def.KitCommand;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.economy.Kits;
@@ -34,7 +35,6 @@ import net.nuggetmc.core.modifiers.nofall.listeners.FallListener;
 import net.nuggetmc.core.modifiers.nofall.listeners.MoveListener;
 import net.nuggetmc.core.player.Levelup;
 import net.nuggetmc.core.player.PlayerChat;
-import net.nuggetmc.core.player.PlayerHomes;
 import net.nuggetmc.core.player.PlayerJoin;
 import net.nuggetmc.core.player.PlayerKill;
 import net.nuggetmc.core.player.PlayerSpawnLocation;
@@ -77,7 +77,6 @@ public class Main extends JavaPlugin implements TabCompleter {
 	public NoFall noFall;
 	public PacketHandler packetHandler;
 	public PlayerChat playerChat;
-	public PlayerHomes playerHomes;
 	public PlayerJoin playerJoin;
 	public PlayerKill playerKill;
 	public PlayerSpawnLocation playerSpawnLocation;
@@ -117,18 +116,20 @@ public class Main extends JavaPlugin implements TabCompleter {
 	private void commandsEnable() {
 		this.getCommand("ban").setExecutor(new BanCommand(this));
 		this.getCommand("banlist").setExecutor(new BanCommand(this));
-		//this.getCommand("ban-ip").setExecutor(new BanCommand(this));
 		this.getCommand("debug").setExecutor(new DebugCommand(this));
+		this.getCommand("delhome").setExecutor(new HomeCommand(this));
 		this.getCommand("ghead").setExecutor(new GHeadCommand());
 		this.getCommand("gma").setExecutor(new AdminCommand(this));
 		this.getCommand("gmc").setExecutor(new AdminCommand(this));
 		this.getCommand("gms").setExecutor(new AdminCommand(this));
 		this.getCommand("gmsp").setExecutor(new AdminCommand(this));
 		this.getCommand("head").setExecutor(new HeadCommand());
+		this.getCommand("home").setExecutor(new HomeCommand(this));
+		this.getCommand("homes").setExecutor(new HomeCommand(this));
 		this.getCommand("invconvert").setExecutor(new InvConvertCommand(this));
-		//this.getCommand("ipbanlist").setExecutor(new BanCommand(this));
 		this.getCommand("nuggetmc").setExecutor(new NMCMainCommand(this));
 		this.getCommand("rank").setExecutor(new RankCommand(this));
+		this.getCommand("sethome").setExecutor(new HomeCommand(this));
 		this.getCommand("setkills").setExecutor(new AdminCommand(this));
 		this.getCommand("setnuggets").setExecutor(new AdminCommand(this));
 		this.getCommand("spawn").setExecutor(new DefaultCommand());
@@ -185,7 +186,6 @@ public class Main extends JavaPlugin implements TabCompleter {
 	private void playerEventsEnable() {
 		this.levelup = new Levelup();
 		this.playerChat = new PlayerChat(this);
-		this.playerHomes = new PlayerHomes(this);
 		this.playerJoin = new PlayerJoin();
 		this.playerKill = new PlayerKill(this);
 		this.playerSpawnLocation = new PlayerSpawnLocation(this);

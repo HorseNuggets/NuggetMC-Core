@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,12 +14,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.util.Checks;
 
 public class CombatTracker {
 	
@@ -50,67 +53,27 @@ public class CombatTracker {
 		CombatTracker.combatTime = new HashMap<>();
 	}
 	
-	/*public void inCombatCommand(PlayerCommandPreprocessEvent event) {
-    	
+	public void inCombatCommand(PlayerCommandPreprocessEvent event) {
     	Player player = event.getPlayer();
     	String base = event.getMessage().split(" ")[0];
     	
-    	if (base.equalsIgnoreCase("/plugins")
-				|| base.equalsIgnoreCase("/pl")
-				|| base.equalsIgnoreCase("//calc")
-				|| base.equalsIgnoreCase("//calculate")
-				|| base.equalsIgnoreCase("/say")
-				|| base.equalsIgnoreCase("/me")) {
-			
-			if (!((player.hasPermission("simpleprefix.horseowner")
-					|| player.hasPermission("simpleprefix.Moderator")
-					|| player.hasPermission("simpleprefix.Manager")))) {
+    	if (Checks.cmCheck1(base)) {
+			if (!Checks.checkHighStaff(player)) {
 				player.sendMessage(ChatColor.RED + "You do not have permission.");
 				event.setCancelled(true);
 	    		return;
 	    	}
     	}
     	
-    	if (base.equalsIgnoreCase("/spleef")
-				|| base.equalsIgnoreCase("/spleefjoin")
-				|| base.equalsIgnoreCase("/sumo")) {
-    		Bukkit.dispatchCommand(player, "leave");
-    	}
-    	
-    	if (combatTime.containsKey(player.getName()) || ArenaCombat.contains(player.getName()) || ArenaCombatWait1.contains(player.getName()) || ArenaCombatWait2.contains(player.getName())) {
-			if (base.equalsIgnoreCase("/spawn")
-					|| base.equalsIgnoreCase("/warp")
-					|| base.equalsIgnoreCase("/tphere")
-					|| base.equalsIgnoreCase("/spawn")
-					|| base.equalsIgnoreCase("/home")
-					|| base.equalsIgnoreCase("/h")
-					|| base.equalsIgnoreCase("/tpyes")
-					|| base.equalsIgnoreCase("/tpno")
-					|| base.equalsIgnoreCase("/spleef")
-					|| base.equalsIgnoreCase("/spleefjoin")
-					|| base.equalsIgnoreCase("/parkour")
-					|| base.equalsIgnoreCase("/pv")
-					|| base.equalsIgnoreCase("/vault")
-					|| base.equalsIgnoreCase("/creative")
-					|| base.equalsIgnoreCase("/sumo")
-					|| base.equalsIgnoreCase("/suicide")
-					|| base.equalsIgnoreCase("/tpa")) {
+    	if (combatTime.containsKey(player)) {
+			if (Checks.cmCheck2(base)) {
 				
-				if (((player.hasPermission("simpleprefix.horseowner")
-						|| player.hasPermission("simpleprefix.Moderator")
-						|| player.hasPermission("simpleprefix.Manager")))) {
+				if (Checks.checkStaff(player)) {
 					player.sendMessage(ChatColor.RED + "Your rank allows you to bypass this combat-tagged command.");
 		    		return;
 		    	}
 				else {
-					
-					int x = player.getLocation().getBlockX();
-					int y = player.getLocation().getBlockY();
-					int z = player.getLocation().getBlockZ();
-					
-					if (!((Math.sqrt(Math.pow((x - 21), 2) + Math.pow((z + 90), 2)) <= 21)&& y >= 214 && y <= 224)) {
-						player.sendMessage(ChatColor.RED + "Command disabled during combat!");
-					}
+					player.sendMessage(ChatColor.RED + "Command disabled during combat!");
 					event.setCancelled(true);
 					return;
 				}
@@ -118,7 +81,7 @@ public class CombatTracker {
     	}
     	
 		return;
-	}*/
+	}
 	
 	public void onQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();

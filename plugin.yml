@@ -1,7 +1,7 @@
 name: NuggetMC-Core
 main: net.nuggetmc.core.Main
 version: 2.0
-depend: [LuckPerms]
+depend: ['LuckPerms']
 commands:
   home:
     description: Warps to a personally-set waypoint.
@@ -10,12 +10,17 @@ commands:
   homes:
     description: Lists a player's set homes + extra home options.
     usage: /homes <playername/remove> <homename>
-  kit:
-    description: Command for all kit-related actions.
-    usage: /kit
   sethome:
     description: Sets a home.
     usage: /sethome <name>
+    aliases: [sh]
+  delhome:
+    description: Deletes a home.
+    usage: /delhome <name>
+    aliases: [dh]
+  kit:
+    description: Command for all kit-related actions.
+    usage: /kit
   spawn:
     description: Teleports to spawn.
     usage: /spawn
