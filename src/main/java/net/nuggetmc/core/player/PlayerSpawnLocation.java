@@ -2,6 +2,7 @@ package net.nuggetmc.core.player;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -13,9 +14,10 @@ public class PlayerSpawnLocation {
 	
 	private Main plugin;
 	private String worldname;
+	private double x;
+	private double y;
+	private double z;
 	private ConfigurationSection config;
-	
-	public Location spawn;
 	
 	public PlayerSpawnLocation(Main plugin) {
 		this.plugin = plugin;
@@ -24,22 +26,25 @@ public class PlayerSpawnLocation {
 	}
 	
 	public void spawnSetup() {
-		worldname = config.getString("spawn.world");
-		double x = config.getDouble("spawn.coordinates.x");
-		double y = config.getDouble("spawn.coordinates.y");
-		double z = config.getDouble("spawn.coordinates.z");
-		spawn = new Location(Bukkit.getWorld(worldname), x, y, z);
+		this.worldname = config.getString("spawn.world");
+		this.x = config.getDouble("spawn.coordinates.x");
+		this.y = config.getDouble("spawn.coordinates.y");
+		this.z = config.getDouble("spawn.coordinates.z");
 	}
 	
 	public void setSpawn(Player player) {
-		if (player.isDead()) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+		/*Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+			if (player.isDead()) {
 				player.spigot().respawn();
-			}, 20);
-		}
+			}
+		}, 20);*/
 		
-		player.setBedSpawnLocation(spawn, true);
-		player.teleport(spawn);
+		World world = Bukkit.getWorld(worldname);
+		if (world != null) {
+			Location spawn = new Location(world, x, y, z);
+			player.teleport(spawn);
+			player.setBedSpawnLocation(spawn, true);
+		}
 		
 		if (!player.getWorld().getName().equals(worldname)) {
 			queue(player);
@@ -51,7 +56,13 @@ public class PlayerSpawnLocation {
 		BukkitRunnable teleportQueue = new BukkitRunnable() {
 			@Override
 			public void run() {
-				player.teleport(spawn);
+				World world = Bukkit.getWorld(worldname);
+				if (world != null) {
+					Location spawn = new Location(world, x, y, z);
+					player.teleport(spawn);
+					player.setBedSpawnLocation(spawn, true);
+				}
+				
 				if (player.getWorld().getName().equals(worldname)) {
 					
 					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {

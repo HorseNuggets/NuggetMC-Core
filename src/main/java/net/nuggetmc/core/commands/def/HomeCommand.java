@@ -107,6 +107,7 @@ public class HomeCommand implements CommandExecutor {
 				}
 				
 				World world = Bukkit.getWorld(homes.getString(key + ".world"));
+				
 				double x = homes.getDouble(key + ".x");
 				double y = homes.getDouble(key + ".y");
 				double z = homes.getDouble(key + ".z");
@@ -120,7 +121,7 @@ public class HomeCommand implements CommandExecutor {
 				}
 				
 				else {
-					player.sendMessage("That world is currently inactive!");
+					player.sendMessage(ChatColor.RED + "The world you are trying to teleport to is currently inactive!");
 				}
 			}
 			return true;

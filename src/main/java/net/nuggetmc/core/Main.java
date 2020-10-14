@@ -146,6 +146,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		
 		this.defaultCommand = new DefaultCommand(this);
 		this.getCommand("spawn").setExecutor(defaultCommand);
+		this.getCommand("warp").setExecutor(defaultCommand);
 		this.getCommand("wrt").setExecutor(defaultCommand);
 		
 		this.getCommand("ban").setExecutor(new BanCommand(this));
@@ -157,6 +158,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.getCommand("invconvert").setExecutor(new InvConvertCommand(this));
 		this.getCommand("nuggetmc").setExecutor(new NMCMainCommand(this));
 		this.getCommand("rank").setExecutor(new RankCommand(this));
+		this.getCommand("ushop").setExecutor(itemShop);
 		this.getCommand("kit").setExecutor(new KitCommand(this));
 		return;
 	}

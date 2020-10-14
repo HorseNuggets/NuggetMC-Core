@@ -20,7 +20,9 @@ import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -32,13 +34,17 @@ import net.nuggetmc.core.modifiers.CombatTracker;
 public class WorldManager {
 	
 	private static Main plugin;
-	private static String spawnworld;
 	private static double x;
 	private static double y;
 	private static double z;
+	private FileConfiguration worldsettings;
+	
+	public static String spawnworld;
 	public static int count = 10800;
 	public static int countNether = 10802;
 	public static int countEnd = 10802;
+	public static int[] pos1;
+	public static int[] pos2;
 	
 	/*
 	 * [TODO]
@@ -49,10 +55,22 @@ public class WorldManager {
 	
 	public WorldManager(Main plugin) {
 		WorldManager.plugin = plugin;
-		spawnworld = Configs.worldsettings.getConfig().getString("spawn.world");
-		x = Configs.worldsettings.getConfig().getDouble("spawn.coordinates.x");
-		y = Configs.worldsettings.getConfig().getDouble("spawn.coordinates.y");
-		z = Configs.worldsettings.getConfig().getDouble("spawn.coordinates.z");
+		this.worldsettings = Configs.worldsettings.getConfig();
+		
+		spawnworld = worldsettings.getString("spawn.world");
+		x = worldsettings.getDouble("spawn.coordinates.x");
+		y = worldsettings.getDouble("spawn.coordinates.y");
+		z = worldsettings.getDouble("spawn.coordinates.z");
+		
+		pos1 = new int[3];
+		pos1[0] = worldsettings.getInt("spawn.region.pos1.x");
+		pos1[1] = worldsettings.getInt("spawn.region.pos1.y");
+		pos1[2] = worldsettings.getInt("spawn.region.pos1.z");
+		
+		pos2 = new int[3];
+		pos2[0] = worldsettings.getInt("spawn.region.pos2.x");
+		pos2[1] = worldsettings.getInt("spawn.region.pos2.y");
+		pos2[2] = worldsettings.getInt("spawn.region.pos2.z");
 		return;
 	}
 	
@@ -137,11 +155,23 @@ public class WorldManager {
 		return;
 	}
 	
+	public void onMove(PlayerMoveEvent event) {
+		Player player = event.getPlayer();
+		World world = player.getWorld();
+		if (world.getName().equals("main")) {
+			Location loc = new Location(world, -176, 180, 116);
+			if (player.getLocation().distance(loc) < 5) {
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect " + player.getName() + " jump_boost 1 18");
+			}
+		}
+		return;
+	}
+	
 	public void loadAllWorlds() {
 		List<String> worlds = Configs.worldsettings.getConfig().getStringList("non-default-worlds");
 		for (int i = 0; i < worlds.size(); i++) {
 			World world = Bukkit.getWorld(worlds.get(i));
-			if (world != null) {
+			if (world == null) {
 				new WorldCreator(worlds.get(i)).createWorld();
 			}
 		}
@@ -149,7 +179,7 @@ public class WorldManager {
 		List<String> worldsNether = Configs.worldsettings.getConfig().getStringList("non-default-worlds-nether");
 		for (int i = 0; i < worldsNether.size(); i++) {
 			World world = Bukkit.getWorld(worldsNether.get(i));
-			if (world != null) {
+			if (world == null) {
 				WorldCreator creatorNether = new WorldCreator(worldsNether.get(i));
 				creatorNether.environment(Environment.NETHER);
 				creatorNether.createWorld();
@@ -159,7 +189,7 @@ public class WorldManager {
 		List<String> worldsEnd = Configs.worldsettings.getConfig().getStringList("non-default-worlds-the-end");
 		for (int i = 0; i < worldsEnd.size(); i++) {
 			World world = Bukkit.getWorld(worldsEnd.get(i));
-			if (world != null) {
+			if (world == null) {
 				WorldCreator creatorEnd = new WorldCreator(worldsEnd.get(i));
 				creatorEnd.environment(Environment.THE_END);
 				creatorEnd.createWorld();
@@ -258,6 +288,10 @@ public class WorldManager {
 						count = 10800;
 					}
 				});
+				
+				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ushop");
+				}, 20);
 		    });
 		    break;
 		    

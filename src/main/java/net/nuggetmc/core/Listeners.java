@@ -84,14 +84,14 @@ public class Listeners implements Listener {
 	}
 	
 	@EventHandler
-	public void playerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
-		plugin.combatTracker.inCombatCommand(event);
+	public void playerChatTabCompleteEvent(PlayerChatTabCompleteEvent event) {
+		plugin.tabComplete.tab(event);
 		return;
 	}
 	
 	@EventHandler
-	public void playerChatTabCompleteEvent(PlayerChatTabCompleteEvent event) {
-		plugin.tabComplete.tab(event);
+	public void playerCommandPreProcess(PlayerCommandPreprocessEvent event) {
+		plugin.combatTracker.inCombatCommand(event);
 		return;
 	}
 	
@@ -108,6 +108,7 @@ public class Listeners implements Listener {
 	public void playerInteractEvent(PlayerInteractEvent event) {
 		GUIMain.cancelAnvil(event);
 		plugin.gheads.headDetectInteract(event);
+		plugin.itemShop.transaction(event);
 		return;
 	}
 	
@@ -129,6 +130,7 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void playerMoveEvent(PlayerMoveEvent event) {
 		plugin.moveListener.onMove(event);
+		plugin.worldManager.onMove(event);
 		if (plugin.playerTracker != null) {
 			plugin.playerTracker.onMove(event);
 		}

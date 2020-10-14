@@ -5,9 +5,6 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
@@ -20,42 +17,25 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.nuggetmc.core.Main;
-import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.util.Checks;
 
 public class CombatTracker {
 	
 	private Main plugin;
 	private Map<Player, BukkitRunnable> combatTask;
-	private FileConfiguration worldsettings;
-	private World spawnworld;
 	
-	public Location pos1;
-	public Location pos2;
 	public static Map<Player, Integer> combatTime;
 	
 	public CombatTracker(Main plugin) {
 		this.plugin = plugin;
 		this.combatTask = new HashMap<>();
-		this.worldsettings = Configs.worldsettings.getConfig();
-		this.spawnworld = Bukkit.getWorld(worldsettings.getString("spawn.world"));
-		
-		this.pos1 = new Location(spawnworld,
-				worldsettings.getInt("spawn.region.pos1.x"),
-				worldsettings.getInt("spawn.region.pos1.y"),
-				worldsettings.getInt("spawn.region.pos1.z"));
-		
-		this.pos2 = new Location(spawnworld,
-				worldsettings.getInt("spawn.region.pos2.x"),
-				worldsettings.getInt("spawn.region.pos2.y"),
-				worldsettings.getInt("spawn.region.pos2.z"));
 		
 		CombatTracker.combatTime = new HashMap<>();
 	}
 	
 	public void inCombatCommand(PlayerCommandPreprocessEvent event) {
-    	Player player = event.getPlayer();
     	String base = event.getMessage().split(" ")[0];
+    	Player player = event.getPlayer();
     	
     	if (Checks.cmCheck1(base)) {
 			if (!Checks.checkHighStaff(player)) {

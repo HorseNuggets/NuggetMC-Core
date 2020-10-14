@@ -1,7 +1,7 @@
 name: NuggetMC-Core
 main: net.nuggetmc.core.Main
 version: 2.0
-depend: ['LuckPerms']
+depend: ['LuckPerms', 'WorldEdit']
 commands:
   help:
     description: "Lists all commands and their purposes."
@@ -51,6 +51,9 @@ commands:
   spawn:
     description: "Teleports to spawn."
     usage: /spawn
+  warp:
+    description: "Warps to a location."
+    usage: /warp <location>
   ban:
     description: "Bans a player."
     usage: /ban <player> <time> <reason>
@@ -90,6 +93,10 @@ commands:
   gmsp:
     description: "Spectator mode."
     usage: /gmsp
+    permission: nmc
+  ushop:
+    description: "Updates the shop."
+    usage: /ushop
     permission: nmc
   head:
     description: "Gives a player a player's head."

@@ -19,6 +19,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.nuggetmc.core.Main;
@@ -133,7 +134,7 @@ public class NMCMainCommand implements CommandExecutor {
 	}
 	
 	private void configIteration(HashMap<String, String> settings, ConfigManager configManager) {
-		for(String key : configManager.getConfig().getConfigurationSection("").getKeys(true)) {
+		for(String key : configManager.getConfig().getKeys(true)) {
 			if (!(configManager.getConfig().get(key) instanceof MemorySection)) {
 				String entry = configManager.getConfig().get(key).toString();
 				settings.put(key, entry);
@@ -196,8 +197,8 @@ public class NMCMainCommand implements CommandExecutor {
 	}
 	
 	private void jarreload(CommandSender sender, String[] args) {
+		PlayerCommandPreprocessEvent.getHandlerList().unregister(plugin);
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "reloader reload NuggetMC-Core");
-		
 		sender.sendMessage(linspace);
 		sender.sendMessage(header);
 		sender.sendMessage("");

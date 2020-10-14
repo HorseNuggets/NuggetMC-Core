@@ -1,2 +1,108 @@
-Diamond_Sword: diamond_sword 1 0 {ench:[{id:16,lvl:4}]}
-Teleport_Crystal: nether_star 1 0 {display:{Name:"§5Teleport Crystal",Lore:["§8Teleport to a player","§8within 10 meters."]}}
+Diamond_Sword:
+  code: DIAMOND_SWORD%%minecraft:diamond_sword%%1%%0%%{ench:[{id:16,lvl:3}]}
+  pos: [41, 223, 9, 0]
+  buy:
+    value: 10
+    amount: 1
+  sell:
+    value: 6
+    amount: 1
+Teleport_Crystal:
+  code: NETHER_STAR%%minecraft:nether_star%%1%%0%%{display:{Name:"&5Teleport Crystal&r",Lore:["&7Teleport to a player&r","&7within &e10 &7meters.&r"]},ench:[{id:51,lvl:<random>}],HideFlags:1}
+  pos: [39, 223, 9, 0]
+  buy:
+    value: 9
+    amount: 1
+  sell:
+    value: -1
+    amount: -1
+Obsidian:
+  code: OBSIDIAN%%minecraft:obsidian%%4%%0%%{}
+  pos: [37, 223, 9, 0]
+  buy:
+    value: 32
+    amount: 4
+  sell:
+    value: 4
+    amount: 4
+TNT:
+  code: TNT%%minecraft:tnt%%8%%0%%{}
+  pos: [35, 223, 9, 0]
+  buy:
+    value: 56
+    amount: 8
+  sell:
+    value: 8
+    amount: 8
+Nugget:
+  code: GOLD_NUGGET%%minecraft:gold_nugget%%1%%0%%{}
+  pos: [35, 223, 11, 1]
+  buy:
+    value: 1
+    amount: 1
+  sell:
+    value: 1
+    amount: 1
+Uncommon_Nugget:
+  code: GOLD_NUGGET%%minecraft:gold_nugget%%1%%0%%{display:{Name:"&aUncommon Nugget&r",Lore:["&7A pretty fine piece of&r","&7nugget if you ask me.&r"]},ench:[{id:51,lvl:1}],HideFlags:1}
+  pos: [37, 223, 11, 1]
+  buy:
+    value: 30
+    amount: 1
+  sell:
+    value: 30
+    amount: 1
+Rare_Nugget:
+  code: GOLD_NUGGET%%minecraft:gold_nugget%%1%%0%%{display:{Name:"&bRare Nugget&r",Lore:["&7Only the real special&r","&7ones lay their hands&r","&7on this nugget.&r"]},ench:[{id:51,lvl:1}],HideFlags:1}
+  pos: [39, 223, 11, 1]
+  buy:
+    value: 900
+    amount: 1
+  sell:
+    value: 900
+    amount: 1
+Epic_Nugget:
+  code: GOLD_NUGGET%%minecraft:gold_nugget%%1%%0%%{display:{Name:"&5Epic Nugget&r",Lore:["&7Now this is some pog&r","&7level nugget.&r"]},ench:[{id:51,lvl:1}],HideFlags:1}
+  pos: [41, 223, 11, 1]
+  buy:
+    value: 18000
+    amount: 1
+  sell:
+    value: 18000
+    amount: 1
+Areion:
+  code: MONSTER_EGG%%minecraft:spawn_egg%%1%%100%%{display:{Name:"&rSpawn Horse &7(Areion)",Lore:["&8Health Boost IX","Jump Boost I","Regeneration I"]}}
+  pos: [41, 223, 14, 0]
+  buy:
+    value: 36
+    amount: 1
+  sell:
+    value: 36
+    amount: 1
+Tuplar:
+  code: MONSTER_EGG%%minecraft:spawn_egg%%1%%100%%{display:{Name:"&rSpawn Horse &7(Tuplar)",Lore:["&8Health Boost X","Antiknockback X","Resistance I"]}}
+  pos: [39, 223, 14, 0]
+  buy:
+    value: 36
+    amount: 1
+  sell:
+    value: 36
+    amount: 1
+Sleipnir:
+  code: MONSTER_EGG%%minecraft:spawn_egg%%1%%100%%{display:{Name:"&rSpawn Horse &7(Sleipnir)",Lore:["&8Health Boost IX","Jump Boost III","Fire Resistance I"]}}
+  pos: [37, 223, 14, 0]
+  buy:
+    value: 36
+    amount: 1
+  sell:
+    value: 36
+    amount: 1
+Phaethon:
+  code: MONSTER_EGG%%minecraft:spawn_egg%%1%%100%%{display:{Name:"&rSpawn Horse &7(Phaethon)",Lore:["&8Health Boost IV","Speed II"]}}
+  pos: [35, 223, 14, 0]
+  buy:
+    value: 36
+    amount: 1
+  sell:
+    value: 36
+    amount: 1
