@@ -63,7 +63,9 @@ public class Sidebar {
 		
 		if (CombatTracker.combatTime.containsKey(player)) {
 			int combatTime = CombatTracker.combatTime.get(player) - 1;
-			status = ChatColor.RED + "In combat! " + ChatColor.GRAY + "(" + ChatColor.YELLOW + combatTime + "s" + ChatColor.GRAY + ")";
+			if (combatTime > 0) {
+				status = ChatColor.RED + "In combat! " + ChatColor.GRAY + "(" + ChatColor.YELLOW + combatTime + "s" + ChatColor.GRAY + ")";
+			}
 		}
 		
 		Score[] lines = new Score[15];

@@ -3,6 +3,7 @@ package net.nuggetmc.core.commands.admin;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.setup.WorldManager;
 
 public class AdminCommand implements CommandExecutor {
 	
@@ -50,6 +52,15 @@ public class AdminCommand implements CommandExecutor {
 		case "tpall":
 			if (sender instanceof Player) {
 				Bukkit.dispatchCommand(sender, "tp @a " + sender.getName());
+			}
+			return true;
+		case "wr":
+			if (args.length >= 1) {
+				WorldManager.worldReload(args[0]);
+			}
+			else {
+				sender.sendMessage(ChatColor.RED + "Too few arguments!");
+				sender.sendMessage(ChatColor.RED + "Usage: /wr <world>");
 			}
 			return true;
 		}

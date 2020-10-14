@@ -1,16 +1,9 @@
 package net.nuggetmc.core.commands.admin;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,8 +13,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 
+import net.md_5.bungee.api.ChatColor;
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.setup.WorldManager;
 import net.nuggetmc.core.util.TimeConverter;
 
 @SuppressWarnings("all")
@@ -54,7 +49,14 @@ public class DebugCommand implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
-		List<Integer> nuggetList = new ArrayList<>();
+		sender.sendMessage("[main] " + ChatColor.YELLOW + TimeConverter.intToString(WorldManager.count));
+		sender.sendMessage("[nether] " + ChatColor.YELLOW + TimeConverter.intToString(WorldManager.countNether));
+		sender.sendMessage("[end] " + ChatColor.YELLOW + TimeConverter.intToString(WorldManager.countEnd));
+		
+		
+		
+		
+		/*List<Integer> nuggetList = new ArrayList<>();
 		List<String> nameList = new ArrayList<>();
 		String nametemp = "";
 		
@@ -114,7 +116,7 @@ public class DebugCommand implements CommandExecutor {
 			itemspw.println("#" + (i + 1) + " - " + nameList.get(i) + ": " + nuggetList.get(i));
 		}
 		
-		itemspw.close();
+		itemspw.close();*/
 		
 		return true;
 	}

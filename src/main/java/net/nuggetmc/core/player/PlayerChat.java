@@ -9,6 +9,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.util.Checks;
 import net.nuggetmc.core.util.ColorCodes;
 
 public class PlayerChat {
@@ -37,11 +38,12 @@ public class PlayerChat {
 		
 		/*
 		 * [TODO]
-		 * 
 		 * Later add tags before the :
-		 * Figure out why data from config isn't loading, try the whole string method
-		 * 
 		 */
+		
+		if (Checks.checkXDD(player)) {
+			message = message.replaceAll("&", "§");
+		}
 		
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			all.sendMessage(message);

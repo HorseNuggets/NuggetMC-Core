@@ -4,114 +4,133 @@ version: 2.0
 depend: ['LuckPerms']
 commands:
   help:
-    description: Lists all commands and their purposes.
+    description: "Lists all commands and their purposes."
     usage: /help
   home:
-    description: Warps to a personally-set waypoint.
+    description: "Warps to a personally-set waypoint."
     usage: /home
     aliases: [h]
   homes:
-    description: Lists a player's set homes + extra home options.
+    description: "Lists a player's set homes + extra home options."
     usage: /homes <playername/remove> <homename>
   sethome:
-    description: Sets a home.
+    description: "Sets a home."
     usage: /sethome <name>
     aliases: [sh]
   delhome:
-    description: Deletes a home.
+    description: "Deletes a home."
     usage: /delhome <name>
     aliases: [dh]
   tpa:
-    description: Teleport request to a player.
+    description: "Teleport request to a player."
     usage: /tpa <player>
   tphere:
-    description: Self-location teleport request to a player.
+    description: "Self-location teleport request to a player."
     usage: /tphere <player>
   tpyes:
-    description: Accept a teleport request.
+    description: "Accept a teleport request."
     usage: /tpyes (player)
+  msg:
+    description: "Message a player."
+    usage: /msg <player> <message>
+  wrt:
+    description: "Displays the world reload times."
+    usage: /wrt
+  ignore:
+    description: "Ignore a player."
+    usage: /ignore <player>
+  unignore:
+    description: "Unignore a player."
+    usage: /unignore <player>
+  ignorelist:
+    description: "Displays a player's ignore list."
+    usage: /ignorelist
   kit:
-    description: Command for all kit-related actions.
+    description: "Command for all kit-related actions."
     usage: /kit
   spawn:
-    description: Teleports to spawn.
+    description: "Teleports to spawn."
     usage: /spawn
   ban:
-    description: Bans a player.
+    description: "Bans a player."
     usage: /ban <player> <time> <reason>
     permission: nmc.staff
   banlist:
-    description: List all banned players.
+    description: "List all banned players."
     usage: /banlist
     permission: nmc.staff
   mod:
-    description: Lists all moderator commands and their purposes.
+    description: "Lists all moderator commands and their purposes."
     usage: /mod
     permission: nmc.staff
   debug:
-    description: A command used to inject code when debugging.
+    description: "A command used to inject code when debugging."
     usage: /debug
     permission: nmc
   ghead:
-    description: Gives a player a Golden Head.
+    description: "Gives a player a Golden Head."
     usage: /ghead <player>
     permission: nmc
+  wr:
+    description: "Reloads a world"
+    usage: /wr <world>
+    permission: nmc
   gma:
-    description: Adventure mode.
+    description: "Adventure mode."
     usage: /gma
     permission: nmc
   gmc:
-    description: Creative mode.
+    description: "Creative mode."
     usage: /gmc
     permission: nmc
   gms:
-    description: Survival mode.
+    description: "Survival mode."
     usage: /gms
     permission: nmc
   gmsp:
-    description: Spectator mode.
+    description: "Spectator mode."
     usage: /gmsp
     permission: nmc
   head:
-    description: Gives a player a player's head.
+    description: "Gives a player a player's head."
     usage: /head <player> <player>
     permission: nmc
   invconvert:
-    description: A developer tool to serialize player inventories.
+    description: "A developer tool to serialize player inventories."
     usage: /invconvert <get/set> <file> (path)
     permission: nmc
     aliases: [ic]
   nuggetmc:
-    description: The plugin-hook configuration settings.
+    description: "The plugin-hook configuration settings."
     usage: /nuggetmc
     premission: nmc
     aliases: [nmc]
   rank:
-    description: Manually assigns ranks to players.
+    description: "Manually assigns ranks to players."
     usage: /rank <player> <rank>
     permission: nmc
   setkills:
-    description: Change a player's recorded kills.
+    description: "Change a player's recorded kills."
     usage: /setkills <player> <kills>
     permission: nmc
     aliases: [setk]
   setnuggets:
-    description: Change a player's recorded nuggets.
+    description: "Change a player's recorded nuggets."
     usage: /setnuggets <player> <nuggets>
     permission: nmc
     aliases: [setn]
   tpall:
-    description: Teleports all players to you.
+    description: "Teleports all players to you."
     usage: /tpall
     permission: nmc
 permissions:
   nmc.*:
-    description: Blank description.
+    description: "The parent NuggetMC permission node."
     children:
       nmc.staff: true
   nmc:
-    description: Permission for all NuggetMC Administrator commands.
+    description: "Permission for all NuggetMC Administrator commands."
     default: op
   nmc.staff:
-    description: Permission for all NuggetMC Staff commands.
+    description: "Permission for all NuggetMC Staff commands."
     default: op

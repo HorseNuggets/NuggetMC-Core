@@ -24,6 +24,7 @@ import net.nuggetmc.core.commands.def.KitCommand;
 import net.nuggetmc.core.commands.def.TPACommand;
 import net.nuggetmc.core.commands.mod.BanCommand;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.economy.ItemShop;
 import net.nuggetmc.core.economy.Kits;
 import net.nuggetmc.core.gui.GUIMain;
 import net.nuggetmc.core.misc.TabComplete;
@@ -65,14 +66,18 @@ public class Main extends JavaPlugin implements TabCompleter {
 	private Logger logger;
 	
 	public HealthBoost healthboost;
+	public AdminCommand adminCommand;
 	public Announcements announcements;
 	public AutoRespawn autoRespawn;
 	public CombatTracker combatTracker;
 	public Configs configs;
+	public DefaultCommand defaultCommand;
 	public FallListener fallListener;
 	public GHeads gheads;
 	public GUIMain guiMain;
+	public HomeCommand homeCommand;
 	public ItemSerializers itemSerializers;
+	public ItemShop itemShop;
 	public Kits kits;
 	public Levelup levelup;
 	public MoveListener moveListener;
@@ -106,6 +111,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.utilsEnable();
 		this.refreshSidebars();
 		this.commandsEnable();
+		this.taskTimer();
 		return;
 	}
 	
@@ -118,37 +124,46 @@ public class Main extends JavaPlugin implements TabCompleter {
 	
 	private void commandsEnable() {
 		this.tpaCommand = new TPACommand(this);
-		this.getCommand("tpa").setExecutor(tpaCommand);
-		this.getCommand("tphere").setExecutor(tpaCommand);
-		this.getCommand("tpyes").setExecutor(tpaCommand);
+		getCommand("tpa").setExecutor(tpaCommand);
+		getCommand("tphere").setExecutor(tpaCommand);
+		getCommand("tpyes").setExecutor(tpaCommand);
+		
+		this.adminCommand = new AdminCommand(this);
+		getCommand("gma").setExecutor(adminCommand);
+		getCommand("gmc").setExecutor(adminCommand);
+		getCommand("gms").setExecutor(adminCommand);
+		getCommand("gmsp").setExecutor(adminCommand);
+		getCommand("setkills").setExecutor(adminCommand);
+		getCommand("setnuggets").setExecutor(adminCommand);
+		getCommand("tpall").setExecutor(adminCommand);
+		getCommand("wr").setExecutor(adminCommand);
+		
+		this.homeCommand = new HomeCommand();
+		this.getCommand("delhome").setExecutor(homeCommand);
+		this.getCommand("home").setExecutor(homeCommand);
+		this.getCommand("homes").setExecutor(homeCommand);
+		this.getCommand("sethome").setExecutor(homeCommand);
+		
+		this.defaultCommand = new DefaultCommand(this);
+		this.getCommand("spawn").setExecutor(defaultCommand);
+		this.getCommand("wrt").setExecutor(defaultCommand);
 		
 		this.getCommand("ban").setExecutor(new BanCommand(this));
 		this.getCommand("banlist").setExecutor(new BanCommand(this));
 		this.getCommand("debug").setExecutor(new DebugCommand(this));
-		this.getCommand("delhome").setExecutor(new HomeCommand(this));
 		this.getCommand("ghead").setExecutor(new GHeadCommand());
-		this.getCommand("gma").setExecutor(new AdminCommand(this));
-		this.getCommand("gmc").setExecutor(new AdminCommand(this));
-		this.getCommand("gms").setExecutor(new AdminCommand(this));
-		this.getCommand("gmsp").setExecutor(new AdminCommand(this));
 		this.getCommand("head").setExecutor(new HeadCommand());
-		this.getCommand("help").setExecutor(new HelpCommand(this));
-		this.getCommand("home").setExecutor(new HomeCommand(this));
-		this.getCommand("homes").setExecutor(new HomeCommand(this));
+		this.getCommand("help").setExecutor(new HelpCommand());
 		this.getCommand("invconvert").setExecutor(new InvConvertCommand(this));
 		this.getCommand("nuggetmc").setExecutor(new NMCMainCommand(this));
 		this.getCommand("rank").setExecutor(new RankCommand(this));
-		this.getCommand("sethome").setExecutor(new HomeCommand(this));
-		this.getCommand("setkills").setExecutor(new AdminCommand(this));
-		this.getCommand("setnuggets").setExecutor(new AdminCommand(this));
-		this.getCommand("spawn").setExecutor(new DefaultCommand());
-		this.getCommand("tpall").setExecutor(new AdminCommand(this));
 		this.getCommand("kit").setExecutor(new KitCommand(this));
 		return;
 	}
 	
 	private void economyEnable() {
 		this.kits = new Kits(this);
+		this.itemShop = new ItemShop(this);
 		return;
 	}
 	
@@ -217,6 +232,11 @@ public class Main extends JavaPlugin implements TabCompleter {
 	
 	private void utilsEnable() {
 		this.itemSerializers = new ItemSerializers();
+		return;
+	}
+	
+	private void taskTimer() {
+		this.worldManager.worldReloadTimer();
 		return;
 	}
 	

@@ -51,6 +51,19 @@ public class Checks {
 		return false;
 	}
 	
+	public static boolean checkXDD(Player player) {
+		UUID uuid = player.getUniqueId();
+		User user = api.getUserManager().getUser(uuid);
+		
+		switch (user.getPrimaryGroup()) {
+		case "default":
+			return false;
+		case "XD":
+			return false;
+		}
+		return true;
+	}
+	
 	public static boolean cmCheck1(String base) {
 		switch (base.toLowerCase()) {
 		case "/plugins":

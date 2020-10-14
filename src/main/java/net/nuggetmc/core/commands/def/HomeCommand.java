@@ -13,17 +13,14 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
-import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.util.Checks;
 
 public class HomeCommand implements CommandExecutor {
 	
-	private Main plugin;
 	private FileConfiguration homes;
 
-	public HomeCommand(Main plugin) {
-		this.plugin = plugin;
+	public HomeCommand() {
 		this.homes = Configs.homes.getConfig();
 	}
 	
@@ -97,7 +94,7 @@ public class HomeCommand implements CommandExecutor {
 					}
 				}
 				
-				if (homes.getConfigurationSection(uuid + "." + key) == null) {
+				if (homes.getConfigurationSection(key) == null) {
 					if (args.length == 0) {
 						player.sendMessage(ChatColor.YELLOW + "You do not currently have this home set. Do " + ChatColor.GOLD + "/sethome "
 								+ ChatColor.YELLOW + "to set a home.");
