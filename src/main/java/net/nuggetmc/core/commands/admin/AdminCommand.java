@@ -56,7 +56,7 @@ public class AdminCommand implements CommandExecutor {
 			return true;
 		case "wr":
 			if (args.length >= 1) {
-				WorldManager.worldReload(args[0]);
+				WorldManager.worldReload(args[0], args);
 			}
 			else {
 				sender.sendMessage(ChatColor.RED + "Too few arguments!");

@@ -53,8 +53,8 @@ public class PacketHandler {
 								}
 							}
 							
-						} catch (ClassNotFoundException | NoSuchFieldException | SecurityException | ClassCastException e) {
-							e.printStackTrace();
+						} catch (Exception e) {
+							return;
 						}
 					}
 					super.write(channelHandlerContext, packet, channelPromise);

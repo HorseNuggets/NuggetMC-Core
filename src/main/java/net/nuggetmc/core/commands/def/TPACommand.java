@@ -17,6 +17,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.nuggetmc.core.Main;
+import net.nuggetmc.core.modifiers.CombatTracker;
 
 public class TPACommand implements CommandExecutor {
 	
@@ -107,23 +108,42 @@ public class TPACommand implements CommandExecutor {
 				else to = recent.get(player);
 				
 				if (to != null) {
-					String players = to.getName() + "%" + player.getName();
+					String toName = to.getName();
+					String players = toName + "%" + player.getName();
 					
 					if (requestTask.containsKey(players + "%normal")) {
-						String key = players + "%normal";
-						requestTask.get(key).cancel();
-						requestTask.remove(key);
-						if (recent.containsKey(player)) recent.remove(player);
-						to.teleport(player.getLocation());
+						
+						if (CombatTracker.combatTime.containsKey(to)) {
+							player.sendMessage(ChatColor.GOLD + toName + ChatColor.YELLOW + " is currently in combat! Try again in "
+									+ ChatColor.RED + CombatTracker.combatTime.get(to) + ChatColor.YELLOW + " seconds.");
+							return true;
+						}
+						
+						else {
+							String key = players + "%normal";
+							requestTask.get(key).cancel();
+							requestTask.remove(key);
+							if (recent.containsKey(player)) recent.remove(player);
+							to.teleport(player.getLocation());
+						}
 						return true;
 					}
 					
 					else if (requestTask.containsKey(players + "%inverse")) {
-						String key = players + "%inverse";
-						requestTask.get(key).cancel();
-						requestTask.remove(key);
-						if (recent.containsKey(player)) recent.remove(player);
-						player.teleport(to.getLocation());
+						
+						if (CombatTracker.combatTime.containsKey(to)) {
+							player.sendMessage(ChatColor.GOLD + toName + ChatColor.YELLOW + " is currently in combat! Try again in "
+									+ ChatColor.RED + CombatTracker.combatTime.get(to) + ChatColor.YELLOW + " seconds.");
+							return true;
+						}
+						
+						else {
+							String key = players + "%inverse";
+							requestTask.get(key).cancel();
+							requestTask.remove(key);
+							if (recent.containsKey(player)) recent.remove(player);
+							player.teleport(to.getLocation());
+						}
 						return true;
 					}
 				}

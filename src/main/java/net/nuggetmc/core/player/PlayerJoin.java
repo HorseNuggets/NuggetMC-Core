@@ -58,7 +58,7 @@ public class PlayerJoin {
 			}
 		}
 		
-		if (!(player.getGameMode() != GameMode.SURVIVAL)) {
+		if (player.getGameMode() != GameMode.SURVIVAL) {
 			player.setGameMode(GameMode.SURVIVAL);
 		}
 		

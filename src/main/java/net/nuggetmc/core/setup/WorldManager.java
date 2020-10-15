@@ -46,13 +46,6 @@ public class WorldManager {
 	public static int[] pos1;
 	public static int[] pos2;
 	
-	/*
-	 * [TODO]
-	 * Add spawn range coordinates here
-	 * when spawn doesn't exist, don't allow /spawn or /warp to anything in spawn
-	 * when reloading worlds, only send warnings to people in that specific world
-	 */
-	
 	public WorldManager(Main plugin) {
 		WorldManager.plugin = plugin;
 		this.worldsettings = Configs.worldsettings.getConfig();
@@ -95,7 +88,7 @@ public class WorldManager {
 			}
 			
 			else if (count == 0) {
-				worldReload(spawnworld);
+				worldReload(spawnworld, null);
 			}
 			
 			count--;
@@ -121,7 +114,7 @@ public class WorldManager {
 			}
 			
 			else if (countNether == 0) {
-				worldReload("nether");
+				worldReload("nether", null);
 			}
 			
 			countNether--;
@@ -147,7 +140,7 @@ public class WorldManager {
 			}
 			
 			else if (countEnd == 0) {
-				worldReload("end");
+				worldReload("end", null);
 			}
 			
 			countEnd--;
@@ -210,11 +203,21 @@ public class WorldManager {
 			if (world == Bukkit.getWorld("nether")) {
 				int y = event.getFrom().getBlockY();
 				if (y > 140) y = 140;
-				location = new Location(Bukkit.getWorld(spawnworld), event.getFrom().getBlockX() * 8,
+				World mainworld = Bukkit.getWorld(spawnworld);
+				if (mainworld == null) {
+					event.setCancelled(true);
+					return;
+				}
+				location = new Location(mainworld, event.getFrom().getBlockX() * 8,
 						y, event.getFrom().getBlockZ() * 8);
 			}
 			else {
-				location = new Location(Bukkit.getWorld("nether"), event.getFrom().getBlockX() / 8,
+				World nether = Bukkit.getWorld("nether");
+				if (nether == null) {
+					event.setCancelled(true);
+					return;
+				}
+				location = new Location(nether, event.getFrom().getBlockX() / 8,
 						event.getFrom().getBlockY(), event.getFrom().getBlockZ() / 8);
 			}
 			event.setTo(event.getPortalTravelAgent().findOrCreate(location));
@@ -222,7 +225,12 @@ public class WorldManager {
 
 		else if (event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL) {
 			if (world == Bukkit.getWorld(spawnworld)) {
-				Location loc = new Location(Bukkit.getWorld("end"), 100, 50, 0);
+				World end = Bukkit.getWorld("end");
+				if (end == null) {
+					event.setCancelled(true);
+					return;
+				}
+				Location loc = new Location(end, 100, 50, 0);
 				event.setTo(loc);
 				Block block = loc.getBlock();
 				for (int x = block.getX() - 2; x <= block.getX() + 2; x++) {
@@ -240,13 +248,18 @@ public class WorldManager {
 					}
 				}
 			} else if (world == Bukkit.getWorld("end")) {
-				event.setTo(new Location(Bukkit.getWorld(spawnworld), x, y, z));
+				World mainworld = Bukkit.getWorld(spawnworld);
+				if (mainworld == null) {
+					event.setCancelled(true);
+					return;
+				}
+				event.setTo(new Location(mainworld, x, y, z));
 			}
 		}
         return;
 	}
 	
-	public static void worldReload(String worldname) {
+	public static void worldReload(String worldname, String[] args) {
 		final String name = worldname.toLowerCase();
 		World world = Bukkit.getWorld(name);
     	File path = world.getWorldFolder();
@@ -273,7 +286,15 @@ public class WorldManager {
 		    }
 		    
 		    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-		    	File sourceFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "\\backup");
+		    	String random = "" + (int) (Math.random() * 10);
+		    	
+		    	if (args != null) {
+			    	if (args.length >= 2) {
+			    		random = args[1];
+			    	}
+		    	}
+		    	
+		    	File sourceFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "\\backups\\world\\" + random);
 				File targetFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "\\" + name);
 					
 				copyWorld(sourceFolder, targetFolder);
@@ -281,9 +302,15 @@ public class WorldManager {
 				Bukkit.getScheduler().runTask(plugin, () -> {
 					new WorldCreator(name).createWorld();
 					
+					World freshWorld = Bukkit.getWorld(spawnworld);
+					freshWorld.setGameRuleValue("naturalRegeneration", "false");
+					freshWorld.setGameRuleValue("doDaylightCycle", "true");
+					freshWorld.setGameRuleValue("doFireTick", "false");
+					freshWorld.setGameRuleValue("doMobSpawning", "false");
+					
 					for (Player player : waiting) {
 						player.sendMessage(ChatColor.YELLOW + "Done!");
-						Location spawn = new Location(Bukkit.getWorld(spawnworld), x, y, z);
+						Location spawn = new Location(freshWorld, x, y, z);
 						player.teleport(spawn);
 						count = 10800;
 					}
@@ -315,7 +342,8 @@ public class WorldManager {
 		    }
 		    
 		    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-		    	File sourceFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "\\world_nether");
+		    	int random = (int) (Math.random() * 2);
+		    	File sourceFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "\\backups\\world_nether\\" + random);
 				File targetFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "\\" + name);
 					
 				copyWorld(sourceFolder, targetFolder);
@@ -349,7 +377,8 @@ public class WorldManager {
 		    }
 		    
 		    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-		    	File sourceFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "\\world_the_end");
+		    	int random = (int) (Math.random() * 2);
+		    	File sourceFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "\\backups\\world_the_end\\" + random);
 				File targetFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "\\" + name);
 					
 				copyWorld(sourceFolder, targetFolder);
