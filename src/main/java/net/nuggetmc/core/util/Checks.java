@@ -27,6 +27,21 @@ public class Checks {
 		return false;
 	}
 	
+	public static boolean checkStaffUUID(UUID uuid) {
+		User user = api.getUserManager().getUser(uuid);
+		if (user != null) {
+			switch (user.getPrimaryGroup()) {
+			case "mod":
+				return true;
+			case "admin":
+				return true;
+			case "owner":
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public static boolean checkHighStaff(Player player) {
 		UUID uuid = player.getUniqueId();
 		User user = api.getUserManager().getUser(uuid);
@@ -108,5 +123,29 @@ public class Checks {
 			return true;
 		}
 		return false;
+	}
+	
+	public static boolean isInteger(String str) {
+	    if (str == null) {
+	        return false;
+	    }
+	    int length = str.length();
+	    if (length == 0) {
+	        return false;
+	    }
+	    int i = 0;
+	    if (str.charAt(0) == '-') {
+	        if (length == 1) {
+	            return false;
+	        }
+	        i = 1;
+	    }
+	    for (; i < length; i++) {
+	        char c = str.charAt(i);
+	        if (c < '0' || c > '9') {
+	            return false;
+	        }
+	    }
+	    return true;
 	}
 }

@@ -11,9 +11,11 @@ public class Configs {
 	public static ConfigManager defaults;
 	public static ConfigManager gheads;
 	public static ConfigManager homes;
+	public static ConfigManager ignore;
 	public static ConfigManager inventories;
 	public static ConfigManager itemshop;
 	public static ConfigManager kitsconfig;
+	public static ConfigManager mutes;
 	public static ConfigManager nofall;
 	public static ConfigManager playerstats;
 	public static ConfigManager playerstatsArchive;
@@ -26,10 +28,12 @@ public class Configs {
 		defaultsSetup();
 		gheadsSetup();
 		homesSetup();
+		ignoreSetup();
 		inventoriesSetup();
 		itemshopSetup();
 		kitsconfigSetup();
 		noFallSetup();
+		mutesSetup();
 		playerstatsSetup();
 		playerstatsArchiveSetup();
 		worldsettingsSetup();
@@ -41,6 +45,8 @@ public class Configs {
 			return mainconfig;
 		case "announcements.yml":
 			return announcements;
+		case "itemshop.yml":
+			return itemshop;
 		case "modifiers\\gheads.yml":
 			return gheads;
 		case "modifiers\\nofall.yml":
@@ -49,12 +55,14 @@ public class Configs {
 			return defaults;
 		case "playerdata\\homes.yml":
 			return homes;
+		case "playerdata\\ignore.yml":
+			return ignore;
 		case "playerdata\\inventories.yml":
 			return inventories;
-		case "itemshop.yml":
-			return itemshop;
 		case "playerdata\\kits.yml":
 			return kitsconfig;
+		case "playerdata\\mutes.yml":
+			return mutes;
 		case "playerdata\\stats.yml":
 			return playerstats;
 		case "playerdata\\archive\\config.yml":
@@ -107,6 +115,12 @@ public class Configs {
 		return;
 	}
 	
+	private void ignoreSetup() {
+		ignore = new ConfigManager(plugin);
+		ignore.setup("playerdata\\ignore.yml");
+		return;
+	}
+	
 	private void inventoriesSetup() {
 		inventories = new ConfigManager(plugin);
 		inventories.setup("playerdata\\inventories.yml");
@@ -122,6 +136,12 @@ public class Configs {
 	private void kitsconfigSetup() {
 		kitsconfig = new ConfigManager(plugin);
 		kitsconfig.setup("playerdata\\kits.yml");
+		return;
+	}
+	
+	private void mutesSetup() {
+		mutes = new ConfigManager(plugin);
+		mutes.setup("playerdata\\mutes.yml");
 		return;
 	}
 	

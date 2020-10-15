@@ -21,8 +21,10 @@ import net.nuggetmc.core.commands.def.DefaultCommand;
 import net.nuggetmc.core.commands.def.HelpCommand;
 import net.nuggetmc.core.commands.def.HomeCommand;
 import net.nuggetmc.core.commands.def.KitCommand;
+import net.nuggetmc.core.commands.def.MSGCommand;
 import net.nuggetmc.core.commands.def.TPACommand;
 import net.nuggetmc.core.commands.mod.BanCommand;
+import net.nuggetmc.core.commands.mod.MuteCommand;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.economy.ItemShop;
 import net.nuggetmc.core.economy.Kits;
@@ -81,6 +83,8 @@ public class Main extends JavaPlugin implements TabCompleter {
 	public Kits kits;
 	public Levelup levelup;
 	public MoveListener moveListener;
+	public MSGCommand msgCommand;
+	public MuteCommand muteCommand;
 	public NoFall noFall;
 	public PacketHandler packetHandler;
 	public PlayerChat playerChat;
@@ -139,15 +143,27 @@ public class Main extends JavaPlugin implements TabCompleter {
 		getCommand("wr").setExecutor(adminCommand);
 		
 		this.homeCommand = new HomeCommand();
-		this.getCommand("delhome").setExecutor(homeCommand);
-		this.getCommand("home").setExecutor(homeCommand);
-		this.getCommand("homes").setExecutor(homeCommand);
-		this.getCommand("sethome").setExecutor(homeCommand);
+		getCommand("delhome").setExecutor(homeCommand);
+		getCommand("home").setExecutor(homeCommand);
+		getCommand("homes").setExecutor(homeCommand);
+		getCommand("sethome").setExecutor(homeCommand);
 		
 		this.defaultCommand = new DefaultCommand(this);
-		this.getCommand("spawn").setExecutor(defaultCommand);
-		this.getCommand("warp").setExecutor(defaultCommand);
-		this.getCommand("wrt").setExecutor(defaultCommand);
+		getCommand("spawn").setExecutor(defaultCommand);
+		getCommand("warp").setExecutor(defaultCommand);
+		getCommand("wrt").setExecutor(defaultCommand);
+		
+		this.muteCommand = new MuteCommand(this);
+		getCommand("mute").setExecutor(muteCommand);
+		getCommand("unmute").setExecutor(muteCommand);
+		getCommand("mutelist").setExecutor(muteCommand);
+		
+		this.msgCommand = new MSGCommand(this);
+		getCommand("msg").setExecutor(msgCommand);
+		getCommand("r").setExecutor(msgCommand);
+		getCommand("ignore").setExecutor(msgCommand);
+		getCommand("unignore").setExecutor(msgCommand);
+		getCommand("ignorelist").setExecutor(msgCommand);
 		
 		this.getCommand("ban").setExecutor(new BanCommand(this));
 		this.getCommand("banlist").setExecutor(new BanCommand(this));
@@ -178,6 +194,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.tabComplete = new TabComplete(this);
 		this.getCommand("nuggetmc").setTabCompleter(this);
 		this.getCommand("rank").setTabCompleter(this);
+		this.getCommand("unignore").setTabCompleter(this);
 		return;
 	}
 	

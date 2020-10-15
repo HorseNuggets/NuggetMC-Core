@@ -33,6 +33,9 @@ commands:
   msg:
     description: "Message a player."
     usage: /msg <player> <message>
+  r:
+    description: "Reply to a player."
+    usage: /r <message>
   wrt:
     description: "Displays the world reload times."
     usage: /wrt
@@ -54,6 +57,18 @@ commands:
   warp:
     description: "Warps to a location."
     usage: /warp <location>
+  mute:
+    description: "Mutes a player."
+    usage: /mute <player> <time> <reason>
+    permission: nmc.staff
+  unmute:
+    description: "Unmutes a player."
+    usage: /unmute <player>
+    permission: nmc.staff
+  mutelist:
+    description: "Lists all muted players."
+    usage: /mutelist
+    permission: nmc.staff
   ban:
     description: "Bans a player."
     usage: /ban <player> <time> <reason>

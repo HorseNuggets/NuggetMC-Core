@@ -41,30 +41,6 @@ public class BanCommand implements CommandExecutor {
 	 * 
 	 */
 	
-	public static boolean isInteger(String str) {
-	    if (str == null) {
-	        return false;
-	    }
-	    int length = str.length();
-	    if (length == 0) {
-	        return false;
-	    }
-	    int i = 0;
-	    if (str.charAt(0) == '-') {
-	        if (length == 1) {
-	            return false;
-	        }
-	        i = 1;
-	    }
-	    for (; i < length; i++) {
-	        char c = str.charAt(i);
-	        if (c < '0' || c > '9') {
-	            return false;
-	        }
-	    }
-	    return true;
-	}
-	
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		switch (label.toLowerCase()) {
@@ -87,7 +63,7 @@ public class BanCommand implements CommandExecutor {
 						if (end == 's' || end == 'm' || end == 'h' || end == 'd') {
 							String numtest = subArgs[i].substring(0, subArgs[i].length() - 1);
 							
-							if (isInteger(numtest)) {
+							if (Checks.isInteger(numtest)) {
 								timeResult = timeResult + subArgs[i] + " ";
 								continue;
 							}
@@ -183,12 +159,12 @@ public class BanCommand implements CommandExecutor {
 			if (args.length >= 1) {
 				
 				String reason = "No reason specified";
-				int bantime = TimeConverter.stringToInt("30d");
+				int bantime = TimeConverter.stringToInt("7d");
 				
 				if (args.length >= 2) {
 					
 					String[] subArgs = Arrays.copyOfRange(args, 1, args.length);
-					String[] ultraSubArgs = Arrays.copyOfRange(args, 1, args.length);
+					String[] ultraSubArgs = null;
 					
 					String timeResult = "";
 					String reasonResult = "";
@@ -198,7 +174,7 @@ public class BanCommand implements CommandExecutor {
 						if (end == 's' || end == 'm' || end == 'h' || end == 'd') {
 							String numtest = subArgs[i].substring(0, subArgs[i].length() - 1);
 							
-							if (isInteger(numtest)) {
+							if (Checks.isInteger(numtest)) {
 								timeResult = timeResult + subArgs[i] + " ";
 								continue;
 							}
@@ -213,17 +189,27 @@ public class BanCommand implements CommandExecutor {
 						reasonResult = reasonResult + ultraSubArgs[i] + " ";
 					}
 					
+
+					if (ultraSubArgs != null) {
+						for (int i = 0; i < ultraSubArgs.length; i++) {
+							reasonResult = reasonResult + ultraSubArgs[i] + " ";
+						}
+						
+						if (reasonResult.endsWith(" ")) {
+							reasonResult = reasonResult.substring(0, reasonResult.length() - 1);
+						}
+						
+						if (!reasonResult.equals("")) {
+							reason = reasonResult;
+						}
+					}
+					
 					if (timeResult.endsWith(" ")) {
 						timeResult = timeResult.substring(0, timeResult.length() - 1);
 					}
-					if (reasonResult.endsWith(" ")) {
-						reasonResult = reasonResult.substring(0, reasonResult.length() - 1);
-					}
+					
 					if (!timeResult.equals("")) {
 						bantime = TimeConverter.stringToInt(timeResult);
-					}
-					if (!reasonResult.equals("")) {
-						reason = reasonResult;
 					}
 				}
 				
@@ -314,18 +300,12 @@ public class BanCommand implements CommandExecutor {
 			String reason = entry.getReason();
 			Date expiration = entry.getExpiration();
 			
-			event.disallow(Result.KICK_BANNED, banmsg(reason, expiration));
-			return;
-		}
-		
-		BanList list = Bukkit.getBanList(BanList.Type.IP);
-		BanEntry entry = list.getBanEntry(player.getName());
-		
-		if (entry != null) {
-			String reason = entry.getReason();
-			Date expiration = entry.getExpiration();
+			int bantime = (int) ((expiration.getTime() - System.currentTimeMillis()) / 1000);
+			if (bantime <= 0) {
+				list.pardon(player.getName());
+			}
 			
-			event.disallow(Result.KICK_BANNED, banmsg(reason, expiration));
+			else event.disallow(Result.KICK_BANNED, banmsg(reason, expiration));
 		}
 		return;
 	}

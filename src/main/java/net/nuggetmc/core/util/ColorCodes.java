@@ -89,37 +89,37 @@ public class ColorCodes {
 	}
 	
 	public static String rankNameTag(UUID uuid) {
-		String rank = "";
+		String rank = ChatColor.WHITE + "";
 		
 		User user = api.getUserManager().getUser(uuid);
 		
 		switch (user.getPrimaryGroup()) {
 		case "xd":
-			rank = ChatColor.YELLOW + "[" + ChatColor.GOLD + "XD" + ChatColor.YELLOW + "]";
+			rank = ChatColor.YELLOW + "[" + ChatColor.GOLD + "XD" + ChatColor.YELLOW + "] ";
 			break;
 		case "xdd":
-			rank = ChatColor.GREEN + "[" + ChatColor.GOLD + "XDD" + ChatColor.GREEN + "]";
+			rank = ChatColor.GREEN + "[" + ChatColor.GOLD + "XDD" + ChatColor.GREEN + "] ";
 			break;
 		case "xddd":
-			rank = ChatColor.AQUA + "[" + ChatColor.GOLD + "XDDD" + ChatColor.AQUA + "]";
+			rank = ChatColor.AQUA + "[" + ChatColor.GOLD + "XDDD" + ChatColor.AQUA + "] ";
 			break;
 		case "promo":
-			rank = ChatColor.DARK_AQUA + "[PROMO]";
+			rank = ChatColor.DARK_AQUA + "[PROMO] ";
 			break;
 		case "youtube":
-			rank = ChatColor.GOLD + "[" + ChatColor.WHITE + "YOU" + ChatColor.RED + "TUBE" + ChatColor.GOLD + "]";
+			rank = ChatColor.GOLD + "[" + ChatColor.WHITE + "YOU" + ChatColor.RED + "TUBE" + ChatColor.GOLD + "] ";
 			break;
 		case "builder":
-			rank = ChatColor.BLUE + "[BUILDER]";
+			rank = ChatColor.BLUE + "[BUILDER] ";
 			break;
 		case "mod":
-			rank = ChatColor.DARK_GREEN + "[MOD]";
+			rank = ChatColor.DARK_GREEN + "[MOD] ";
 			break;
 		case "admin":
-			rank = ChatColor.RED + "[ADMIN]";
+			rank = ChatColor.RED + "[ADMIN] ";
 			break;
 		case "owner":
-			rank = ChatColor.RED + "[OWNER]";
+			rank = ChatColor.RED + "[OWNER] ";
 			break;
 		}
 		return rank;

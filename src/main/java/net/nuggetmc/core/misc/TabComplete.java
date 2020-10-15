@@ -10,12 +10,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatTabCompleteEvent;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.nuggetmc.core.Main;
+import net.nuggetmc.core.data.Configs;
 
 public class TabComplete {
 	
@@ -89,8 +91,7 @@ public class TabComplete {
 			break;
 			
 		case "rank":
-			switch (args.length) {
-			case 2:
+			if (args.length == 2) {
 				LuckPerms api = LuckPermsProvider.get();
 				Set<Group> groups = api.getGroupManager().getLoadedGroups();
 				List<String> groupnames = new ArrayList<>();
@@ -107,6 +108,28 @@ public class TabComplete {
 				return groupnames;
 			}
 			break;
+			
+		case "unignore":
+			if (args.length == 1) {
+				if (sender instanceof Player) {
+					Player player = (Player) sender;
+					List<String> groupnames = new ArrayList<>();
+					for (String key : Configs.ignore.getConfig().getStringList(player.getUniqueId().toString())) {
+						String name = Configs.playerstats.getConfig().getString("players." + key + ".name");
+						if (name != null) {
+							groupnames.add(name);
+						}
+					}
+					
+					Collections.sort(groupnames);
+					
+					if (tabConditional(args[0])) {
+						groupnames = autofill(groupnames, args[0]);
+					}
+					
+					return groupnames;
+				}
+			}
 		}
 		return null;
 	}
@@ -123,7 +146,7 @@ public class TabComplete {
 		List<String> newlist = new ArrayList<>();
 		for (String entry : groupnames) {
 			if (entry.length() >= input.length()) {
-				if (input.equals(entry.substring(0, input.length()))) {
+				if (input.equalsIgnoreCase(entry.substring(0, input.length()))) {
 					newlist.add(entry);
 				}
 			}
