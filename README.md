@@ -16,12 +16,12 @@ Some of the main features this plugin includes are:
 - [x] Essential Staff Commands
 - [x] Inventory Serialization
 - [ ] Items with Custom Abilities
-- [ ] Map Reloading
+- [x] Map Reloading
 - [x] Multiworld Support
 - [x] Optimized Combat Tracking
-- [ ] Optimized Player Homes
+- [x] Optimized Player Homes
 - [ ] Optimized Player Vaults
-- [ ] Optimized TPA
+- [x] Optimized TPA
 - [x] Player Tracking Compasses
 - [ ] Player Warps
 - [x] Separate Config Reloading Support
