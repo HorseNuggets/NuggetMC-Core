@@ -1,9 +1,10 @@
-prefix: §8[§4Alert§8]§f
+prefix: "&8[&4Alert&8]&f"
 messages:
-- "<prefix> Don't forget to vote! §e/vote"
-- "<prefix> You can do §e/help §fto view the general commands."
-- "<prefix> Do §e/rules §fto view the rules."
-- "<prefix> Do §e/kit §fto recieve a kit."
+- "<prefix> Don't forget to vote! &e/vote"
+- "<prefix> You can do &e/help &fto view the general commands."
+- "<prefix> Do &e/rules &fto view the rules."
+- "<prefix> Do &e/kit &fto recieve a kit."
+- "<prefix> Tip: Shift-click on the shop signs to sell all of your items at once!"
 time:
   delay: 1s
   period: 3m 20s

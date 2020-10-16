@@ -28,6 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scoreboard.Team;
 
 import net.minecraft.server.v1_8_R3.MojangsonParseException;
 import net.minecraft.server.v1_8_R3.MojangsonParser;
@@ -50,8 +51,21 @@ public class ItemShop implements CommandExecutor {
 		this.shopSetup();
 	}
 	
-	private int[] pos1 = {28, 209, 1};
-	private int[] pos2 = {50, 233, 29};
+	private static int[] pos1 = {28, 209, 1};
+	private static int[] pos2 = {50, 233, 29};
+	
+	public static boolean isInShop(Location loc) {
+		int x = loc.getBlockX();
+    	int y = loc.getBlockY();
+    	int z = loc.getBlockZ();
+    	
+    	if (loc.getWorld().getName().equals("main")) {
+	    	if (x > pos1[0] && x < pos2[0] && y > pos1[1] && y < pos2[1] && z > pos1[2] && z < pos2[2]) {
+	    		return true;
+	    	}
+    	}
+		return false;
+	}
 	
 	class Wrapper {
 	    public Wrapper(String tag, ItemStack value) {
@@ -133,7 +147,7 @@ public class ItemShop implements CommandExecutor {
 				sign.update();
 			}
 			
-			ItemStack item = new ItemStack(Material.valueOf(sep[0]), Integer.parseInt(sep[2]), Byte.parseByte(sep[3]));
+			ItemStack item = new ItemStack(Material.valueOf(sep[0]), Integer.parseInt(sep[2]), Short.parseShort(sep[3]));
 			net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
 			
 			ItemStack bukkitStack = null;
@@ -224,7 +238,7 @@ public class ItemShop implements CommandExecutor {
 									if (price == 1) s = "";
 									player.sendMessage("You need at least " + ChatColor.YELLOW
 											+ NumberFormat.getNumberInstance(Locale.US).format(price)
-											+ ChatColor.RESET + " point" + s + " to buy this!");
+											+ ChatColor.RESET + " nugget" + s + " to buy this!");
 									return;
 								}
 								
@@ -235,7 +249,9 @@ public class ItemShop implements CommandExecutor {
 									Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + player.getName() + " " + tag);
 									playerstats.set("players." + uuid + ".nuggets", nuggets - price);
 									Configs.playerstats.saveConfig();
-									plugin.sidebar.enable(player);
+									Team display = player.getScoreboard().getTeam("nuggets");
+									String output = NumberFormat.getNumberInstance(Locale.US).format(nuggets - price);
+									display.setSuffix(output);
 								}
 							}
 							
@@ -263,7 +279,9 @@ public class ItemShop implements CommandExecutor {
 										
 										playerstats.set("players." + uuid + ".nuggets", nuggets + sells * price);
 										Configs.playerstats.saveConfig();
-										plugin.sidebar.enable(player);
+										Team display = player.getScoreboard().getTeam("nuggets");
+										String output = NumberFormat.getNumberInstance(Locale.US).format(nuggets + sells * price);
+										display.setSuffix(output);
 
 										player.playSound(location, Sound.CHICKEN_EGG_POP, 1, 1);
 									}
@@ -272,7 +290,9 @@ public class ItemShop implements CommandExecutor {
 										player.getInventory().removeItem(item);
 										playerstats.set("players." + uuid + ".nuggets", nuggets + price);
 										Configs.playerstats.saveConfig();
-										plugin.sidebar.enable(player);
+										Team display = player.getScoreboard().getTeam("nuggets");
+										String output = NumberFormat.getNumberInstance(Locale.US).format(nuggets + price);
+										display.setSuffix(output);
 
 										double dX = location.getX();
 										double dY = location.getY();

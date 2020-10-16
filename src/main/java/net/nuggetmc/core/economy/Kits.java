@@ -201,6 +201,4 @@ public class Kits {
 		
 		return;
 	}
-	
-	// [TODO] Register PlayerJoinEvent later for daily free kits
 }

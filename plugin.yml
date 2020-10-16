@@ -13,6 +13,21 @@ commands:
   homes:
     description: "Lists a player's set homes + extra home options."
     usage: /homes <playername/remove> <homename>
+  levels:
+    description: "Displays leveling information."
+    usage: /levels
+  boat:
+    description: "Gives the player a boat."
+    usage: /boat
+  suicide:
+    description: "kys"
+    usage: /suicide
+  rules:
+    description: "Lists the server rules."
+    usage: /rules
+  discord:
+    description: "Returns the server Discord link."
+    usage: /discord
   sethome:
     description: "Sets a home."
     usage: /sethome <name>
@@ -51,6 +66,9 @@ commands:
   kit:
     description: "Command for all kit-related actions."
     usage: /kit
+  stats:
+    description: "Displays a user's stats."
+    usage: /stats
   spawn:
     description: "Teleports to spawn."
     usage: /spawn
@@ -81,9 +99,18 @@ commands:
     description: "Lists all moderator commands and their purposes."
     usage: /mod
     permission: nmc.staff
+  vanish:
+    description: "Lets staff members turn invisible to watch over players."
+    usage: /vanish
+    permission: nmc.staff
+    aliases: [v]
   debug:
     description: "A command used to inject code when debugging."
     usage: /debug
+    permission: nmc
+  alert:
+    description: "Broadcasts a message to the server."
+    usage: /alert
     permission: nmc
   ghead:
     description: "Gives a player a Golden Head."

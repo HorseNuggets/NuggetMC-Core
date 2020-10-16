@@ -8,7 +8,7 @@ Diamond_Sword:
     value: 6
     amount: 1
 Teleport_Crystal:
-  code: NETHER_STAR%%minecraft:nether_star%%1%%0%%{display:{Name:"&5Teleport Crystal&r",Lore:["&7Teleport to a player&r","&7within &e10 &7meters.&r"]},ench:[{id:51,lvl:<random>}],HideFlags:1}
+  code: NETHER_STAR%%minecraft:nether_star%%1%%0%%{display:{Name:"&5Teleport Crystal",Lore:["&7Teleport to a player&r","&7within &e10 &7meters.&r"]},ench:[{id:51,lvl:<random>}],HideFlags:1}
   pos: [39, 223, 9, 0]
   buy:
     value: 9
@@ -80,7 +80,7 @@ Areion:
     value: 36
     amount: 1
 Tuplar:
-  code: MONSTER_EGG%%minecraft:spawn_egg%%1%%100%%{display:{Name:"&rSpawn Horse &7(Tuplar)",Lore:["&8Health Boost X","&8Antiknockback X","&8Resistance I"]}}
+  code: MONSTER_EGG%%minecraft:spawn_egg%%1%%100%%{display:{Name:"&rSpawn Horse &7(Tulpar)",Lore:["&8Health Boost X","&8Antiknockback X","&8Resistance I"]}}
   pos: [39, 223, 14, 0]
   buy:
     value: 36
@@ -125,14 +125,14 @@ Diamond:
     value: 64
     amount: 1
 Boom_Box:
-  code: REDSTONE_BLOCK%%minecraft:redstone_block%%1%%0%%{display:{Name:"&cBoom Box"}}
+  code: REDSTONE_BLOCK%%minecraft:redstone_block%%1%%0%%{display:{Name:"&cBoom Box"},ench:[{id:51,lvl:<random>}],HideFlags:1}
   pos: [39, 223, 16, 1]
   buy:
     value: 16
     amount: 1
   sell:
-    value: 1
-    amount: 1
+    value: -1
+    amount: -1
 Head:
   code: SKULL_ITEM%%minecraft:skull%%1%%3%%{}
   pos: [41, 223, 16, 1]
@@ -152,7 +152,7 @@ Ender_Pearl:
     value: 1
     amount: 1
 Sword_of_JUSTICE:
-  code: IRON_SWORD%%minecraft:iron_sword%%1%%0%%{ench:[{id:19,lvl:10}],display:{Name:"&eSword of JUSTICE",Lore:["&7Lightning X"]}}
+  code: IRON_SWORD%%minecraft:iron_sword%%1%%250%%{ench:[{id:19,lvl:10}],display:{Name:"&eSword of JUSTICE",Lore:["&7Lightning X"]}}
   pos: [39, 223, 19, 0]
   buy:
     value: 56
@@ -188,7 +188,7 @@ Golden_Apple:
     value: 384
     amount: 1
 Blast_Totem:
-  code: NETHER_STALK%%minecraft:nether_wart%%1%%0%%{display:{Name:"&cBlast Totem"},ench:[{id:51,lvl:<random>}],HideFlags:1}
+  code: NETHER_STALK%%minecraft:nether_wart%%1%%0%%{display:{Name:"&cBlast Totem",Lore:["&7Create an explosion","&7on death."]},ench:[{id:51,lvl:<random>}],HideFlags:1}
   pos: [37, 223, 21, 1]
   buy:
     value: 250

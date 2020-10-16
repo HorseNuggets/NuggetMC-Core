@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.nuggetmc.core.commands.admin.AdminCommand;
@@ -28,7 +27,10 @@ import net.nuggetmc.core.commands.mod.MuteCommand;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.economy.ItemShop;
 import net.nuggetmc.core.economy.Kits;
+import net.nuggetmc.core.gui.EnderChest;
 import net.nuggetmc.core.gui.GUIMain;
+import net.nuggetmc.core.misc.FlyVanish;
+import net.nuggetmc.core.misc.ItemEffects;
 import net.nuggetmc.core.misc.TabComplete;
 import net.nuggetmc.core.modifiers.CombatTracker;
 import net.nuggetmc.core.modifiers.HealthBoost;
@@ -74,10 +76,13 @@ public class Main extends JavaPlugin implements TabCompleter {
 	public CombatTracker combatTracker;
 	public Configs configs;
 	public DefaultCommand defaultCommand;
+	public EnderChest enderChest;
 	public FallListener fallListener;
+	public FlyVanish flyVanish;
 	public GHeads gheads;
 	public GUIMain guiMain;
 	public HomeCommand homeCommand;
+	public ItemEffects itemEffects;
 	public ItemSerializers itemSerializers;
 	public ItemShop itemShop;
 	public Kits kits;
@@ -104,16 +109,16 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.announcementsEnable();
 		this.economyEnable();
 		this.guiEnable();
+		this.itemEffectsEnable();
 		this.listenersEnable();
 		this.loggerEnable();
 		this.modifiersEnable();
-		this.packetHandlerEnable();
 		this.playerEventsEnable();
+		this.protocolEnable();
 		this.sidebarEnable();
 		this.tabCompleteEnable();
 		this.toolsEnable();
 		this.utilsEnable();
-		this.refreshSidebars();
 		this.commandsEnable();
 		this.taskTimer();
 		return;
@@ -133,6 +138,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		getCommand("tpyes").setExecutor(tpaCommand);
 		
 		this.adminCommand = new AdminCommand(this);
+		getCommand("alert").setExecutor(adminCommand);
 		getCommand("gma").setExecutor(adminCommand);
 		getCommand("gmc").setExecutor(adminCommand);
 		getCommand("gms").setExecutor(adminCommand);
@@ -149,7 +155,13 @@ public class Main extends JavaPlugin implements TabCompleter {
 		getCommand("sethome").setExecutor(homeCommand);
 		
 		this.defaultCommand = new DefaultCommand(this);
+		getCommand("boat").setExecutor(defaultCommand);
+		getCommand("discord").setExecutor(defaultCommand);
+		getCommand("levels").setExecutor(defaultCommand);
+		getCommand("rules").setExecutor(defaultCommand);
 		getCommand("spawn").setExecutor(defaultCommand);
+		getCommand("stats").setExecutor(defaultCommand);
+		getCommand("suicide").setExecutor(defaultCommand);
 		getCommand("warp").setExecutor(defaultCommand);
 		getCommand("wrt").setExecutor(defaultCommand);
 		
@@ -165,6 +177,8 @@ public class Main extends JavaPlugin implements TabCompleter {
 		getCommand("unignore").setExecutor(msgCommand);
 		getCommand("ignorelist").setExecutor(msgCommand);
 		
+		this.getCommand("ushop").setExecutor(itemShop);
+		
 		this.getCommand("ban").setExecutor(new BanCommand(this));
 		this.getCommand("banlist").setExecutor(new BanCommand(this));
 		this.getCommand("debug").setExecutor(new DebugCommand(this));
@@ -174,7 +188,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.getCommand("invconvert").setExecutor(new InvConvertCommand(this));
 		this.getCommand("nuggetmc").setExecutor(new NMCMainCommand(this));
 		this.getCommand("rank").setExecutor(new RankCommand(this));
-		this.getCommand("ushop").setExecutor(itemShop);
+		this.getCommand("vanish").setExecutor(new FlyVanish(this));
 		this.getCommand("kit").setExecutor(new KitCommand(this));
 		return;
 	}
@@ -198,6 +212,11 @@ public class Main extends JavaPlugin implements TabCompleter {
 		return;
 	}
 	
+	private void itemEffectsEnable() {
+		this.itemEffects = new ItemEffects(this);
+		return;
+	}
+	
 	private void listenersEnable() {
 		Bukkit.getServer().getPluginManager().registerEvents(new Listeners(this), this);
 		return;
@@ -210,6 +229,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 	
 	private void modifiersEnable() {
 		this.autoRespawn = new AutoRespawn(this);
+		this.enderChest = new EnderChest();
 		this.fallListener = new FallListener(this);
 		this.healthboost = new HealthBoost(this);
 		this.moveListener = new MoveListener(this);
@@ -221,26 +241,17 @@ public class Main extends JavaPlugin implements TabCompleter {
 		}
 	}
 	
-	private void packetHandlerEnable() {
-		this.packetHandler = new PacketHandler();
-		return;
-	}
-	
 	private void playerEventsEnable() {
 		this.levelup = new Levelup();
 		this.playerChat = new PlayerChat(this);
-		this.playerJoin = new PlayerJoin();
+		this.playerJoin = new PlayerJoin(this);
 		this.playerKill = new PlayerKill(this);
 		this.playerSpawnLocation = new PlayerSpawnLocation(this);
 		this.playerStats = new PlayerStats(this);
 	}
 	
-	private void refreshSidebars() {
-		Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				this.sidebar.enable(player);
-			}
-		}, 10);
+	private void protocolEnable() {
+		//this.packetHandler = new PacketHandler();
 		return;
 	}
 	

@@ -256,11 +256,6 @@ public class GUIKits {
 		inv.setItem(31, kit18);
 		inv.setItem(32, kit19);
 		inv.setItem(33, kit20);
-		/*
-		 * inv.setItem(24, soon); inv.setItem(25, soon); inv.setItem(28, soon);
-		 * inv.setItem(29, soon); inv.setItem(30, soon); inv.setItem(31, soon);
-		 * inv.setItem(32, soon); inv.setItem(33, soon);
-		 */
 
 		inv.setItem(49, kit21);
 		player.updateInventory();

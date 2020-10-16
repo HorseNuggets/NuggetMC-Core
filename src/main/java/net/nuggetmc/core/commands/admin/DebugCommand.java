@@ -55,7 +55,9 @@ public class DebugCommand implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
-		Player player = (Player) sender;
+		Bukkit.broadcastMessage(plugin.getDataFolder().getAbsolutePath());
+		
+		/*Player player = (Player) sender;
 		ItemStack item = player.getInventory().getItemInHand();
 		net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
 		
@@ -89,7 +91,7 @@ public class DebugCommand implements CommandExecutor {
 		
 		itemspw.println(nbt.toString());
 		
-		itemspw.close();
+		itemspw.close();*/
 		
 		
 		/*List<Integer> nuggetList = new ArrayList<>();

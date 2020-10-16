@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
+import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.util.ColorCodes;
 import net.nuggetmc.core.util.ItemSerializers;
@@ -22,11 +23,13 @@ import net.nuggetmc.core.util.SuperRandom;
 
 public class PlayerJoin {
 	
+	private Main plugin;
 	private List<String> joinmsg;
 	private FileConfiguration config;
 	private FileConfiguration defaults;
 	
-	public PlayerJoin() {
+	public PlayerJoin(Main plugin) {
+		this.plugin = plugin;
 		this.configSetup();
 		this.defaultInvSetup();
 	}
@@ -63,17 +66,20 @@ public class PlayerJoin {
 		}
 		
 		if (!config.contains("players." + uuid)) {
-			config.set("players." + uuid + ".name", playername);
-			config.set("players." + uuid + ".level", 1);
-			config.set("players." + uuid + ".kills", 0);
-			config.set("players." + uuid + ".nuggets", 100);
-			
-			int count = config.getInt("count") + 1;
-			config.set("count", count);
-			Configs.playerstats.saveConfig();
-			
-			Bukkit.broadcastMessage("Welcome " + playername + " to NuggetMC! " + ChatColor.GRAY + "(" + ChatColor.YELLOW + "#"
-					+ NumberFormat.getNumberInstance(Locale.US).format(count) + ChatColor.GRAY + ")");
+			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+				config.set("players." + uuid + ".name", playername);
+				config.set("players." + uuid + ".rank", "default");
+				config.set("players." + uuid + ".level", 1);
+				config.set("players." + uuid + ".kills", 0);
+				config.set("players." + uuid + ".nuggets", 100);
+				
+				int count = config.getInt("count") + 1;
+				config.set("count", count);
+				Configs.playerstats.saveConfig();
+				
+				Bukkit.broadcastMessage("Welcome " + playername + " to NuggetMC! " + ChatColor.GRAY + "(" + ChatColor.YELLOW + "#"
+						+ NumberFormat.getNumberInstance(Locale.US).format(count) + ChatColor.GRAY + ")");
+			});
 			
 			player.getInventory().setContents(items);
 			player.getInventory().setArmorContents(armor);
@@ -81,9 +87,14 @@ public class PlayerJoin {
 			randomDiamondArmor(player, ((byte) (SuperRandom.generate() * 4)));
 		}
 		
-		for (int i = 0; i < joinmsg.size(); i++) {
-			player.sendMessage(joinmsg.get(i));
-		}
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+			for (int i = 0; i < joinmsg.size(); i++) {
+				player.sendMessage(joinmsg.get(i).replaceAll("&", "§"));
+			}
+			
+			config.set("players." + uuid + ".rank", ColorCodes.getRankName(uuid));
+			Configs.playerstats.saveConfig();
+		});
 		
 		return;
 	}

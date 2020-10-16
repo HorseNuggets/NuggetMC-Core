@@ -11,7 +11,6 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatTabCompleteEvent;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -25,12 +24,6 @@ public class TabComplete {
 	
 	public TabComplete(Main plugin) {
 		this.plugin = plugin;
-	}
-	
-	public void tab(PlayerChatTabCompleteEvent event) {
-		Bukkit.broadcastMessage(event.getChatMessage());
-		Bukkit.broadcastMessage(event.getTabCompletions().toString());
-		return;
 	}
 	
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {

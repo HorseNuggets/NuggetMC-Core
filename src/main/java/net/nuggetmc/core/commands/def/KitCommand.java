@@ -1,6 +1,8 @@
 package net.nuggetmc.core.commands.def;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,12 +17,14 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scoreboard.Team;
 
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.economy.KitCosts;
 import net.nuggetmc.core.economy.KitGear;
 import net.nuggetmc.core.gui.GUIKits;
+import net.nuggetmc.core.setup.WorldManager;
 import net.nuggetmc.core.util.TimeConverter;
 
 public class KitCommand implements CommandExecutor {
@@ -180,9 +184,18 @@ public class KitCommand implements CommandExecutor {
 				}
 				else {
 					ItemStack sword = new ItemStack(Material.IRON_AXE, 1);
-					sword.addEnchantment(Enchantment.DAMAGE_ALL, 4);
+					sword.addEnchantment(Enchantment.DURABILITY, 1);
 					ItemMeta swordn = sword.getItemMeta();
 					swordn.setDisplayName(ChatColor.AQUA + "Horseman Axe");
+					ArrayList<String> swordl = new ArrayList<String>();
+					swordl.add(ChatColor.GRAY + "Jousting I");
+					swordl.add("");
+					swordl.add(ChatColor.DARK_GRAY + "This weapon's damage doubles if");
+					swordl.add(ChatColor.DARK_GRAY + "you are on a horse.");
+					swordl.add("");
+					swordl.add(ChatColor.BLUE + "+5 " + ChatColor.DARK_BLUE + "(+10)" + ChatColor.BLUE + " Attack Damage");
+					swordn.setLore(swordl);
+					swordn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 					sword.setItemMeta(swordn);
 					player.getInventory().addItem(sword);
 
@@ -231,9 +244,14 @@ public class KitCommand implements CommandExecutor {
 
 					kit = false;
 					check = true;
-
-					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-							"effect " + player.getName() + " haste 120");
+					
+					if (WorldManager.isInSpawn(player.getLocation())) {
+						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
+								"effect " + player.getName() + " haste 120");
+					}
+					else {
+						player.sendMessage("You didn't recieve the effects since you aren't at spawn!");
+					}
 
 					BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 					scheduler.scheduleSyncDelayedTask(plugin, () -> {
@@ -287,9 +305,18 @@ public class KitCommand implements CommandExecutor {
 				}
 				else {
 					ItemStack sword = new ItemStack(Material.DIAMOND_AXE, 1);
-					sword.addEnchantment(Enchantment.DAMAGE_ALL, 4);
+					sword.addEnchantment(Enchantment.DURABILITY, 1);
 					ItemMeta swordn = sword.getItemMeta();
 					swordn.setDisplayName(ChatColor.AQUA + "Jouster Axe");
+					ArrayList<String> swordl = new ArrayList<String>();
+					swordl.add(ChatColor.GRAY + "Jousting I");
+					swordl.add("");
+					swordl.add(ChatColor.DARK_GRAY + "This weapon's damage doubles if");
+					swordl.add(ChatColor.DARK_GRAY + "you are on a horse.");
+					swordl.add("");
+					swordl.add(ChatColor.BLUE + "+6 " + ChatColor.DARK_BLUE + "(+12)" + ChatColor.BLUE + " Attack Damage");
+					swordn.setLore(swordl);
+					swordn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 					sword.setItemMeta(swordn);
 					player.getInventory().addItem(sword);
 
@@ -342,8 +369,13 @@ public class KitCommand implements CommandExecutor {
 
 					BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 					scheduler.scheduleSyncDelayedTask(plugin, () -> {
-						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-								"effect " + player.getName() + " strength 30");
+						if (WorldManager.isInSpawn(player.getLocation())) {
+							Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
+									"effect " + player.getName() + " strength 30");
+						}
+						else {
+							player.sendMessage("You didn't recieve the effects since you aren't at spawn!");
+						}
 						ItemStack pearl = new ItemStack(Material.IRON_HOE, 1);
 						pearl.addEnchantment(Enchantment.DURABILITY, 1);
 						pearl.setDurability((short) 250);
@@ -403,17 +435,23 @@ public class KitCommand implements CommandExecutor {
 						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
 								"give " + player.getName() + " ender_pearl 4");
 
-						ItemStack tpcr = new ItemStack(Material.NETHER_STAR, 8);
-						ItemMeta i = tpcr.getItemMeta();
-						i.setDisplayName(ChatColor.DARK_PURPLE + "Teleport Crystal");
+						for (int j = 0; j < 8; j++) {
+							ItemStack tpcr = new ItemStack(Material.NETHER_STAR);
+							
+							int random = (int) (Math.random() * 214748367 + 1);
+							tpcr.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, random);
+							
+							ItemMeta i = tpcr.getItemMeta();
+							i.setDisplayName(ChatColor.DARK_PURPLE + "Teleport Crystal");
 
-						ArrayList<String> lore1 = new ArrayList<String>();
-						lore1.add(ChatColor.DARK_GRAY + "Teleport to a player within");
-						lore1.add(ChatColor.DARK_GRAY + "10 meters.");
-						i.setLore(lore1);
-
-						tpcr.setItemMeta(i);
-						player.getInventory().addItem(tpcr);
+							ArrayList<String> lore1 = new ArrayList<String>();
+							lore1.add(ChatColor.GRAY + "Teleport to a player");
+							lore1.add(ChatColor.GRAY + "within " + ChatColor.YELLOW + "10 " + ChatColor.GRAY + "meters.");
+							i.setLore(lore1);
+							i.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+							tpcr.setItemMeta(i);
+							player.getInventory().addItem(tpcr);
+						}
 					}, 2);
 					
 					config.set("players." + uuid + ".nuggets", nuggets - cost);
@@ -438,9 +476,14 @@ public class KitCommand implements CommandExecutor {
 
 					kit = false;
 					check = true;
-
-					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-							"effect " + player.getName() + " fire_resistance 180");
+					
+					if (WorldManager.isInSpawn(player.getLocation())) {
+						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
+								"effect " + player.getName() + " fire_resistance 180");
+					}
+					else {
+						player.sendMessage("You didn't recieve the effects since you aren't at spawn!");
+					}
 
 					BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 					scheduler.scheduleSyncDelayedTask(plugin, () -> {
@@ -501,20 +544,22 @@ public class KitCommand implements CommandExecutor {
 					check = true;
 
 					BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-					scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
-						public void run() {
-							Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-									"give " + player.getName() + " tnt 6");
-							Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-									"give " + player.getName() + " redstone_block 2 0 {display:{Name:\"§cBoom Box\"}}");
-						}
+					scheduler.scheduleSyncDelayedTask(plugin, () -> {
+						int random = (int) (Math.random() * 214748367 + 1);
+						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
+								"give " + player.getName() + " tnt 6");
+						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
+								"give " + player.getName() + " redstone_block 1 0 {display:{Name:\"§cBoom Box\"},ench:[{id:51,lvl:" + random + "}],HideFlags:1}");
+						random = (int) (Math.random() * 214748367 + 1);
+						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
+								"give " + player.getName() + " redstone_block 1 0 {display:{Name:\"§cBoom Box\"},ench:[{id:51,lvl:" + random + "}],HideFlags:1}");
 					}, 2);
 
 					int totem = (int) (Math.random() * 6 + 1);
 					if (totem == 4) {
 						scheduler.scheduleSyncDelayedTask(plugin, () -> {
 							Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "give " + player.getName()
-									+ " nether_wart 1 0 {display:{Name:\"§cBlast Totem§r\"},ench:[{id:34,lvl:1}],HideFlags:1}");
+									+ " nether_wart 1 0 {display:{Name:\"§cBlast Totem§r\",Lore:[\"§7Create an explosion\",\"§7on death.\"]},ench:[{id:34,lvl:1}],HideFlags:1}");
 						}, 2);
 					}
 					
@@ -542,7 +587,7 @@ public class KitCommand implements CommandExecutor {
 					ItemStack sword = new ItemStack(Material.IRON_SWORD, 1);
 					sword.addEnchantment(Enchantment.DAMAGE_ALL, 3);
 					ItemMeta swordn = sword.getItemMeta();
-					swordn.setDisplayName(ChatColor.AQUA + "Samurai Sword");
+					swordn.setDisplayName(ChatColor.AQUA + "Samurai " + ChatColor.AQUA + "Sword" + ChatColor.WHITE);
 					ArrayList<String> swordl = new ArrayList<String>();
 					swordl.add(ChatColor.GRAY + "Block I");
 					swordl.add("");
@@ -568,9 +613,14 @@ public class KitCommand implements CommandExecutor {
 
 					kit = true;
 					check = true;
-
-					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-							"effect " + player.getName() + " speed 60 1");
+					
+					if (WorldManager.isInSpawn(player.getLocation())) {
+						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
+								"effect " + player.getName() + " speed 60 1");
+					}
+					else {
+						player.sendMessage("You didn't recieve the effects since you aren't at spawn!");
+					}
 					
 					config.set("players." + uuid + ".nuggets", nuggets - cost);
 				}
@@ -599,7 +649,7 @@ public class KitCommand implements CommandExecutor {
 					ItemStack sword2 = new ItemStack(Material.GOLD_SWORD, 1);
 					sword2.addEnchantment(Enchantment.KNOCKBACK, 2);
 					ItemMeta swordn = sword.getItemMeta();
-					swordn.setDisplayName(ChatColor.AQUA + "Templar Sword");
+					swordn.setDisplayName(ChatColor.AQUA + "Templar " + ChatColor.AQUA + "Sword" + ChatColor.WHITE);
 					ArrayList<String> swordl = new ArrayList<String>();
 					
 					swordl.add(ChatColor.GRAY + "Healing II");
@@ -648,9 +698,14 @@ public class KitCommand implements CommandExecutor {
 
 					kit = true;
 					check = true;
-
-					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-							"effect " + player.getName() + " absorption 15 2");
+					
+					if (WorldManager.isInSpawn(player.getLocation())) {
+						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
+								"effect " + player.getName() + " absorption 15 2");
+					}
+					else {
+						player.sendMessage("You didn't recieve the effects since you aren't at spawn!");
+					}
 
 					BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 					scheduler.scheduleSyncDelayedTask(plugin, () -> {
@@ -687,7 +742,7 @@ public class KitCommand implements CommandExecutor {
 					ItemStack sword = new ItemStack(Material.IRON_SWORD, 1);
 					sword.addEnchantment(Enchantment.DAMAGE_ALL, 4);
 					ItemMeta swordn = sword.getItemMeta();
-					swordn.setDisplayName(ChatColor.AQUA + "Valkyrie Sword");
+					swordn.setDisplayName(ChatColor.AQUA + "Valkyrie " + ChatColor.AQUA + "Sword" + ChatColor.WHITE);
 					ArrayList<String> swordl = new ArrayList<String>();
 					swordl.add(ChatColor.GRAY + "Lightning I");
 					swordn.setLore(swordl);
@@ -814,18 +869,18 @@ public class KitCommand implements CommandExecutor {
 					check = true;
 
 					ItemStack boen = new ItemStack(Material.BONE, 1);
-					boen.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 10);
+					boen.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 9);
 					ItemMeta boenn = boen.getItemMeta();
 					boenn.setDisplayName(ChatColor.AQUA + "Sans Bone");
 					ArrayList<String> boenl = new ArrayList<String>();
 					boenl.add("");
-					boenl.add(ChatColor.BLUE + "+12.5 Attack Damage");
+					boenl.add(ChatColor.BLUE + "+11.25 Attack Damage");
 					boenn.setLore(boenl);
 					boen.setItemMeta(boenn);
 
 					ItemStack boww = new ItemStack(Material.BOW, 1, (short) 355);
 					ItemMeta t = boww.getItemMeta();
-					t.setDisplayName(ChatColor.BLUE + "Gaster Blaster");
+					t.setDisplayName(ChatColor.BLUE + "Gaster " + ChatColor.BLUE + "Blaster" + ChatColor.WHITE);
 					ArrayList<String> bowl = new ArrayList<String>();
 					bowl.add(ChatColor.GRAY + "do you wanna have a bad time?");
 					t.setLore(bowl);
@@ -862,7 +917,8 @@ public class KitCommand implements CommandExecutor {
 					ItemStack pearl = new ItemStack(Material.GOLD_NUGGET, 1);
 					pearl.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
 					ItemMeta pearln = pearl.getItemMeta();
-					pearln.setDisplayName(ChatColor.DARK_PURPLE + "The Infinity Gauntlet");
+					pearln.setDisplayName(ChatColor.DARK_PURPLE + "The " + ChatColor.DARK_PURPLE + "Infinity "
+							+ ChatColor.DARK_PURPLE + "Gauntlet" + ChatColor.WHITE);
 					ArrayList<String> pearl1 = new ArrayList<String>();
 					pearl1.add(ChatColor.GRAY + "Thanos I");
 					pearl1.add("");
@@ -921,30 +977,23 @@ public class KitCommand implements CommandExecutor {
 				break;
 				
 			case "spoon":
+				if (!player.getName().equals("SpoonyTheSpoon")) {
+					if (level < requiredLevel) {
+						notSufficientLevel = true;
+						break;
+					}
+					if (nuggets < cost) {
+						loss = true;
+						break;
+					}
+				}
 				
-				/*
-				 * [TODO]
-				 * Check for SPOON rank for bypass
-				 * 
-				 */
+				check = true;
+				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "give " + player.getName()
+						+ " iron_shovel 1 0 {display:{Name:\"§r§9§kX§r"
+						+ " §9The §9Spoon §kX§f\",Lore:[\"§7Lightning V\"]},ench:[{id:16,lvl:8},{id:32,lvl:8},{id:34,lvl:3}]}");
 				
-				if (level < requiredLevel) {
-					notSufficientLevel = true;
-					break;
-				}
-				if (nuggets < cost) {
-					loss = true;
-					break;
-				}
-				else {
-					check = true;
-
-					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "give " + player.getName()
-							+ " iron_shovel 1 0 {display:{Name:\"§r§9§kX§r"
-							+ " §9The Spoon §kX§r\",Lore:[\"§7Lightning V\"]},ench:[{id:16,lvl:8},{id:32,lvl:8},{id:34,lvl:3}]}");
-					
-					config.set("players." + uuid + ".nuggets", nuggets - cost);
-				}
+				if (!player.getName().equals("SpoonyTheSpoon")) config.set("players." + uuid + ".nuggets", nuggets - cost);
 				break;
 			}
 			
@@ -956,7 +1005,7 @@ public class KitCommand implements CommandExecutor {
 			
 			if (loss) {
 				int nuggetDifference = cost - nuggets;
-				sender.sendMessage(ChatColor.WHITE + "You need " + ChatColor.YELLOW + nuggetDifference
+				sender.sendMessage(ChatColor.WHITE + "You need " + ChatColor.YELLOW + NumberFormat.getNumberInstance(Locale.US).format(nuggetDifference)
 						+ ChatColor.WHITE + " more nuggets to purchase " + ChatColor.YELLOW + kitName + ChatColor.WHITE + "!");
 				return true;
 			}
@@ -1055,7 +1104,9 @@ public class KitCommand implements CommandExecutor {
 		}
 		
 		Configs.playerstats.saveConfig();
-		plugin.sidebar.enable(player);
+		Team display = player.getScoreboard().getTeam("nuggets");
+		String val = NumberFormat.getNumberInstance(Locale.US).format(Configs.playerstats.getConfig().get("players." + uuid + ".nuggets"));
+		display.setSuffix(val);
 		return true;
 	}
 }

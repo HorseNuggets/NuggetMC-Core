@@ -25,7 +25,7 @@ public class Announcements {
 		if (Configs.mainconfig.getConfig().getBoolean("enabled.announcements")) {
 			messages = Configs.announcements.getConfig().getStringList("messages");
 			for (int i = 0; i < messages.size(); i++) {
-				messages.set(i, messages.get(i).replaceAll("<prefix>", Configs.announcements.getConfig().getString("prefix")));
+				messages.set(i, messages.get(i).replaceAll("<prefix>", Configs.announcements.getConfig().getString("prefix")).replaceAll("&", "§"));
 			}
 		}
 		return;

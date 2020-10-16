@@ -28,9 +28,9 @@ public class ConfigManager {
 		String yml = path;
 		ArrayList<String> dir = null;
 		
-		if (path.contains("\\")) {
+		if (path.contains("/")) {
 		
-			String[] pathParts = path.split(Pattern.quote("\\"));
+			String[] pathParts = path.split(Pattern.quote("/"));
 			dir = new ArrayList<String>(Arrays.asList(pathParts));
 			dir.remove(dir.size() - 1);
 			
@@ -47,7 +47,7 @@ public class ConfigManager {
 		
 		if (dir != null) {
 			for (int i = 0; i < dir.size(); i++) {
-				absoluteDir = absoluteDir + "\\" + dir.get(i);
+				absoluteDir = absoluteDir + "/" + dir.get(i);
 				File folder = new File(absoluteDir);
 				if (!folder.exists()) {
 					folder.mkdir();
@@ -55,13 +55,13 @@ public class ConfigManager {
 			}
 		}
 		
-		file = new File(absoluteDir + "\\" + yml);
+		file = new File(absoluteDir + "/" + yml);
 		
 		if (!file.exists()) {
 			try {
 				try {
 					FileUtils.copyInputStreamToFile(plugin.getResource("resources/"
-							+ path.replaceAll(Pattern.quote("\\"), "/")), new File(absoluteDir + "\\" + yml));
+							+ path.replaceAll(Pattern.quote("/"), "/")), new File(absoluteDir + "/" + yml));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

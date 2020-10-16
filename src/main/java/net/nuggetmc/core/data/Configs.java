@@ -47,25 +47,25 @@ public class Configs {
 			return announcements;
 		case "itemshop.yml":
 			return itemshop;
-		case "modifiers\\gheads.yml":
+		case "modifiers/gheads.yml":
 			return gheads;
-		case "modifiers\\nofall.yml":
+		case "modifiers/nofall.yml":
 			return nofall;
-		case "playerdata\\defaults\\config.yml":
+		case "playerdata/defaults/config.yml":
 			return defaults;
-		case "playerdata\\homes.yml":
+		case "playerdata/homes.yml":
 			return homes;
-		case "playerdata\\ignore.yml":
+		case "playerdata/ignore.yml":
 			return ignore;
-		case "playerdata\\inventories.yml":
+		case "playerdata/inventories.yml":
 			return inventories;
-		case "playerdata\\kits.yml":
+		case "playerdata/kits.yml":
 			return kitsconfig;
-		case "playerdata\\mutes.yml":
+		case "playerdata/mutes.yml":
 			return mutes;
-		case "playerdata\\stats.yml":
+		case "playerdata/stats.yml":
 			return playerstats;
-		case "playerdata\\archive\\config.yml":
+		case "playerdata/archive/config.yml":
 			return playerstatsArchive;
 		case "worldsettings.yml":
 			return worldsettings;
@@ -99,31 +99,31 @@ public class Configs {
 	
 	private void defaultsSetup() {
 		defaults = new ConfigManager(plugin);
-		defaults.setup("playerdata\\defaults\\config.yml");
+		defaults.setup("playerdata/defaults/config.yml");
 		return;
 	}
 	
 	private void gheadsSetup() {
 		gheads = new ConfigManager(plugin);
-		gheads.setup("modifiers\\gheads.yml");
+		gheads.setup("modifiers/gheads.yml");
 		return;
 	}
 	
 	private void homesSetup() {
 		homes = new ConfigManager(plugin);
-		homes.setup("playerdata\\homes.yml");
+		homes.setup("playerdata/homes.yml");
 		return;
 	}
 	
 	private void ignoreSetup() {
 		ignore = new ConfigManager(plugin);
-		ignore.setup("playerdata\\ignore.yml");
+		ignore.setup("playerdata/ignore.yml");
 		return;
 	}
 	
 	private void inventoriesSetup() {
 		inventories = new ConfigManager(plugin);
-		inventories.setup("playerdata\\inventories.yml");
+		inventories.setup("playerdata/inventories.yml");
 		return;
 	}
 	
@@ -135,31 +135,31 @@ public class Configs {
 	
 	private void kitsconfigSetup() {
 		kitsconfig = new ConfigManager(plugin);
-		kitsconfig.setup("playerdata\\kits.yml");
+		kitsconfig.setup("playerdata/kits.yml");
 		return;
 	}
 	
 	private void mutesSetup() {
 		mutes = new ConfigManager(plugin);
-		mutes.setup("playerdata\\mutes.yml");
+		mutes.setup("playerdata/mutes.yml");
 		return;
 	}
 	
 	private void noFallSetup() {
 		nofall = new ConfigManager(plugin);
-		nofall.setup("modifiers\\nofall.yml");
+		nofall.setup("modifiers/nofall.yml");
 		return;
 	}
 	
 	private void playerstatsSetup() {
 		playerstats = new ConfigManager(plugin);
-		playerstats.setup("playerdata\\stats.yml");
+		playerstats.setup("playerdata/stats.yml");
 		return;
 	}
 	
 	private void playerstatsArchiveSetup() {
 		playerstatsArchive = new ConfigManager(plugin);
-		playerstatsArchive.setup("playerdata\\archive\\config.yml");
+		playerstatsArchive.setup("playerdata/archive/config.yml");
 		return;
 	}
 	

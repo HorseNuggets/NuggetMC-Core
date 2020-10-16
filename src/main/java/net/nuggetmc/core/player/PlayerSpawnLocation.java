@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.misc.FlyVanish;
 
 public class PlayerSpawnLocation {
 	
@@ -33,12 +34,6 @@ public class PlayerSpawnLocation {
 	}
 	
 	public void setSpawn(Player player) {
-		/*Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-			if (player.isDead()) {
-				player.spigot().respawn();
-			}
-		}, 20);*/
-		
 		World world = Bukkit.getWorld(worldname);
 		if (world != null) {
 			Location spawn = new Location(world, x, y, z);
@@ -64,15 +59,11 @@ public class PlayerSpawnLocation {
 				}
 				
 				if (player.getWorld().getName().equals(worldname)) {
-					
 					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 						for (Player all : Bukkit.getOnlinePlayers()) {
-							
-							/*
-							 * [TODO] Unless they are vanished, show the player.
-							 */
-							
-							all.showPlayer(player);
+							if (!FlyVanish.vanish.contains(player)) {
+								all.showPlayer(player);
+							}
 						}
 					}, 20);
 					

@@ -1,5 +1,9 @@
 package net.nuggetmc.core.player;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -18,10 +22,18 @@ public class PlayerChat {
 	
 	private Main plugin;
 	private FileConfiguration mutes;
+	private List<String> filter;
+	private Map<Player, Long> msgTime;
+	private Map<Player, String> msgPrev;
+	private Map<Player, Long> msgPrevTime;
 	
 	public PlayerChat(Main plugin) {
 		this.plugin = plugin;
 		this.mutes = Configs.mutes.getConfig();
+		this.msgTime = new HashMap<>();
+		this.msgPrev = new HashMap<>();
+		this.msgPrevTime = new HashMap<>();
+		this.setupFilter();
 	}
 	
 	public void onChat(AsyncPlayerChatEvent event) {
@@ -40,16 +52,60 @@ public class PlayerChat {
 			}
 		}
 		
-		String playername = player.getName();
 		String message = event.getMessage();
 		
-		message = playername + ChatColor.WHITE + ": " + message;
+		if (!Checks.checkStaff(player)) {
+			if (msgTime.containsKey(player)) {
+				Long difference = msgTime.get(player) - System.currentTimeMillis() / 1000;
+				if (difference > 0) {
+					String s = "s";
+					if (difference == 1) s = "";
+					player.sendMessage(ChatColor.RED + "You are chatting too fast. Try again in " + ChatColor.YELLOW
+							+ difference + ChatColor.RED + " second" + s + ".");
+					return;
+				}
+				
+				else {
+					msgTime.remove(player);
+				}
+			}
+			
+			if (msgPrev.containsKey(player)) {
+				if (message.equals(msgPrev.get(player))) {
+					if (msgPrevTime.containsKey(player)) {
+						Long difference = msgPrevTime.get(player) - System.currentTimeMillis() / 1000;
+						if (difference > 0) {
+							player.sendMessage(ChatColor.RED + "You can't say the same message twice!");
+							return;
+						}
+						
+						else {
+							msgPrevTime.remove(player);
+						}
+					}
+				}
+			}
+			
+			for (String i : filter) {
+				if (message.toLowerCase().replaceAll(" ", "").contains(i)) {
+					player.sendMessage(ChatColor.YELLOW + "Omg that's racist!!!!1 1");
+					return;
+				}
+			}
+		}
+
+		String playername = player.getName();
+		String raw = message;
+		String start = "";
+		
+		start = playername + ChatColor.WHITE + ": ";
 		
 		int playerkillsnum = Configs.playerstats.getConfig().getInt("players." + uuid + ".kills");
 		plugin.playerStats.allign(player, uuid, playerkillsnum);
 		int playerlevel = Configs.playerstats.getConfig().getInt("players." + uuid + ".level");
 		
-		message = ChatColor.DARK_GRAY + "[" + ColorCodes.levelToTag(playerlevel) + ChatColor.DARK_GRAY + "] " + ColorCodes.rankNameTag(uuid) + message;
+		start = ChatColor.DARK_GRAY + "[" + ColorCodes.levelToTag(playerlevel) + ChatColor.DARK_GRAY + "] " + ColorCodes.rankNameTag(uuid) + start;
+		message = start + message;
 		
 		/*
 		 * [TODO]
@@ -61,6 +117,17 @@ public class PlayerChat {
 		}
 		
 		if (Checks.checkStaff(player)) {
+			if (raw.startsWith("#")) {
+				raw = raw.substring(1);
+				if (raw.startsWith(" ")) {
+					raw = raw.substring(1);
+				}
+				if (!raw.equals("")) {
+					staffChat(player, start, raw);
+					return;
+				}
+			}
+			
 			for (Player all : Bukkit.getOnlinePlayers()) {
 				all.sendMessage(message);
 			}
@@ -72,9 +139,28 @@ public class PlayerChat {
 					all.sendMessage(message);
 				}
 			}
+			
+			msgTime.put(player, 2 + System.currentTimeMillis() / 1000);
+			msgPrevTime.put(player, 30 + System.currentTimeMillis() / 1000);
+			msgPrev.put(player, raw);
 		}
 		
 		Bukkit.getConsoleSender().sendMessage(message);
+		return;
+	}
+	
+	private void setupFilter() {
+		this.filter = Arrays.asList("nigga", "nigger");
+		return;
+	}
+	
+	private void staffChat(Player player, String start, String message) {
+		for (Player all : Bukkit.getOnlinePlayers()) {
+			if (Checks.checkStaff(all)) {
+				all.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_GREEN + "STAFF" + ChatColor.DARK_GRAY + "] "
+						+ ChatColor.RESET + start + ChatColor.AQUA + message);
+			}
+		}
 		return;
 	}
 }

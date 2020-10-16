@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.scoreboard.Team;
 
 import net.md_5.bungee.api.ChatColor;
 import net.nuggetmc.core.Main;
@@ -65,6 +66,19 @@ public class WorldManager {
 		pos2[1] = worldsettings.getInt("spawn.region.pos2.y");
 		pos2[2] = worldsettings.getInt("spawn.region.pos2.z");
 		return;
+	}
+	
+	public static boolean isInSpawn(Location loc) {
+		int x = loc.getBlockX();
+    	int y = loc.getBlockY();
+    	int z = loc.getBlockZ();
+    	
+    	if (loc.getWorld().getName().equals(spawnworld)) {
+	    	if (x > pos1[0] && x < pos2[0] && y > pos1[1] && y < pos2[1] && z > pos1[2] && z < pos2[2]) {
+	    		return true;
+	    	}
+    	}
+		return false;
 	}
 	
 	public void worldReloadTimer() {
@@ -276,7 +290,9 @@ public class WorldManager {
 		    			waiting.add(player);
 		    			if (CombatTracker.combatTime.containsKey(player)) {
 		    				CombatTracker.combatTime.remove(player);
-		    				plugin.sidebar.enable(player);
+		    				Team display = player.getScoreboard().getTeam("status");
+	        				String output = ChatColor.GREEN + "Idle";
+	        				display.setSuffix(output);
 		    			}
 		    		}
 		    	}
@@ -294,8 +310,8 @@ public class WorldManager {
 			    	}
 		    	}
 		    	
-		    	File sourceFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "\\backups\\world\\" + random);
-				File targetFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "\\" + name);
+		    	File sourceFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/backups/world/" + random);
+				File targetFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/" + name);
 					
 				copyWorld(sourceFolder, targetFolder);
 				
@@ -332,7 +348,9 @@ public class WorldManager {
 		    			player.sendMessage(ChatColor.YELLOW + "Done!");
 		    			if (CombatTracker.combatTime.containsKey(player)) {
 		    				CombatTracker.combatTime.remove(player);
-		    				plugin.sidebar.enable(player);
+		    				Team display = player.getScoreboard().getTeam("status");
+	        				String output = ChatColor.GREEN + "Idle";
+	        				display.setSuffix(output);
 		    			}
 		    		}
 		    	}
@@ -343,8 +361,8 @@ public class WorldManager {
 		    
 		    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 		    	int random = (int) (Math.random() * 2);
-		    	File sourceFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "\\backups\\world_nether\\" + random);
-				File targetFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "\\" + name);
+		    	File sourceFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/backups/world_nether/" + random);
+				File targetFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/" + name);
 					
 				copyWorld(sourceFolder, targetFolder);
 				
@@ -367,7 +385,9 @@ public class WorldManager {
 		    			player.sendMessage(ChatColor.YELLOW + "Done!");
 		    			if (CombatTracker.combatTime.containsKey(player)) {
 		    				CombatTracker.combatTime.remove(player);
-		    				plugin.sidebar.enable(player);
+		    				Team display = player.getScoreboard().getTeam("status");
+	        				String output = ChatColor.GREEN + "Idle";
+	        				display.setSuffix(output);
 		    			}
 		    		}
 		    	}
@@ -378,8 +398,8 @@ public class WorldManager {
 		    
 		    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 		    	int random = (int) (Math.random() * 2);
-		    	File sourceFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "\\backups\\world_the_end\\" + random);
-				File targetFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "\\" + name);
+		    	File sourceFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/backups/world_the_end/" + random);
+				File targetFolder = new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/" + name);
 					
 				copyWorld(sourceFolder, targetFolder);
 				

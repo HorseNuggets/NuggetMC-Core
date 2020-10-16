@@ -1,5 +1,7 @@
 package net.nuggetmc.core.commands.admin;
 
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -8,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Team;
 
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
@@ -63,6 +66,22 @@ public class AdminCommand implements CommandExecutor {
 				sender.sendMessage(ChatColor.RED + "Usage: /wr <world>");
 			}
 			return true;
+		case "alert":
+			if (args.length < 1) {
+				sender.sendMessage(ChatColor.RED + "Usage: /alert <msg>");
+				return true;
+			}
+
+			String msg = "";
+
+			for (int i = 0; i < args.length; i++)
+				msg = msg + " " + args[i];
+
+			msg = msg.replaceAll("&", "§");
+			Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Alert" + ChatColor.DARK_GRAY + "]"
+					+ ChatColor.WHITE + msg);
+
+			return true;
 		}
 		return true;
 	}
@@ -81,10 +100,20 @@ public class AdminCommand implements CommandExecutor {
 		}
 		
 		if (uuid != null) {
-			Configs.playerstats.getConfig().set("players." + uuid + "." + type, Integer.parseInt(args[1]));
+			int kills = Integer.parseInt(args[1]);
+			Configs.playerstats.getConfig().set("players." + uuid + "." + type, kills);
+			plugin.playerStats.allign(player, uuid, kills);
 			Configs.playerstats.saveConfig();
 			if (player != null) {
-				plugin.sidebar.enable(player);
+				Team killsDisplay = player.getScoreboard().getTeam(type);
+				String val = NumberFormat.getNumberInstance(Locale.US).format(kills);
+				killsDisplay.setSuffix(val);
+				
+				if (type.equals("kills")) {
+					Team levelDisplay = player.getScoreboard().getTeam("level");
+					int level = Configs.playerstats.getConfig().getInt("players." + uuid + ".level");
+					levelDisplay.setSuffix(String.valueOf(level));
+				}
 			}
 		}
 	}

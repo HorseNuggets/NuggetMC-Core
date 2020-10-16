@@ -1,15 +1,13 @@
 non-default-worlds:
 - main
-- alpha
-- test
 non-default-worlds-nether:
 - nether
 non-default-worlds-the-end:
 - end
 uhckit-worlds:
 - main
-- world_nether
-- world_the_end
+- nether
+- end
 spawn:
   world: main
   coordinates:

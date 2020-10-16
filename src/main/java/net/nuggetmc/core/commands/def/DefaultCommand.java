@@ -1,21 +1,30 @@
 package net.nuggetmc.core.commands.def;
 
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.player.Levelup;
 import net.nuggetmc.core.setup.WorldManager;
 import net.nuggetmc.core.util.Checks;
+import net.nuggetmc.core.util.ColorCodes;
 import net.nuggetmc.core.util.TimeConverter;
 
 public class DefaultCommand implements CommandExecutor {
@@ -28,31 +37,66 @@ public class DefaultCommand implements CommandExecutor {
 	private String linspace = ChatColor.GRAY + "--------------------------------------";
 
 	public DefaultCommand(Main plugin) {
+		this.defineConfigs();
 		this.defineSpawn();
 		this.defineWarps();
+		this.defineMaps();
+		this.defineLevelsMsg();
 		this.plugin = plugin;
 	}
 	
-	private void defineSpawn() {
-		this.spawnworld = Configs.worldsettings.getConfig().getString("spawn.world");
-		this.x = Configs.worldsettings.getConfig().getDouble("spawn.coordinates.x");
-		this.y = Configs.worldsettings.getConfig().getDouble("spawn.coordinates.y");
-		this.z = Configs.worldsettings.getConfig().getDouble("spawn.coordinates.z");
+	private FileConfiguration worldsettings;
+	private FileConfiguration playerstats;
+	
+	private void defineConfigs() {
+		this.worldsettings = Configs.worldsettings.getConfig();
+		this.playerstats = Configs.playerstats.getConfig();
 		return;
 	}
 	
-	private Map<String, String> warps = new HashMap<>();
+	private void defineSpawn() {
+		this.spawnworld = worldsettings.getString("spawn.world");
+		this.x = worldsettings.getDouble("spawn.coordinates.x");
+		this.y = worldsettings.getDouble("spawn.coordinates.y");
+		this.z = worldsettings.getDouble("spawn.coordinates.z");
+		return;
+	}
 	
 	/*
 	 * [TODO]
 	 * Store the values as a float array
 	 */
 	
+	private Map<String, String> warps = new HashMap<>();
+	
 	private void defineWarps() {
 		warps.put("ushop", "world%28.5%222%15.5%270%0");
 		return;
 	}
 	
+	private static Map<Player, Long> boat;
+	
+	private void defineMaps() {
+		boat = new HashMap<>();
+	}
+	
+	private List<String> levels;
+	
+	private void defineLevelsMsg() {
+		levels = new ArrayList<String>();
+		levels.add(linspace);
+		levels.add("Leveling Kill Requirements:");
+		for (int i = 1; i <= 12; i++) {
+			levels.add(ChatColor.GRAY + " ▪ " + ChatColor.WHITE + ColorCodes.levelToName(i) + ChatColor.GRAY + " (" + ColorCodes.levelToTag(i)
+				+ ChatColor.GRAY + ") " + ChatColor.WHITE + "("
+				+ ChatColor.YELLOW + NumberFormat.getNumberInstance(Locale.US).format(Levelup.checkKills(i))
+				+ ChatColor.WHITE + ")");
+		}
+		levels.add(linspace);
+		return;
+	}
+	
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		switch (label) {
 		case "spawn":
@@ -65,6 +109,7 @@ public class DefaultCommand implements CommandExecutor {
 				}
 				else {
 					player.teleport(new Location(Bukkit.getWorld(spawnworld), x, y, z));
+					plugin.healthboost.healthSetup(player);
 					player.sendMessage(ChatColor.WHITE + "You have warped to " + ChatColor.YELLOW + "spawn" + ChatColor.WHITE + ".");
 				}
 			}
@@ -121,6 +166,117 @@ public class DefaultCommand implements CommandExecutor {
 				sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "Nether:" + ChatColor.RED + TimeConverter.intToString(WorldManager.countNether));
 				sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "The End:" + ChatColor.RED + TimeConverter.intToString(WorldManager.countEnd));
 				sender.sendMessage(linspace);
+			});
+			break;
+			
+		case "levels":
+			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+				for (String i : levels) {
+					sender.sendMessage(i);
+				}
+			});
+			break;
+			
+		case "boat":
+			if (sender instanceof Player) {
+				Player player = (Player) sender;
+				
+				if (boat.containsKey(player)) {
+					Long difference = boat.get(player) - System.currentTimeMillis() / 1000;
+					if (difference > 0) {
+						String s = "s";
+						if (difference == 1) s = "";
+						player.sendMessage(ChatColor.WHITE + "You can't get a boat again for another " + ChatColor.YELLOW
+								+ difference + ChatColor.WHITE + " second" + s + ".");
+						return true;
+					}
+					
+					else {
+						boat.remove(player);
+					}
+				}
+				
+				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "give " + player.getName() + " boat");
+				player.sendMessage("You have recieved a boat.");
+				boat.put(player, 10 + System.currentTimeMillis() / 1000);
+			}
+			break;
+			
+		case "suicide":
+			if (sender instanceof Player) {
+				Player player = (Player) sender;
+				player.setHealth(0);
+			}
+			break;
+			
+		case "rules":
+			sender.sendMessage(linspace);
+			sender.sendMessage("Server Rules:");
+			sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "(1) No making cobble monsters");
+			sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "(2) No cheating");
+			sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "(3) If you wish to team, team against higher");
+			sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + " level players, not lower level players.");
+			sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "(4) No racism, toxicity");
+			sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "(5) No kill boosting (spam-killing a player");
+			sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + " who isn't playing just for levels)");
+			sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "(6) Obey your lord and savior horse nuggets");
+			sender.sendMessage(linspace);
+			break;
+			
+		case "stats":
+			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+				if (args.length >= 1) {
+					Player player = Bukkit.getPlayer(args[0]);
+					String playername = args[0];
+					UUID uuid = null;
+					
+					if (player == null) {
+						OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(args[0]);
+						if (offPlayer != null) {
+							uuid = offPlayer.getUniqueId();
+							playername = offPlayer.getName();
+						}
+						
+						else {
+							sender.sendMessage(ChatColor.GOLD + playername + ChatColor.YELLOW + " has never joined the server!");
+							return;
+						}
+					}
+					
+					else {
+						uuid = player.getUniqueId();
+						playername = player.getName();
+					}
+					
+					if (uuid != null) {
+						String name = playerstats.getString("players." + uuid + ".name");
+						
+						if (name == null) {
+							sender.sendMessage(ChatColor.GOLD + playername + ChatColor.YELLOW + " has never joined the server!");
+							return;
+						}
+						
+						String rank = ColorCodes.getOfflineRankName(uuid);
+						playername = ColorCodes.rankNameTagName(rank) + playername;
+						int level = playerstats.getInt("players." + uuid + ".level");
+						int kills = playerstats.getInt("players." + uuid + ".kills");
+						int nuggets = playerstats.getInt("players." + uuid + ".nuggets");
+						
+						String killsFormat = NumberFormat.getNumberInstance(Locale.US).format(kills);
+						String nuggetsFormat = NumberFormat.getNumberInstance(Locale.US).format(nuggets);
+						
+						sender.sendMessage(linspace);
+						sender.sendMessage(playername);
+						sender.sendMessage(ChatColor.GRAY + " ▪ Level: " + ChatColor.YELLOW + level);
+						sender.sendMessage(ChatColor.GRAY + " ▪ Kills: " + ChatColor.YELLOW + killsFormat);
+						sender.sendMessage(ChatColor.GRAY + " ▪ Nuggets: " + ChatColor.YELLOW + nuggetsFormat);
+						sender.sendMessage(linspace);
+					}
+				}
+				
+				else if (sender instanceof Player) {
+					Bukkit.dispatchCommand(sender, "stats " + sender.getName());
+				}
 			});
 			break;
 		}

@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
+import net.nuggetmc.core.data.Configs;
 
 public class ColorCodes {
 	
@@ -48,6 +49,20 @@ public class ColorCodes {
 			break;
 		}
 		return rank;
+	}
+	
+	public static String getRankName(UUID uuid) {
+		LuckPerms api = LuckPermsProvider.get();
+		User user = api.getUserManager().getUser(uuid);
+		return user.getPrimaryGroup();
+	}
+	
+	public static String getOfflineRankName(UUID uuid) {
+		String rank = Configs.playerstats.getConfig().getString("players." + uuid + ".rank");
+		if (rank != null) {
+			return rank;
+		}
+		return "default";
 	}
 	
 	public static String colorName(UUID uuid, String name) {
@@ -94,6 +109,40 @@ public class ColorCodes {
 		User user = api.getUserManager().getUser(uuid);
 		
 		switch (user.getPrimaryGroup()) {
+		case "xd":
+			rank = ChatColor.YELLOW + "[" + ChatColor.GOLD + "XD" + ChatColor.YELLOW + "] ";
+			break;
+		case "xdd":
+			rank = ChatColor.GREEN + "[" + ChatColor.GOLD + "XDD" + ChatColor.GREEN + "] ";
+			break;
+		case "xddd":
+			rank = ChatColor.AQUA + "[" + ChatColor.GOLD + "XDDD" + ChatColor.AQUA + "] ";
+			break;
+		case "promo":
+			rank = ChatColor.DARK_AQUA + "[PROMO] ";
+			break;
+		case "youtube":
+			rank = ChatColor.GOLD + "[" + ChatColor.WHITE + "YOU" + ChatColor.RED + "TUBE" + ChatColor.GOLD + "] ";
+			break;
+		case "builder":
+			rank = ChatColor.BLUE + "[BUILDER] ";
+			break;
+		case "mod":
+			rank = ChatColor.DARK_GREEN + "[MOD] ";
+			break;
+		case "admin":
+			rank = ChatColor.RED + "[ADMIN] ";
+			break;
+		case "owner":
+			rank = ChatColor.RED + "[OWNER] ";
+			break;
+		}
+		return rank;
+	}
+	
+	public static String rankNameTagName(String input) {
+		String rank = ChatColor.WHITE + "";
+		switch (input) {
 		case "xd":
 			rank = ChatColor.YELLOW + "[" + ChatColor.GOLD + "XD" + ChatColor.YELLOW + "] ";
 			break;

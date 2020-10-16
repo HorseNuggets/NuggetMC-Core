@@ -66,6 +66,17 @@ public class Checks {
 		return false;
 	}
 	
+	public static boolean checkXD(Player player) {
+		UUID uuid = player.getUniqueId();
+		User user = api.getUserManager().getUser(uuid);
+		
+		switch (user.getPrimaryGroup()) {
+		case "default":
+			return false;
+		}
+		return true;
+	}
+	
 	public static boolean checkXDD(Player player) {
 		UUID uuid = player.getUniqueId();
 		User user = api.getUserManager().getUser(uuid);
@@ -73,7 +84,39 @@ public class Checks {
 		switch (user.getPrimaryGroup()) {
 		case "default":
 			return false;
-		case "XD":
+		case "xd":
+			return false;
+		}
+		return true;
+	}
+	
+	public static boolean checkXDDD(Player player) {
+		UUID uuid = player.getUniqueId();
+		User user = api.getUserManager().getUser(uuid);
+		
+		switch (user.getPrimaryGroup()) {
+		case "default":
+			return false;
+		case "xd":
+			return false;
+		case "xdd":
+			return false;
+		}
+		return true;
+	}
+	
+	public static boolean checkXDDDD(Player player) {
+		UUID uuid = player.getUniqueId();
+		User user = api.getUserManager().getUser(uuid);
+		
+		switch (user.getPrimaryGroup()) {
+		case "default":
+			return false;
+		case "xd":
+			return false;
+		case "xdd":
+			return false;
+		case "xddd":
 			return false;
 		}
 		return true;

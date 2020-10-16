@@ -3,18 +3,18 @@ enabled:
   heads-gheads: true
   playertracker: true
 join-msg:
-- "§7--------------------------------------"
+- "&7--------------------------------------"
 - ""
-- "§e              Welcome to §6§lNuggetMC§r§e!"
-- "§7          Discord: §9discord.gg/H6P8JT2"
+- "&e              Welcome to &6&lNuggetMC&r&e!"
+- "&7          Discord: &9discord.gg/H6P8JT2"
 - ""
-- "§7--------------------------------------"
-- "Remember to §e/vote §fto win free items!"
+- "&7--------------------------------------"
+- "Remember to &e/vote &fto win free items!"
 levelup-msg:
-- "§2--------------------------------------"
+- "&2--------------------------------------"
 - ""
-- "§e                   §kX§r§e LEVEL UP §kX"
-- "§2                 You are §eLevel <level>§2!"
+- "&e                   &kX&r&e LEVEL UP &kX"
+- "&2                 You are &eLevel <level>&2!"
 - ""
-- "§2--------------------------------------"
+- "&2--------------------------------------"
 autorespawn-ticks: 12

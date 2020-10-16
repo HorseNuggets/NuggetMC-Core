@@ -496,9 +496,18 @@ public class KitPreviews {
 		inv.setItem(48, kit3);
 
 		ItemStack sword = new ItemStack(Material.IRON_AXE, 1);
-		sword.addEnchantment(Enchantment.DAMAGE_ALL, 4);
+		sword.addEnchantment(Enchantment.DURABILITY, 1);
 		ItemMeta swordn = sword.getItemMeta();
 		swordn.setDisplayName(ChatColor.AQUA + "Horseman Axe");
+		ArrayList<String> swordl = new ArrayList<String>();
+		swordl.add(ChatColor.GRAY + "Jousting I");
+		swordl.add("");
+		swordl.add(ChatColor.DARK_GRAY + "This weapon's damage doubles if");
+		swordl.add(ChatColor.DARK_GRAY + "you are on a horse.");
+		swordl.add("");
+		swordl.add(ChatColor.BLUE + "+5 " + ChatColor.DARK_BLUE + "(+10)" + ChatColor.BLUE + " Attack Damage");
+		swordn.setLore(swordl);
+		
 		ItemStack rod = new ItemStack(Material.FISHING_ROD, 1);
 		ItemStack bow = new ItemStack(Material.BOW, 1);
 		bow.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
@@ -556,6 +565,7 @@ public class KitPreviews {
 		bootsl.add(ChatColor.GRAY + "Protection II - III");
 		bootsn.setLore(bootsl);
 
+		swordn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		helmn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
 		chestn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
 		legsn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
@@ -747,9 +757,18 @@ public class KitPreviews {
 		inv.setItem(48, kit3);
 
 		ItemStack sword = new ItemStack(Material.DIAMOND_AXE, 1);
-		sword.addEnchantment(Enchantment.DAMAGE_ALL, 4);
+		sword.addEnchantment(Enchantment.DURABILITY, 1);
 		ItemMeta swordn = sword.getItemMeta();
 		swordn.setDisplayName(ChatColor.AQUA + "Jouster Axe");
+		ArrayList<String> swordl = new ArrayList<String>();
+		swordl.add(ChatColor.GRAY + "Jousting I");
+		swordl.add("");
+		swordl.add(ChatColor.DARK_GRAY + "This weapon's damage doubles if");
+		swordl.add(ChatColor.DARK_GRAY + "you are on a horse.");
+		swordl.add("");
+		swordl.add(ChatColor.BLUE + "+6 " + ChatColor.DARK_BLUE + "(+12)" + ChatColor.BLUE + " Attack Damage");
+		swordn.setLore(swordl);
+		
 		ItemStack rod = new ItemStack(Material.FISHING_ROD, 1);
 		ItemStack bow = new ItemStack(Material.BOW, 1);
 		bow.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
@@ -808,6 +827,7 @@ public class KitPreviews {
 		bootsl.add(ChatColor.GRAY + "Protection II - III");
 		bootsn.setLore(bootsl);
 
+		swordn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		helmn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
 		chestn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
 		legsn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
@@ -900,8 +920,8 @@ public class KitPreviews {
 		i.setDisplayName(ChatColor.DARK_PURPLE + "Teleport Crystal");
 
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(ChatColor.DARK_GRAY + "Teleport to a player within");
-		lore1.add(ChatColor.DARK_GRAY + "10 meters.");
+		lore1.add(ChatColor.GRAY + "Teleport to a player");
+		lore1.add(ChatColor.GRAY + "within " + ChatColor.YELLOW + "10 " + ChatColor.GRAY + "meters.");
 		i.setLore(lore1);
 
 		tpcr.setItemMeta(i);
@@ -1343,6 +1363,10 @@ public class KitPreviews {
 		totem.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
 		ItemMeta totemn = totem.getItemMeta();
 		totemn.setDisplayName(ChatColor.RED + "Blast Totem " + ChatColor.GRAY + "(16.67%)");
+		ArrayList<String> toteml = new ArrayList<String>();
+		toteml.add(ChatColor.GRAY + "Create an explosion");
+		toteml.add(ChatColor.GRAY + "on death.");
+		totemn.setLore(toteml);
 
 		swordn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
 		helmn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
@@ -2111,12 +2135,12 @@ public class KitPreviews {
 		inv.setItem(48, kit3);
 
 		ItemStack sword = new ItemStack(Material.BONE, 1);
-		sword.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 10);
+		sword.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 9);
 		ItemMeta swordn = sword.getItemMeta();
 		swordn.setDisplayName(ChatColor.AQUA + "Sans Bone");
 		ArrayList<String> swordl = new ArrayList<String>();
 		swordl.add("");
-		swordl.add(ChatColor.BLUE + "+12.5 Attack Damage");
+		swordl.add(ChatColor.BLUE + "+11.25 Attack Damage");
 		swordn.setLore(swordl);
 		ItemStack rod = new ItemStack(Material.FISHING_ROD, 1);
 

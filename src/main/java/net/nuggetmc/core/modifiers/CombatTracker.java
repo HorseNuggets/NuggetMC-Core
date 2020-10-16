@@ -13,8 +13,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Team;
 
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.util.Checks;
@@ -74,11 +74,6 @@ public class CombatTracker {
 		Player player = event.getEntity();
 		if (combatTime.containsKey(player)) combatTime.remove(player);
 		if (combatTask.containsKey(player)) combatTask.remove(player);
-		return;
-	}
-	
-	public void onRespawn(PlayerRespawnEvent event) {
-		plugin.sidebar.enable(event.getPlayer());
 		return;
 	}
     
@@ -163,7 +158,10 @@ public class CombatTracker {
                     return;
         		}
         		
-        		plugin.sidebar.enable(player);
+        		Team display = player.getScoreboard().getTeam("status");
+        		int time = combatTime.get(player) - 1;
+				String output = time + "s";
+				display.setSuffix(output);
         		
                 combatTime.put(player, combatTime.get(player) - 1);
                 if (combatTime.get(player) <= 0) {
@@ -171,10 +169,14 @@ public class CombatTracker {
         			if (combatTask.containsKey(player)) combatTask.remove(player);
                     
                     if (player != null) {
-                		plugin.sidebar.enable(player);
+                    	display = player.getScoreboard().getTeam("status");
+        				output = ChatColor.GREEN + "Idle";
+        				display.setSuffix(output);
                 		
                 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                			plugin.sidebar.enable(player);
+                			final Team disp = player.getScoreboard().getTeam("status");
+            				final String out = ChatColor.GREEN + "Idle";
+            				disp.setSuffix(out);
                 		}, 20);
                 	}
                     

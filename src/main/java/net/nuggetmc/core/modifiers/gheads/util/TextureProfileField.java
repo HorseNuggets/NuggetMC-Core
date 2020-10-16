@@ -45,7 +45,7 @@ public class TextureProfileField {
 			e.printStackTrace();
 		}
 		
-		String username = config.getString("heads.head-name").replaceAll("<username>", player.getName());
+		String username = config.getString("heads.head-name").replaceAll("<username>", player.getName()).replaceAll("&", "§");
 		
 		headMeta.setDisplayName(ChatColor.WHITE + username);
 		head.setItemMeta(headMeta);
