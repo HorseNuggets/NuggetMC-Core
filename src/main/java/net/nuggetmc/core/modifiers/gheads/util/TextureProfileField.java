@@ -21,9 +21,11 @@ import net.nuggetmc.core.data.Configs;
 public class TextureProfileField {
 	
 	private FileConfiguration config;
+	private String gheadName;
 	
 	public TextureProfileField() {
 		this.config = Configs.gheads.getConfig();
+		this.gheadName = config.getString("gheads.ghead-name").replaceAll("&", "§");
 	}
 	
 	public ItemStack headPlayer(Player player) {
@@ -45,7 +47,7 @@ public class TextureProfileField {
 			e.printStackTrace();
 		}
 		
-		String username = config.getString("heads.head-name").replaceAll("<username>", player.getName()).replaceAll("&", "§");
+		String username = config.getString("heads.head-name").replaceAll("<username>", player.getName());
 		
 		headMeta.setDisplayName(ChatColor.WHITE + username);
 		head.setItemMeta(headMeta);
@@ -70,7 +72,7 @@ public class TextureProfileField {
 		catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
-		headMeta.setDisplayName(config.getString("gheads.ghead-name"));
+		headMeta.setDisplayName(gheadName);
 		head.setItemMeta(headMeta);
 		return head;
 	}

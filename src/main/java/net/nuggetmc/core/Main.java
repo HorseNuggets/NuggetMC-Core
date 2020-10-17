@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.nuggetmc.core.commands.admin.AdminCommand;
@@ -29,13 +30,13 @@ import net.nuggetmc.core.economy.ItemShop;
 import net.nuggetmc.core.economy.Kits;
 import net.nuggetmc.core.gui.EnderChest;
 import net.nuggetmc.core.gui.GUIMain;
+import net.nuggetmc.core.gui.Voting;
 import net.nuggetmc.core.misc.FlyVanish;
 import net.nuggetmc.core.misc.ItemEffects;
 import net.nuggetmc.core.misc.TabComplete;
 import net.nuggetmc.core.modifiers.CombatTracker;
 import net.nuggetmc.core.modifiers.HealthBoost;
 import net.nuggetmc.core.modifiers.PlayerTracker;
-import net.nuggetmc.core.modifiers.autorespawn.AutoRespawn;
 import net.nuggetmc.core.modifiers.gheads.GHeads;
 import net.nuggetmc.core.modifiers.nofall.NoFall;
 import net.nuggetmc.core.modifiers.nofall.listeners.FallListener;
@@ -72,7 +73,6 @@ public class Main extends JavaPlugin implements TabCompleter {
 	public HealthBoost healthboost;
 	public AdminCommand adminCommand;
 	public Announcements announcements;
-	public AutoRespawn autoRespawn;
 	public CombatTracker combatTracker;
 	public Configs configs;
 	public DefaultCommand defaultCommand;
@@ -146,7 +146,9 @@ public class Main extends JavaPlugin implements TabCompleter {
 		getCommand("setkills").setExecutor(adminCommand);
 		getCommand("setnuggets").setExecutor(adminCommand);
 		getCommand("tpall").setExecutor(adminCommand);
+		getCommand("votealert").setExecutor(adminCommand);
 		getCommand("wr").setExecutor(adminCommand);
+		getCommand("wrset").setExecutor(adminCommand);
 		
 		this.homeCommand = new HomeCommand();
 		getCommand("delhome").setExecutor(homeCommand);
@@ -155,6 +157,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		getCommand("sethome").setExecutor(homeCommand);
 		
 		this.defaultCommand = new DefaultCommand(this);
+		getCommand("blocks").setExecutor(defaultCommand);
 		getCommand("boat").setExecutor(defaultCommand);
 		getCommand("discord").setExecutor(defaultCommand);
 		getCommand("levels").setExecutor(defaultCommand);
@@ -189,6 +192,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.getCommand("nuggetmc").setExecutor(new NMCMainCommand(this));
 		this.getCommand("rank").setExecutor(new RankCommand(this));
 		this.getCommand("vanish").setExecutor(new FlyVanish(this));
+		this.getCommand("vote").setExecutor(new Voting(this));
 		this.getCommand("kit").setExecutor(new KitCommand(this));
 		return;
 	}
@@ -218,7 +222,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 	}
 	
 	private void listenersEnable() {
-		Bukkit.getServer().getPluginManager().registerEvents(new Listeners(this), this);
+		Bukkit.getPluginManager().registerEvents(new Listeners(this), this);
 		return;
 	}
 	
@@ -228,7 +232,6 @@ public class Main extends JavaPlugin implements TabCompleter {
 	}
 	
 	private void modifiersEnable() {
-		this.autoRespawn = new AutoRespawn(this);
 		this.enderChest = new EnderChest();
 		this.fallListener = new FallListener(this);
 		this.healthboost = new HealthBoost(this);
@@ -257,6 +260,10 @@ public class Main extends JavaPlugin implements TabCompleter {
 	
 	private void sidebarEnable() {
 		this.sidebar = new Sidebar(this);
+		
+		for (Player all : Bukkit.getOnlinePlayers()) {
+			this.sidebar.enable(all);
+		}
 		return;
 	}
 	

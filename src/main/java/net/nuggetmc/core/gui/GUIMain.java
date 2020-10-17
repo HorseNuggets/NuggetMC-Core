@@ -118,6 +118,7 @@ public class GUIMain {
 						if (guiLockList.contains(event.getInventory().getTitle().toLowerCase())) {
 							plugin.kits.onClick(event);
 							plugin.enderChest.onClick(event);
+							Voting.onClick(event);
 						}
 					}
 				}

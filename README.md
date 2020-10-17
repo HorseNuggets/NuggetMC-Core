@@ -15,18 +15,17 @@ Some of the main features this plugin includes are:
 - [x] Dynamic Fall-Damage Cancellation
 - [x] Essential Staff Commands
 - [x] Inventory Serialization
-- [ ] Items with Custom Abilities
+- [x] Items with Custom Abilities
 - [x] Map Reloading
 - [x] Multiworld Support
 - [x] Optimized Combat Tracking
 - [x] Optimized Player Homes
-- [ ] Optimized Player Vaults
+- [x] Optimized Player Vaults
 - [x] Optimized TPA
 - [x] Player Tracking Compasses
-- [ ] Player Warps
 - [x] Separate Config Reloading Support
 - [x] Temporary Mutes/Bans/IP-Bans
-- [ ] Vanish
+- [x] Vanish
 
 The remaining features are currently being adapted from [NuggetMC 1.0](https://github.com/HorseNuggets/NuggetMC-1.0) (Warning: it's bad).
 

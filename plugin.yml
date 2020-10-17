@@ -19,9 +19,15 @@ commands:
   boat:
     description: "Gives the player a boat."
     usage: /boat
+  blocks:
+    description: "Gives the player sum blocc"
+    usage: /blocks
   suicide:
     description: "kys"
     usage: /suicide
+  vote:
+    description: "Vote for the server!"
+    usage: /vote
   rules:
     description: "Lists the server rules."
     usage: /rules
@@ -108,6 +114,10 @@ commands:
     description: "A command used to inject code when debugging."
     usage: /debug
     permission: nmc
+  votealert:
+    description: "Announce player votes."
+    usage: /votealert
+    permission: nmc
   alert:
     description: "Broadcasts a message to the server."
     usage: /alert
@@ -119,6 +129,10 @@ commands:
   wr:
     description: "Reloads a world"
     usage: /wr <world>
+    permission: nmc
+  wrset:
+    description: "Changes a world's reload time."
+    usage: /wrset <world> <time>
     permission: nmc
   gma:
     description: "Adventure mode."

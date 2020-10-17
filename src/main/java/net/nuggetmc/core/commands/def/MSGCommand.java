@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.util.Checks;
+import net.nuggetmc.core.util.ColorCodes;
 import net.nuggetmc.core.util.MathTools;
 import net.nuggetmc.core.util.TimeConverter;
 
@@ -236,11 +237,11 @@ public class MSGCommand implements CommandExecutor {
 			msg = msg + " " + args[i];
 		
 		replies.put(player, to);
-		player.sendMessage(ChatColor.YELLOW + "(To " + ChatColor.RESET + name + ChatColor.YELLOW + ")" + ChatColor.YELLOW + msg);
+		player.sendMessage(ChatColor.YELLOW + "(To " + ChatColor.RESET + ColorCodes.rankNameTag(to.getUniqueId()) + name + ChatColor.YELLOW + ")" + ChatColor.YELLOW + msg);
 		
 		if (!ignore.getStringList(to.getUniqueId().toString()).contains(uuid.toString())) {
 			replies.put(to, player);
-			to.sendMessage(ChatColor.YELLOW + "(From " + ChatColor.RESET + player.getName() + ChatColor.YELLOW + ")" + ChatColor.YELLOW + msg);
+			to.sendMessage(ChatColor.YELLOW + "(From " + ChatColor.RESET + ColorCodes.rankNameTag(uuid) + player.getName() + ChatColor.YELLOW + ")" + ChatColor.YELLOW + msg);
 		}
 		return;
 	}

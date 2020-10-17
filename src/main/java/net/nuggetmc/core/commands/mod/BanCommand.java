@@ -1,8 +1,10 @@
 package net.nuggetmc.core.commands.mod;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.BanEntry;
@@ -53,7 +55,7 @@ public class BanCommand implements CommandExecutor {
 				if (args.length >= 2) {
 					
 					String[] subArgs = Arrays.copyOfRange(args, 1, args.length);
-					String[] ultraSubArgs = Arrays.copyOfRange(args, 1, args.length);
+					String[] ultraSubArgs = null;
 					
 					String timeResult = "";
 					String reasonResult = "";
@@ -74,21 +76,26 @@ public class BanCommand implements CommandExecutor {
 						}
 					}
 					
-					for (int i = 0; i < ultraSubArgs.length; i++) {
-						reasonResult = reasonResult + ultraSubArgs[i] + " ";
+					if (ultraSubArgs != null) {
+						for (int i = 0; i < ultraSubArgs.length; i++) {
+							reasonResult = reasonResult + ultraSubArgs[i] + " ";
+						}
+						
+						if (reasonResult.endsWith(" ")) {
+							reasonResult = reasonResult.substring(0, reasonResult.length() - 1);
+						}
+						
+						if (!reasonResult.equals("")) {
+							reason = reasonResult;
+						}
 					}
 					
 					if (timeResult.endsWith(" ")) {
 						timeResult = timeResult.substring(0, timeResult.length() - 1);
 					}
-					if (reasonResult.endsWith(" ")) {
-						reasonResult = reasonResult.substring(0, reasonResult.length() - 1);
-					}
+					
 					if (!timeResult.equals("")) {
 						bantime = TimeConverter.stringToInt(timeResult);
-					}
-					if (!reasonResult.equals("")) {
-						reason = reasonResult;
 					}
 				}
 				
@@ -118,12 +125,9 @@ public class BanCommand implements CommandExecutor {
 					}
 				}
 				
-				for (Player all : Bukkit.getOnlinePlayers()) {
-					if (Checks.checkStaff(all)) {
-						all.sendMessage(sender.getName() + " banned player " + bannedPlayerName + ChatColor.WHITE + " with reason [" + ChatColor.YELLOW
-								+ reason + ChatColor.WHITE + "] and time" + ChatColor.YELLOW + TimeConverter.intToString(bantime) + ChatColor.WHITE + ".");
-					}
-				}
+				Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Alert" + ChatColor.DARK_GRAY + "] " + ChatColor.RED
+						+ sender.getName() + " banned player " + bannedPlayerName + ChatColor.RED + " with reason [" + ChatColor.YELLOW
+						+ reason + ChatColor.RED + "] and time" + ChatColor.YELLOW + TimeConverter.intToString(bantime) + ChatColor.RED + ".");
 			}
 			else {
 				sender.sendMessage(ChatColor.RED + "Usage: /ban <player> <time> <reason>");
@@ -135,7 +139,8 @@ public class BanCommand implements CommandExecutor {
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 				BanList list = Bukkit.getBanList(BanList.Type.NAME);
 				Set<BanEntry> entries = list.getBanEntries();
-				sender.sendMessage("There are " + entries.size() + " total banned players:");
+				List<String> msgList = new ArrayList<>();
+				int count = 0;
 				
 				for (BanEntry entry : entries) {
 					String name = entry.getTarget();
@@ -144,13 +149,26 @@ public class BanCommand implements CommandExecutor {
 					Date expiration = entry.getExpiration();
 					
 					int bantime = (int) ((expiration.getTime() - System.currentTimeMillis()) / 1000);
+					
+					if (bantime <= 0) {
+						list.pardon(name);
+						continue;
+					}
+					
 					String bantimestr = TimeConverter.intToString(bantime);
 					if (bantimestr.startsWith(" ")) {
 						bantimestr = bantimestr.substring(1);
 					}
 					
-					sender.sendMessage(name + " (by " + ChatColor.YELLOW + by + ChatColor.RESET + ") [" + ChatColor.YELLOW + reason
+					count++;
+					msgList.add(name + " (by " + ChatColor.YELLOW + by + ChatColor.RESET + ") [" + ChatColor.YELLOW + reason
 							+ ChatColor.RESET + "] (" + ChatColor.YELLOW + bantimestr + ChatColor.RESET + ")");
+				}
+				
+				sender.sendMessage("There are " + count + " total banned players:");
+				
+				for (String key : msgList) {
+					sender.sendMessage(key);
 				}
 			});
 			break;
@@ -264,6 +282,12 @@ public class BanCommand implements CommandExecutor {
 					Date expiration = entry.getExpiration();
 					
 					int bantime = (int) ((expiration.getTime() - System.currentTimeMillis()) / 1000);
+					
+					if (bantime <= 0) {
+						list.pardon(name);
+						continue;
+					}
+					
 					String bantimestr = TimeConverter.intToString(bantime);
 					if (bantimestr.startsWith(" ")) {
 						bantimestr = bantimestr.substring(1);

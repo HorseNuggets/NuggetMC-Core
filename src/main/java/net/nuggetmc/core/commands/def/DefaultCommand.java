@@ -75,9 +75,11 @@ public class DefaultCommand implements CommandExecutor {
 	}
 	
 	private static Map<Player, Long> boat;
+	private static Map<Player, Long> blocks;
 	
 	private void defineMaps() {
 		boat = new HashMap<>();
+		blocks = new HashMap<>();
 	}
 	
 	private List<String> levels;
@@ -202,10 +204,35 @@ public class DefaultCommand implements CommandExecutor {
 			}
 			break;
 			
-		case "suicide":
+		case "blocks":
 			if (sender instanceof Player) {
 				Player player = (Player) sender;
-				player.setHealth(0);
+				
+				if (blocks.containsKey(player)) {
+					Long difference = blocks.get(player) - System.currentTimeMillis() / 1000;
+					if (difference > 0) {
+						String s = "s";
+						if (difference == 1) s = "";
+						player.sendMessage(ChatColor.WHITE + "You can't get blocks again for another " + ChatColor.YELLOW
+								+ difference + ChatColor.WHITE + " second" + s + ".");
+						return true;
+					}
+					
+					else {
+						blocks.remove(player);
+					}
+				}
+				
+				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "give " + player.getName() + " cobblestone 64");
+				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "give " + player.getName() + " planks 64");
+				player.sendMessage("You have recieved blocks.");
+				blocks.put(player, 60 + System.currentTimeMillis() / 1000);
+			}
+			break;
+			
+		case "suicide":
+			if (sender instanceof Player) {
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kill " + sender.getName());
 			}
 			break;
 			

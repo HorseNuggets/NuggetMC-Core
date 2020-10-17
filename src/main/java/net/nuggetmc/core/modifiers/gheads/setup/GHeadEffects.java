@@ -13,9 +13,11 @@ public class GHeadEffects {
 	private FileConfiguration config;
 	private HashMap<String, Integer[]> headEffects = new HashMap<String, Integer[]>();
 	private HashMap<String, Integer[]> gheadEffects = new HashMap<String, Integer[]>();
+	private String gheadName;
 	
 	public GHeadEffects() {
 		this.config = Configs.gheads.getConfig();
+		this.gheadName = config.getString("gheads.ghead-name").replaceAll("&", "§");
 		this.assignEffects();
 	}
 	
@@ -45,7 +47,7 @@ public class GHeadEffects {
 	public void eatHeadSort(Player player) {
 		if (player.getItemInHand().hasItemMeta()) {
 			if (player.getItemInHand().getItemMeta().hasDisplayName()) {
-				if (player.getItemInHand().getItemMeta().getDisplayName().equals(config.getString("gheads.ghead-name"))) {
+				if (player.getItemInHand().getItemMeta().getDisplayName().equals(gheadName)) {
 					eatHead(player, "ghead");
 					return;
 				}

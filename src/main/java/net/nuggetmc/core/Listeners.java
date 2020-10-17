@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -34,6 +35,7 @@ import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.scoreboard.Team;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import net.minecraft.server.v1_8_R3.BlockPosition;
@@ -117,10 +119,14 @@ public class Listeners implements Listener {
 	
 	@EventHandler
 	public void playerDeathEvent(PlayerDeathEvent event) {
-		plugin.autoRespawn.onPlayerDeath(event);
+		Player player = event.getEntity();
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+			player.spigot().respawn();
+		}, 12);
+		
 		plugin.combatTracker.onDeath(event);
 		plugin.gheads.onDeath(event);
-		plugin.guiMain.hardRemove(event.getEntity());
+		plugin.guiMain.hardRemove(player);
 		plugin.playerKill.onKill(event);
 		ItemEffects.onDeath(event);
 	}
@@ -166,6 +172,11 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void playerJoinEvent(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+			if (player.isDead()) {
+				player.spigot().respawn();
+			}
+		}, 12);
 		
 		event.setJoinMessage(null);
 		plugin.playerSpawnLocation.setSpawn(player);
@@ -217,10 +228,18 @@ public class Listeners implements Listener {
 	
 	@EventHandler
 	public void playerRespawnEvent(PlayerRespawnEvent event) {
+		Player player = event.getPlayer();
 		plugin.healthboost.onRespawn(event);
 		plugin.kits.respawn(event);
 		plugin.moveListener.onRespawn(event);
-		plugin.playerSpawnLocation.setSpawn(event.getPlayer());
+		plugin.playerSpawnLocation.setSpawn(player);
+		Team display = player.getScoreboard().getTeam("status");
+		String output = ChatColor.GREEN + "Idle";
+		display.setSuffix(output);
+		
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+			display.setSuffix(output);
+		}, 5);
 		return;
 	}
 	

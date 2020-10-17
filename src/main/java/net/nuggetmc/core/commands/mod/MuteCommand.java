@@ -1,6 +1,8 @@
 package net.nuggetmc.core.commands.mod;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -115,12 +117,9 @@ public class MuteCommand implements CommandExecutor {
 					sender.sendMessage(ChatColor.RED + mutedPlayerName + " does not exist!");
 				}
 				
-				for (Player all : Bukkit.getOnlinePlayers()) {
-					if (Checks.checkStaff(all)) {
-						all.sendMessage(sender.getName() + " muted player " + mutedPlayerName + ChatColor.WHITE + " with reason [" + ChatColor.YELLOW
-								+ reason + ChatColor.WHITE + "] and time" + ChatColor.YELLOW + TimeConverter.intToString(mutetime) + ChatColor.WHITE + ".");
-					}
-				}
+				Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Alert" + ChatColor.DARK_GRAY + "] " + ChatColor.RED
+						+ sender.getName() + " muted player " + mutedPlayerName + ChatColor.RED + " with reason [" + ChatColor.YELLOW
+						+ reason + ChatColor.RED + "] and time" + ChatColor.YELLOW + TimeConverter.intToString(mutetime) + ChatColor.RED + ".");
 			}
 			else {
 				sender.sendMessage(ChatColor.RED + "Usage: /mute <player> <time> <reason>");
@@ -158,7 +157,8 @@ public class MuteCommand implements CommandExecutor {
 			
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 				Set<String> keys = mutes.getKeys(false);
-				sender.sendMessage("There are " + keys.size() + " total muted players:");
+				List<String> msgList = new ArrayList<>();
+				int count = 0;
 				
 				for (String key : keys) {
 					String name = mutes.getString(key + ".name");
@@ -167,13 +167,27 @@ public class MuteCommand implements CommandExecutor {
 					
 					int exp = mutes.getInt(key + ".exp");
 					int remaining = (int) (exp - (System.currentTimeMillis() / 1000));
+					
+					if (remaining <= 0) {
+						mutes.set(key, null);
+						Configs.mutes.saveConfig();;
+						continue;
+					}
+					
 					String rStr = TimeConverter.intToString(remaining);
 					if (rStr.startsWith(" ")) {
 						rStr = rStr.substring(1);
 					}
 					
-					sender.sendMessage(name + " (by " + ChatColor.YELLOW + by + ChatColor.RESET + ") [" + ChatColor.YELLOW + reason
+					count++;
+					msgList.add(name + " (by " + ChatColor.YELLOW + by + ChatColor.RESET + ") [" + ChatColor.YELLOW + reason
 							+ ChatColor.RESET + "] (" + ChatColor.YELLOW + rStr + ChatColor.RESET + ")");
+				}
+				
+				sender.sendMessage("There are " + count + " total muted players:");
+				
+				for (String key : msgList) {
+					sender.sendMessage(key);
 				}
 			});
 			break;

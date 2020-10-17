@@ -26,7 +26,8 @@ public class HelpCommand implements CommandExecutor {
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/sethome" + ChatColor.GRAY + " » Sets a home.");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/home" + ChatColor.GRAY + " » Warps to your home.");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/homes" + ChatColor.GRAY + " » Lists your homes.");
-		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/boat" + ChatColor.GRAY + " » gives u sum epic boat");
+		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/boat" + ChatColor.GRAY + " » Gives you a boat.");
+		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/blocks" + ChatColor.GRAY + " » Gives you sum blocc");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/wrt" + ChatColor.GRAY + " » Lists when the worlds will reset.");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/stats" + ChatColor.GRAY + " » Lists a player's stats.");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/suicide" + ChatColor.GRAY + " » kys");

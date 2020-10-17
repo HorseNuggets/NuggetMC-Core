@@ -12,6 +12,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -55,7 +56,11 @@ public class DebugCommand implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
-		Bukkit.broadcastMessage(plugin.getDataFolder().getAbsolutePath());
+		Player player = Bukkit.getPlayer(args[0]);
+		String ip = ((CraftPlayer) player).getHandle().playerConnection.networkManager.getRawAddress().toString();
+		String ip2 = ((CraftPlayer) player).getHandle().playerConnection.networkManager.getSocketAddress().toString();
+		sender.sendMessage(ip);
+		sender.sendMessage(ip2);
 		
 		/*Player player = (Player) sender;
 		ItemStack item = player.getInventory().getItemInHand();

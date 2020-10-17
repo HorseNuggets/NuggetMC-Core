@@ -65,8 +65,14 @@ public class CombatTracker {
 	
 	public void onQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		if (combatTime.containsKey(player)) combatTime.remove(player);
-		if (combatTask.containsKey(player)) combatTask.remove(player);
+		if (combatTime.containsKey(player)) {
+			combatTime.remove(player);
+			player.setHealth(0);
+		}
+		if (combatTask.containsKey(player)) {
+			combatTask.remove(player);
+			player.setHealth(0);
+		}
 		return;
 	}
 	
@@ -150,7 +156,8 @@ public class CombatTracker {
 		}
     	
     	BukkitRunnable combatRunnable = new BukkitRunnable() {
-        	public void run() {
+        	@SuppressWarnings("deprecation")
+			public void run() {
         		if (!combatTime.containsKey(player) || player == null) {
         			if (combatTime.containsKey(player)) combatTime.remove(player);
         			if (combatTask.containsKey(player)) combatTask.remove(player);
@@ -173,7 +180,7 @@ public class CombatTracker {
         				output = ChatColor.GREEN + "Idle";
         				display.setSuffix(output);
                 		
-                		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                		Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, () -> {
                 			final Team disp = player.getScoreboard().getTeam("status");
             				final String out = ChatColor.GREEN + "Idle";
             				disp.setSuffix(out);
@@ -188,7 +195,7 @@ public class CombatTracker {
     	
     	combatTime.put(player, countdown);
         combatTask.put(player, combatRunnable);
-        combatTask.get(player).runTaskTimer(plugin, 0, 20);
+        combatTask.get(player).runTaskTimerAsynchronously(plugin, 0, 20);
     	return;
     }
 }

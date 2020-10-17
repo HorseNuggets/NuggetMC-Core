@@ -27,7 +27,6 @@ import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.Team;
 
 import net.minecraft.server.v1_8_R3.MojangsonParseException;
@@ -163,12 +162,6 @@ public class ItemShop implements CommandExecutor {
 			}
 			
 			shop.put(keySpace, new Wrapper(sep[1] + " " + sep[2] + " "  + sep[3] + " "  + sep[4], bukkitStack));
-			
-			if (bukkitStack.getType() == Material.DIAMOND_SWORD) {
-				ItemMeta bukkitStackMeta = bukkitStack.getItemMeta();
-				bukkitStackMeta.setDisplayName(ChatColor.WHITE + "Sharpness III");
-				bukkitStack.setItemMeta(bukkitStackMeta);
-			}
 			
 			World world = loc.getWorld();
 			for(Entity i : world.getEntities()){

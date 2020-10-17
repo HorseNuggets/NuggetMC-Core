@@ -12,6 +12,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -49,6 +50,7 @@ public class ItemEffects {
 	private static List<String> worldlist;
 	private static Map<Player, Long> heal;
 	private static Set<Arrow> explosiveArrows;
+	private static Map<Player, Long> boom;
 
 	public static Main plugin;
 
@@ -57,27 +59,30 @@ public class ItemEffects {
 		ItemEffects.worldlist = Configs.worldsettings.getConfig().getStringList("uhckit-worlds");
 		ItemEffects.heal = new HashMap<>();
 		ItemEffects.explosiveArrows = new HashSet<>();
+		ItemEffects.boom = new HashMap<>();
 	}
 
 	public static void boomBox(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
 		if (worldlist.contains(player.getWorld().getName())) {
 			if (!player.getItemInHand().equals(null)) {
+				Block block = event.getBlock();
+				if (block.getType() == Material.TNT) {
+					if (player.isSneaking()) {
+						block.setType(Material.AIR);
+						player.getWorld().spawnEntity(block.getLocation().add(0.5D, 0.5D, 0.5D), EntityType.PRIMED_TNT);
+					}
+				}
 				if (player.getItemInHand().getType() == Material.REDSTONE_BLOCK) {
-					if (event.getBlock().getType() == Material.REDSTONE_BLOCK) {
+					if (block.getType() == Material.REDSTONE_BLOCK) {
 						if (player.getItemInHand().hasItemMeta()) {
 							if (player.getItemInHand().getItemMeta().hasDisplayName()) {
-								if (player.getItemInHand().getItemMeta().getDisplayName()
-										.equals(ChatColor.RED + "Boom Box")) {
-
-									ItemStack box = new ItemStack(Material.REDSTONE_BLOCK, 1);
-									ItemMeta boxMeta = box.getItemMeta();
-									boxMeta.setDisplayName(ChatColor.RED + "Boom Box");
-									box.setItemMeta(boxMeta);
-
+								if (player.getItemInHand().getItemMeta().getDisplayName().equals(ChatColor.RED + "Boom Box")) {
+									
 									Location location = event.getBlock().getLocation();
 									if (!WorldManager.isInSpawn(location)) {
-
+										player.setItemInHand(null);
+										
 										location.getBlock().setType(Material.AIR);
 										Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 											TNTPrimed tnt = (TNTPrimed) player.getWorld().spawnEntity(location, EntityType.PRIMED_TNT);
@@ -103,10 +108,8 @@ public class ItemEffects {
 						if (player.getInventory().getBoots() != null) {
 							if (player.getInventory().getBoots().hasItemMeta()) {
 								if (player.getInventory().getBoots().getItemMeta().hasDisplayName()) {
-									if (player.getInventory().getBoots().getItemMeta().getDisplayName()
-											.equals(ChatColor.GREEN + "Scout Boots")
-											|| player.getInventory().getBoots().getItemMeta().getDisplayName()
-													.equals(ChatColor.GREEN + "Valkyrie Boots")) {
+									if (player.getInventory().getBoots().getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Scout Boots")
+											|| player.getInventory().getBoots().getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Valkyrie Boots")) {
 										Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
 												"effect " + player.getName() + " speed 2");
 									}
@@ -340,7 +343,7 @@ public class ItemEffects {
 		}
 		return;
 	}
-
+	
 	public static void itemInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		ItemStack item = player.getItemInHand();
@@ -407,6 +410,40 @@ public class ItemEffects {
 								ActionBar actionBar = new ActionBar("No players within §e10 §rmeters!");
 								actionBar.Send(player);
 							}
+						}
+					}
+					
+					else if (name.equals(ChatColor.DARK_PURPLE + "The " + ChatColor.DARK_PURPLE + "Infinity "
+							+ ChatColor.DARK_PURPLE + "Gauntlet" + ChatColor.WHITE)) {
+						if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+							
+							if (boom.containsKey(player)) {
+								Long difference = boom.get(player) - System.currentTimeMillis() / 1000;
+								if (difference > 0) {
+									ActionBar actionBar = new ActionBar("You are on a cooldown! (§e" + difference + "s§r)");
+									actionBar.Send(player);
+									return;
+								}
+								
+								else {
+									boom.remove(player);
+								}
+							}
+							
+							Location loc = player.getLocation();
+							
+							if (WorldManager.isInSpawn(loc)) {
+								ActionBar ab = new ActionBar("You cannot use this here!");
+								ab.Send(player);
+								return;
+							}
+
+							else {
+								TNTPrimed tnt = (TNTPrimed) player.getWorld().spawnEntity(loc, EntityType.PRIMED_TNT);
+								tnt.setFuseTicks(0);
+							}
+							
+							boom.put(player, ((Long) ((System.currentTimeMillis() / 1000)) + 10));
 						}
 					}
 				}

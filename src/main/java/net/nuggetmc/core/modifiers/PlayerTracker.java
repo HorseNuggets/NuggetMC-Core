@@ -60,22 +60,29 @@ public class PlayerTracker implements Listener {
 				}
 				
 				for (Player others : Bukkit.getOnlinePlayers()) {
-					if (player.getWorld() != others.getWorld()) continue;
-					if (player == others) continue;
-					if ((target == null) || player.getLocation().distance(others.getLocation()) < target.getLocation().distance(player.getLocation())) {
-						target = others;
+					if (player.getWorld() == others.getWorld()) {
+						if (player != others) {
+							try {
+								if ((target == null) || player.getLocation().distance(others.getLocation()) < target.getLocation().distance(player.getLocation())) {
+									target = others;
+								}
+							} catch (IllegalArgumentException e) {
+								continue;
+							}
+						}
 					}
 				}
 				
-				if (target == null) return;
-				targets.put(player, target);
-				if (!player.getCompassTarget().equals(targets.get(event.getPlayer()).getLocation())) {
-					player.setCompassTarget(targets.get(event.getPlayer()).getLocation());
+				if (target != null) {
+					targets.put(player, target);
+					if (!player.getCompassTarget().equals(targets.get(event.getPlayer()).getLocation())) {
+						player.setCompassTarget(targets.get(event.getPlayer()).getLocation());
+					}
 				}
 			}
 		});
 		
-		task.get(player).runTaskTimer(plugin, 0, 10);
+		task.get(player).runTaskTimerAsynchronously(plugin, 0, 10);
 		return;
 	}
 	

@@ -15,6 +15,7 @@ import org.bukkit.scoreboard.Team;
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.setup.WorldManager;
+import net.nuggetmc.core.util.ColorCodes;
 
 public class AdminCommand implements CommandExecutor {
 	
@@ -66,6 +67,25 @@ public class AdminCommand implements CommandExecutor {
 				sender.sendMessage(ChatColor.RED + "Usage: /wr <world>");
 			}
 			return true;
+		case "wrset":
+			if (args.length >= 2) {
+				switch(args[0]) {
+				case "main":
+					WorldManager.count = Integer.parseInt(args[1]);
+					break;
+				case "nether":
+					WorldManager.countNether = Integer.parseInt(args[1]);
+					break;
+				case "end:":
+					WorldManager.countEnd = Integer.parseInt(args[1]);
+					break;
+				}
+			}
+			else {
+				sender.sendMessage(ChatColor.RED + "Too few arguments!");
+				sender.sendMessage(ChatColor.RED + "Usage: /wrset <world> <time>");
+			}
+			return true;
 		case "alert":
 			if (args.length < 1) {
 				sender.sendMessage(ChatColor.RED + "Usage: /alert <msg>");
@@ -81,6 +101,15 @@ public class AdminCommand implements CommandExecutor {
 			Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Alert" + ChatColor.DARK_GRAY + "]"
 					+ ChatColor.WHITE + msg);
 
+			return true;
+		case "votealert":
+			Player player = Bukkit.getServer().getPlayer(args[0]);
+			UUID uuid = player.getUniqueId();
+			
+			if (args[1].equals("100nuggets")) {
+				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
+						"alert " + ColorCodes.colorName(uuid, player.getName()) + " &fjust voted and won &e100 Nuggets&f!");
+			}
 			return true;
 		}
 		return true;

@@ -67,7 +67,7 @@ public class EnderChest {
 		}
 		
 		for (int i = 0; i < 21; i++) {
-			if (i < 3) {
+			if (i < 4) {
 				invXD.setItem(numConvert(i), chests[i]);
 			} else {
 				invXD.setItem(numConvert(i), echests[i]);
@@ -75,7 +75,7 @@ public class EnderChest {
 		}
 		
 		for (int i = 0; i < 21; i++) {
-			if (i < 7) {
+			if (i < 8) {
 				invXDD.setItem(numConvert(i), chests[i]);
 			} else {
 				invXDD.setItem(numConvert(i), echests[i]);
@@ -93,6 +93,17 @@ public class EnderChest {
 		for (int i = 0; i < 21; i++) {
 			invXDDDD.setItem(numConvert(i), chests[i]);
 		}
+		
+		ItemStack close = new ItemStack(Material.BARRIER);
+		ItemMeta closeMeta = close.getItemMeta();
+		closeMeta.setDisplayName(ChatColor.RED + "Close");
+		close.setItemMeta(closeMeta);
+		
+		invXD.setItem(49, close);
+		invXDD.setItem(49, close);
+		invXDDD.setItem(49, close);
+		invXDDDD.setItem(49, close);
+		invDefault.setItem(49, close);
 		return;
 	}
 	
@@ -149,12 +160,19 @@ public class EnderChest {
 		Player player = (Player) event.getWhoClicked();
 		ItemStack item = event.getCurrentItem();
 		String itemName = item.getItemMeta().getDisplayName();
-		String val = itemName.substring(9);
 		
-		if (item.getType() == Material.CHEST) {
-			if (itemName.contains("Vault")) {
-				Bukkit.dispatchCommand(player, "pv " + val);
+		try {
+			String val = itemName.substring(9);
+			
+			if (item.getType() == Material.CHEST) {
+				if (itemName.contains("Vault")) {
+					Bukkit.dispatchCommand(player, "pv " + val);
+				}
 			}
+		}
+		
+		catch (Exception e) {
+			return;
 		}
 		return;
 	}

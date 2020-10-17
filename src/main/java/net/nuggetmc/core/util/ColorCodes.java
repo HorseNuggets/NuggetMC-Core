@@ -32,6 +32,9 @@ public class ColorCodes {
 		case "promo":
 			rank = ChatColor.DARK_AQUA + "Promo";
 			break;
+		case "twitch":
+			rank = ChatColor.DARK_PURPLE + "Twitch";
+			break;
 		case "youtube":
 			rank = ChatColor.WHITE + "You" + ChatColor.RED + "Tube";
 			break;
@@ -84,6 +87,9 @@ public class ColorCodes {
 		case "promo":
 			rank = ChatColor.DARK_AQUA + name;
 			break;
+		case "twitch":
+			rank = ChatColor.DARK_PURPLE + name;
+			break;
 		case "youtube":
 			rank = ChatColor.GOLD + name;
 			break;
@@ -121,6 +127,9 @@ public class ColorCodes {
 		case "promo":
 			rank = ChatColor.DARK_AQUA + "[PROMO] ";
 			break;
+		case "twitch":
+			rank = ChatColor.DARK_PURPLE + "[TWITCH] ";
+			break;
 		case "youtube":
 			rank = ChatColor.GOLD + "[" + ChatColor.WHITE + "YOU" + ChatColor.RED + "TUBE" + ChatColor.GOLD + "] ";
 			break;
@@ -154,6 +163,9 @@ public class ColorCodes {
 			break;
 		case "promo":
 			rank = ChatColor.DARK_AQUA + "[PROMO] ";
+			break;
+		case "twitch":
+			rank = ChatColor.DARK_PURPLE + "[TWITCH] ";
 			break;
 		case "youtube":
 			rank = ChatColor.GOLD + "[" + ChatColor.WHITE + "YOU" + ChatColor.RED + "TUBE" + ChatColor.GOLD + "] ";
