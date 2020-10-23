@@ -20,5 +20,4 @@ public class ActionBar {
 		((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
 		return;
 	}
-
 }

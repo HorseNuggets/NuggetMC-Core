@@ -123,6 +123,25 @@ public class TabComplete {
 					return groupnames;
 				}
 			}
+			break;
+			
+		case "pardon-ip":
+			if (args.length == 1) {
+				List<String> groupnames = new ArrayList<>();
+				
+				for (String name : Configs.ips.getConfig().getKeys(false)) {
+					groupnames.add(name);
+				}
+				
+				Collections.sort(groupnames);
+				
+				if (tabConditional(args[0])) {
+					groupnames = autofill(groupnames, args[0]);
+				}
+				
+				return groupnames;
+			}
+			break;
 		}
 		return null;
 	}

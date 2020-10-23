@@ -1,23 +1,28 @@
 package net.nuggetmc.core.modifiers.gheads.setup;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.util.ActionBar;
 
 public class GHeadEffects {
 	
 	private FileConfiguration config;
 	private HashMap<String, Integer[]> headEffects = new HashMap<String, Integer[]>();
 	private HashMap<String, Integer[]> gheadEffects = new HashMap<String, Integer[]>();
+	private Map<Player, Long> cooldown;
 	private String gheadName;
 	
 	public GHeadEffects() {
 		this.config = Configs.gheads.getConfig();
 		this.gheadName = config.getString("gheads.ghead-name").replaceAll("&", "§");
+		this.cooldown = new HashMap<>();
 		this.assignEffects();
 	}
 	
@@ -62,26 +67,34 @@ public class GHeadEffects {
 		boolean success = false;
 		switch(type) {
 		case "head":
-			if (config.getBoolean("heads.enabled")) {
-				if (config.getBoolean("heads.edible")) {
-					for (String key : headEffects.keySet()) {
-						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "effect " + player.getName() + " " + key
-								+ " " + headEffects.get(key)[0] + " " + headEffects.get(key)[1]);
-					}
-					success = true;
-				}
+			for (String key : headEffects.keySet()) {
+				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "effect " + player.getName() + " " + key
+						+ " " + headEffects.get(key)[0] + " " + headEffects.get(key)[1]);
 			}
+			success = true;
 			break;
+			
 		case "ghead":
-			if (config.getBoolean("gheads.enabled")) {
-				if (config.getBoolean("gheads.edible")) {
-					for (String key : gheadEffects.keySet()) {
-						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "effect " + player.getName() + " " + key
-								+ " " + gheadEffects.get(key)[0] + " " + gheadEffects.get(key)[1]);
-					}
-					success = true;
+			if (cooldown.containsKey(player)) {
+				Long difference = cooldown.get(player) - System.currentTimeMillis() / 1000;
+				if (difference > 0) {
+					ActionBar actionBar = new ActionBar("You are on a cooldown! (§e" + difference + "s§r)");
+					actionBar.Send(player);
+					return;
+				}
+				
+				else {
+					cooldown.remove(player);
 				}
 			}
+			
+			cooldown.put(player, (System.currentTimeMillis() / 1000) + 10);
+			
+			for (String key : gheadEffects.keySet()) {
+				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "effect " + player.getName() + " " + key
+						+ " " + gheadEffects.get(key)[0] + " " + gheadEffects.get(key)[1]);
+			}
+			success = true;
 			break;
 		}
 		
@@ -90,8 +103,10 @@ public class GHeadEffects {
 			double y = player.getLocation().getY();
 			double z = player.getLocation().getZ();
 			
-			if (player.getInventory().getItemInHand().getAmount() == 1) player.getInventory().setItemInHand(null);
-			else player.getInventory().getItemInHand().setAmount(player.getInventory().getItemInHand().getAmount() - 1);
+			ItemStack item = player.getInventory().getItemInHand();
+			
+			if (item.getAmount() == 1) player.getInventory().setItemInHand(null);
+			else player.getInventory().getItemInHand().setAmount(item.getAmount() - 1);
 			
 			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "playsound random.eat @a " + x + " " + y + " " + z);
 		}

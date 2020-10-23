@@ -1183,7 +1183,7 @@ public class KitPreviews {
 		ItemStack arrow = new ItemStack(Material.ARROW, 48);
 		ItemStack cobble = new ItemStack(Material.COBBLESTONE, 64);
 		ItemStack water = new ItemStack(Material.WATER_BUCKET, 1);
-		ItemStack lava = new ItemStack(Material.LAVA_BUCKET, 1);
+		ItemStack lava = new ItemStack(Material.LAVA_BUCKET, 10);
 		ItemStack track = new ItemStack(Material.COMPASS, 1);
 		ItemMeta trackn = track.getItemMeta();
 		trackn.setDisplayName(ChatColor.RESET + "Player Tracker");
@@ -1262,18 +1262,9 @@ public class KitPreviews {
 		inv.setItem(18, arrow);
 		inv.setItem(21, water);
 		inv.setItem(22, water);
-		inv.setItem(14, lava);
 		inv.setItem(23, lava);
-		inv.setItem(24, lava);
-		inv.setItem(25, lava);
-		inv.setItem(26, lava);
-		inv.setItem(9, lava);
-		inv.setItem(10, lava);
-		inv.setItem(11, lava);
-		inv.setItem(12, lava);
-		inv.setItem(13, lava);
 		inv.setItem(28, fsword);
-		inv.setItem(15, track);
+		inv.setItem(24, track);
 
 		p.updateInventory();
 		p.openInventory(inv);
@@ -1356,6 +1347,7 @@ public class KitPreviews {
 		ItemStack tnt = new ItemStack(Material.TNT, 6);
 
 		ItemStack boom = new ItemStack(Material.REDSTONE_BLOCK, 2);
+		boom.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 1);
 		ItemMeta boomn = boom.getItemMeta();
 		boomn.setDisplayName(ChatColor.RED + "Boom Box");
 
@@ -1375,6 +1367,7 @@ public class KitPreviews {
 		bootsn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
 		bown.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
 		totemn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
+		boomn.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
 		sword.setItemMeta(swordn);
 		bow.setItemMeta(bown);
@@ -2039,7 +2032,7 @@ public class KitPreviews {
 		inv.setItem(48, kit3);
 
 		ItemStack sword = new ItemStack(Material.STONE_SWORD, 1);
-		sword.addEnchantment(Enchantment.DAMAGE_ALL, 5);
+		sword.addEnchantment(Enchantment.DAMAGE_ALL, 4);
 		sword.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
 		ItemMeta swordn = sword.getItemMeta();
 		swordn.setDisplayName(ChatColor.DARK_GRAY + "Witherman Sword");
@@ -2317,72 +2310,56 @@ public class KitPreviews {
 		kit3.setItemMeta(meta3);
 		inv.setItem(48, kit3);
 
-		/*
-		 * ItemStack sword = new ItemStack(Material.IRON_SWORD, 1);
-		 * sword.addEnchantment(Enchantment.DAMAGE_ALL, 1); ItemMeta swordn =
-		 * sword.getItemMeta(); swordn.setDisplayName(ChatColor.AQUA + "Iron Sword");
-		 * ArrayList<String> swordl = new ArrayList<String>(); swordl.add(ChatColor.GRAY
-		 * + "Sharpness I - II"); swordl.add(""); swordl.add(ChatColor.BLUE +
-		 * "+(7.25-8.5) Attack Damage"); swordn.setLore(swordl); ItemStack rod = new
-		 * ItemStack(Material.FISHING_ROD, 1); ItemStack bow = new
-		 * ItemStack(Material.BOW, 1); bow.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
-		 * ItemMeta bown = bow.getItemMeta(); ArrayList<String> bowl = new
-		 * ArrayList<String>(); bowl.add(ChatColor.GRAY + "Power I - III");
-		 * bown.setLore(bowl); ItemStack steak = new ItemStack(Material.COOKED_BEEF,
-		 * 12); ItemStack gapple = new ItemStack(Material.GOLDEN_APPLE, 12); ItemStack
-		 * pick = new ItemStack(Material.IRON_PICKAXE, 1); ItemStack axe = new
-		 * ItemStack(Material.IRON_AXE, 1); ItemStack shovel = new
-		 * ItemStack(Material.IRON_SPADE, 1); ItemStack planks = new
-		 * ItemStack(Material.WOOD, 64); ItemStack arrow = new ItemStack(Material.ARROW,
-		 * 48); ItemStack cobble = new ItemStack(Material.COBBLESTONE, 64); ItemStack
-		 * water = new ItemStack(Material.WATER_BUCKET, 1); ItemStack lava = new
-		 * ItemStack(Material.LAVA_BUCKET, 1); ItemStack track = new
-		 * ItemStack(Material.COMPASS, 1); ItemMeta trackn = track.getItemMeta();
-		 * trackn.setDisplayName(ChatColor.RESET + "Player Tracker");
-		 * 
-		 * ItemStack helm = new ItemStack(Material.DIAMOND_HELMET, 1);
-		 * helm.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1); ItemMeta helmn
-		 * = helm.getItemMeta(); ArrayList<String> helml = new ArrayList<String>();
-		 * helml.add(ChatColor.GRAY + "Protection II - III"); helmn.setLore(helml);
-		 * 
-		 * ItemStack chest = new ItemStack(Material.DIAMOND_CHESTPLATE, 1);
-		 * chest.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1); ItemMeta
-		 * chestn = chest.getItemMeta(); ArrayList<String> chestl = new
-		 * ArrayList<String>(); chestl.add(ChatColor.GRAY + "Protection II - III");
-		 * chestn.setLore(chestl);
-		 * 
-		 * ItemStack legs = new ItemStack(Material.DIAMOND_LEGGINGS, 1);
-		 * legs.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1); ItemMeta legsn
-		 * = legs.getItemMeta(); ArrayList<String> legsl = new ArrayList<String>();
-		 * legsl.add(ChatColor.GRAY + "Protection I - II"); legsn.setLore(legsl);
-		 * 
-		 * ItemStack boots = new ItemStack(Material.DIAMOND_BOOTS, 1);
-		 * boots.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1); ItemMeta
-		 * bootsn = boots.getItemMeta(); ArrayList<String> bootsl = new
-		 * ArrayList<String>(); bootsl.add(ChatColor.GRAY + "Protection I - III");
-		 * bootsn.setLore(bootsl);
-		 * 
-		 * swordn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
-		 * helmn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
-		 * chestn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
-		 * legsn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
-		 * bootsn.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
-		 * bown.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
-		 * 
-		 * sword.setItemMeta(swordn); bow.setItemMeta(bown); helm.setItemMeta(helmn);
-		 * chest.setItemMeta(chestn); legs.setItemMeta(legsn);
-		 * boots.setItemMeta(bootsn); track.setItemMeta(trackn);
-		 * 
-		 * inv.setItem(0, helm); inv.setItem(1, chest); inv.setItem(2, legs);
-		 * inv.setItem(3, boots);
-		 * 
-		 * inv.setItem(27, sword); inv.setItem(28, rod); inv.setItem(29, bow);
-		 * inv.setItem(31, steak); inv.setItem(30, gapple); inv.setItem(32, pick);
-		 * inv.setItem(33, axe); inv.setItem(34, shovel); inv.setItem(18, planks);
-		 * inv.setItem(19, cobble); inv.setItem(35, arrow); inv.setItem(20, water);
-		 * inv.setItem(21, water); inv.setItem(22, lava); inv.setItem(23, lava);
-		 * inv.setItem(24, track);
-		 */
+		ItemStack rod = new ItemStack(Material.FISHING_ROD, 1);
+		ItemStack bow = new ItemStack(Material.BOW, 1);
+		bow.addEnchantment(Enchantment.ARROW_DAMAGE, 5);
+		ItemStack steak = new ItemStack(Material.COOKED_BEEF, 12);
+		ItemStack gapple = new ItemStack(Material.GOLDEN_APPLE, 12);
+		ItemStack pick = new ItemStack(Material.IRON_PICKAXE, 1);
+		ItemStack axe = new ItemStack(Material.IRON_AXE, 1);
+		ItemStack shovel = new ItemStack(Material.IRON_SPADE, 1);
+		ItemStack planks = new ItemStack(Material.WOOD, 64);
+		ItemStack arrow = new ItemStack(Material.ARROW, 48);
+		ItemStack cobble = new ItemStack(Material.COBBLESTONE, 64);
+		ItemStack water = new ItemStack(Material.WATER_BUCKET, 1);
+		ItemStack lava = new ItemStack(Material.LAVA_BUCKET, 1);
+		ItemStack track = new ItemStack(Material.COMPASS, 1);
+		ItemMeta trackn = track.getItemMeta();
+		trackn.setDisplayName(ChatColor.RESET + "Player Tracker");
+
+		ItemStack helm = new ItemStack(Material.DIAMOND_HELMET, 1);
+		helm.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
+
+		ItemStack chest = new ItemStack(Material.DIAMOND_CHESTPLATE, 1);
+		chest.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
+
+		ItemStack legs = new ItemStack(Material.DIAMOND_LEGGINGS, 1);
+		legs.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
+
+		ItemStack boots = new ItemStack(Material.DIAMOND_BOOTS, 1);
+		boots.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
+		track.setItemMeta(trackn);
+
+		inv.setItem(0, helm);
+		inv.setItem(1, chest);
+		inv.setItem(2, legs);
+		inv.setItem(3, boots);
+		
+		inv.setItem(28, rod);
+		inv.setItem(29, bow);
+		inv.setItem(31, steak);
+		inv.setItem(30, gapple);
+		inv.setItem(32, pick);
+		inv.setItem(33, axe);
+		inv.setItem(34, shovel);
+		inv.setItem(18, planks);
+		inv.setItem(19, cobble);
+		inv.setItem(35, arrow);
+		inv.setItem(20, water);
+		inv.setItem(21, water);
+		inv.setItem(22, lava);
+		inv.setItem(23, lava);
+		inv.setItem(24, track);
 
 		ItemStack spoon = new ItemStack(Material.IRON_SPADE, 1);
 		spoon.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 8);
@@ -2395,7 +2372,7 @@ public class KitPreviews {
 		spoonn.setLore(spoonl);
 		spoon.setItemMeta(spoonn);
 
-		inv.setItem(22, spoon);
+		inv.setItem(27, spoon);
 
 		p.updateInventory();
 		p.openInventory(inv);

@@ -1,13 +1,11 @@
 package net.nuggetmc.core.commands.admin;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
-import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,7 +19,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.server.v1_8_R3.ChatComponentText;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.util.TimeConverter;
@@ -53,14 +55,40 @@ public class DebugCommand implements CommandExecutor {
 		}
 		return "error";
 	}
+	
+	public static void send(Player player, IChatBaseComponent chat) {
+		TextComponent message = new TextComponent("lmao ");
+		ChatComponentText text = new ChatComponentText("poggers ");
+		text.addSibling(chat);
+		final ComponentBuilder message2 = new ComponentBuilder("lmao");
+	    message2.append(ChatColor.GRAY + "hh");
+	    player.spigot().sendMessage(message2.create());
+		PacketPlayOutChat packet = new PacketPlayOutChat(text);
+		((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+	}
+	
+	public IChatBaseComponent bukkitStackToChatComponent(ItemStack stack) {
+	    net.minecraft.server.v1_8_R3.ItemStack nms = CraftItemStack.asNMSCopy(stack);
+	    return nms.C();
+	}
+
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
-		Player player = Bukkit.getPlayer(args[0]);
+		Player player = (Player) sender;
+		
+		
+		
+		send(player, bukkitStackToChatComponent(new ItemStack(Material.IRON_SWORD)));
+		
+		
+		
+		
+		/*Player player = Bukkit.getPlayer(args[0]);
 		String ip = ((CraftPlayer) player).getHandle().playerConnection.networkManager.getRawAddress().toString();
 		String ip2 = ((CraftPlayer) player).getHandle().playerConnection.networkManager.getSocketAddress().toString();
 		sender.sendMessage(ip);
-		sender.sendMessage(ip2);
+		sender.sendMessage(ip2);*/
 		
 		/*Player player = (Player) sender;
 		ItemStack item = player.getInventory().getItemInHand();
@@ -104,11 +132,7 @@ public class DebugCommand implements CommandExecutor {
 		String nametemp = "";
 		
 		for(String key : config.getConfigurationSection("players").getKeys(false)) {
-			String name = getName(key);
-			
-			Bukkit.broadcastMessage(key);
-			
-			nuggetList.add(config.getInt("players." + key + ".nuggets"));
+			nuggetList.add(config.getInt("players." + key + ".kills"));
 			nameList.add(config.getString("players." + key + ".name"));
 		}
 		
@@ -137,7 +161,7 @@ public class DebugCommand implements CommandExecutor {
 			folder.mkdir();
 		}
 		
-		File fileTxt = new File(dir + "\\" + "lead.txt");
+		File fileTxt = new File(dir + "\\" + "lead_kills.txt");
 		
 		if (!fileTxt.exists()) {
 			try {
@@ -159,8 +183,8 @@ public class DebugCommand implements CommandExecutor {
 			itemspw.println("#" + (i + 1) + " - " + nameList.get(i) + ": " + nuggetList.get(i));
 		}
 		
-		itemspw.close();*/
-		
+		itemspw.close();
+		*/
 		return true;
 	}
 }

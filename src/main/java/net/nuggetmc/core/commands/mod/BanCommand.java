@@ -15,20 +15,25 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 
 import net.nuggetmc.core.Main;
+import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.util.Checks;
 import net.nuggetmc.core.util.TimeConverter;
 
 public class BanCommand implements CommandExecutor {
 	
 	private Main plugin;
+	private static FileConfiguration ips;
 	
 	public BanCommand(Main plugin) {
 		this.plugin = plugin;
+		BanCommand.ips = Configs.ips.getConfig();
 	}
 	
 	/*
@@ -50,7 +55,7 @@ public class BanCommand implements CommandExecutor {
 			if (args.length >= 1) {
 				
 				String reason = "No reason specified";
-				int bantime = TimeConverter.stringToInt("30d");
+				int bantime = TimeConverter.stringToInt("7d");
 				
 				if (args.length >= 2) {
 					
@@ -68,6 +73,10 @@ public class BanCommand implements CommandExecutor {
 							if (Checks.isInteger(numtest)) {
 								timeResult = timeResult + subArgs[i] + " ";
 								continue;
+							}
+							else {
+								ultraSubArgs = Arrays.copyOfRange(subArgs, i, subArgs.length);
+								break;
 							}
 						}
 						else {
@@ -126,8 +135,8 @@ public class BanCommand implements CommandExecutor {
 				}
 				
 				Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Alert" + ChatColor.DARK_GRAY + "] " + ChatColor.RED
-						+ sender.getName() + " banned player " + bannedPlayerName + ChatColor.RED + " with reason [" + ChatColor.YELLOW
-						+ reason + ChatColor.RED + "] and time" + ChatColor.YELLOW + TimeConverter.intToString(bantime) + ChatColor.RED + ".");
+						+ sender.getName() + " banned " + bannedPlayerName + ChatColor.RED + " with reason [" + ChatColor.YELLOW
+						+ reason + ChatColor.RED + "] for" + ChatColor.YELLOW + TimeConverter.intToStringElongated(bantime) + ChatColor.RED + ".");
 			}
 			else {
 				sender.sendMessage(ChatColor.RED + "Usage: /ban <player> <time> <reason>");
@@ -177,69 +186,14 @@ public class BanCommand implements CommandExecutor {
 			if (args.length >= 1) {
 				
 				String reason = "No reason specified";
-				int bantime = TimeConverter.stringToInt("7d");
 				
 				if (args.length >= 2) {
-					
 					String[] subArgs = Arrays.copyOfRange(args, 1, args.length);
-					String[] ultraSubArgs = null;
-					
-					String timeResult = "";
-					String reasonResult = "";
-					
+					reason = "";
 					for (int i = 0; i < subArgs.length; i++) {
-						char end = subArgs[i].charAt(subArgs[i].length() - 1);
-						if (end == 's' || end == 'm' || end == 'h' || end == 'd') {
-							String numtest = subArgs[i].substring(0, subArgs[i].length() - 1);
-							
-							if (Checks.isInteger(numtest)) {
-								timeResult = timeResult + subArgs[i] + " ";
-								continue;
-							}
-						}
-						else {
-							ultraSubArgs = Arrays.copyOfRange(subArgs, i, subArgs.length);
-							break;
-						}
-					}
-					
-					for (int i = 0; i < ultraSubArgs.length; i++) {
-						reasonResult = reasonResult + ultraSubArgs[i] + " ";
-					}
-					
-
-					if (ultraSubArgs != null) {
-						for (int i = 0; i < ultraSubArgs.length; i++) {
-							reasonResult = reasonResult + ultraSubArgs[i] + " ";
-						}
-						
-						if (reasonResult.endsWith(" ")) {
-							reasonResult = reasonResult.substring(0, reasonResult.length() - 1);
-						}
-						
-						if (!reasonResult.equals("")) {
-							reason = reasonResult;
-						}
-					}
-					
-					if (timeResult.endsWith(" ")) {
-						timeResult = timeResult.substring(0, timeResult.length() - 1);
-					}
-					
-					if (!timeResult.equals("")) {
-						bantime = TimeConverter.stringToInt(timeResult);
+						reason += subArgs[i];
 					}
 				}
-				
-				BanList list = Bukkit.getBanList(BanList.Type.IP);
-				Date date = new Date(System.currentTimeMillis());
-				
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(date);
-				calendar.add(Calendar.SECOND, bantime);
-				Date expiration = calendar.getTime();
-				
-				list.addBan(args[0], reason, expiration, sender.getName());
 				
 				Player bannedPlayer = Bukkit.getPlayer(args[0]);
 				String bannedPlayerName = args[0];
@@ -247,7 +201,43 @@ public class BanCommand implements CommandExecutor {
 				if (bannedPlayer != null) {
 					bannedPlayerName = bannedPlayer.getName();
 					if (bannedPlayer.isOnline()) {
-						bannedPlayer.kickPlayer(banmsg(reason, expiration));
+						bannedPlayer.kickPlayer(permbanmsg(reason));
+					}
+				}
+				else {
+					OfflinePlayer bannedOfflinePlayer = Bukkit.getOfflinePlayer(args[0]);
+					if (bannedOfflinePlayer != null) {
+						bannedPlayerName = bannedOfflinePlayer.getName();
+					}
+					sender.sendMessage(ChatColor.RED + bannedPlayerName + " is not online!");
+					return true;
+				}
+				
+				String ip = ((CraftPlayer) bannedPlayer).getHandle().playerConnection.networkManager.getRawAddress().toString();
+				ip = ip.split(":")[0];
+				ips.set(bannedPlayerName + ".ip", ip);
+				ips.set(bannedPlayerName + ".reason", reason);
+				ips.set(bannedPlayerName + ".by", sender.getName());
+				Configs.ips.saveConfig();
+				
+				Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Alert" + ChatColor.DARK_GRAY + "] " + ChatColor.RED
+						+ sender.getName() + " permanently banned " + bannedPlayerName + ChatColor.RED + " with reason [" + ChatColor.YELLOW
+						+ reason + ChatColor.RED + "].");
+			}
+			else {
+				sender.sendMessage(ChatColor.RED + "Usage: /ban-ip <player> <reason>");
+			}
+			break;
+			
+		case "pardon-ip":
+			if (args.length >= 1) {
+				
+				Player bannedPlayer = Bukkit.getPlayer(args[0]);
+				String bannedPlayerName = args[0];
+				
+				if (bannedPlayer != null) {
+					bannedPlayerName = bannedPlayer.getName();
+					if (bannedPlayer.isOnline()) {
 					}
 				}
 				else {
@@ -257,44 +247,35 @@ public class BanCommand implements CommandExecutor {
 					}
 				}
 				
-				for (Player all : Bukkit.getOnlinePlayers()) {
-					if (Checks.checkStaff(all)) {
-						all.sendMessage(sender.getName() + " IP-banned " + bannedPlayerName + ChatColor.WHITE + " with reason [" + ChatColor.YELLOW
-								+ reason + ChatColor.WHITE + "] and time" + ChatColor.YELLOW + TimeConverter.intToString(bantime) + ChatColor.WHITE + ".");
+				for (String names : ips.getKeys(false)) {
+					if (names.equals(bannedPlayerName)) {
+						ips.set(bannedPlayerName, null);
+						Configs.ips.saveConfig();
+						sender.sendMessage("Pardoned player " + bannedPlayerName);
 					}
 				}
 			}
 			else {
-				sender.sendMessage(ChatColor.RED + "Usage: /ban-ip <player> <time> <reason>");
+				sender.sendMessage(ChatColor.RED + "Usage: /pardon-ip <player>");
 			}
 			break;
 			
 		case "ipbanlist":
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-				BanList list = Bukkit.getBanList(BanList.Type.IP);
-				Set<BanEntry> entries = list.getBanEntries();
-				sender.sendMessage("There are " + entries.size() + " total IP-banned players:");
+				List<String> msgList = new ArrayList<>();
+				int count = 0;
+				for (String names : ips.getKeys(false)) {
+					String reason = ips.getString(names + ".reason");
+					String by = ips.getString(names + ".by");
+					msgList.add(names + " (by " + ChatColor.YELLOW + by + ChatColor.RESET + ") [" + ChatColor.YELLOW + reason
+					+ ChatColor.RESET + "]");
+					count++;
+				}
 				
-				for (BanEntry entry : entries) {
-					String name = entry.getTarget();
-					String reason = entry.getReason();
-					String by = entry.getSource();
-					Date expiration = entry.getExpiration();
-					
-					int bantime = (int) ((expiration.getTime() - System.currentTimeMillis()) / 1000);
-					
-					if (bantime <= 0) {
-						list.pardon(name);
-						continue;
-					}
-					
-					String bantimestr = TimeConverter.intToString(bantime);
-					if (bantimestr.startsWith(" ")) {
-						bantimestr = bantimestr.substring(1);
-					}
-					
-					sender.sendMessage(name + " (by " + ChatColor.YELLOW + by + ChatColor.RESET + ") [" + ChatColor.YELLOW + reason
-							+ ChatColor.RESET + "] (" + ChatColor.YELLOW + bantimestr + ChatColor.RESET + ")");
+				sender.sendMessage("There are " + count + " total banned players:");
+				
+				for (String key : msgList) {
+					sender.sendMessage(key);
 				}
 			});
 			break;
@@ -314,9 +295,25 @@ public class BanCommand implements CommandExecutor {
 		return result;
 	}
 	
+	private static String permbanmsg(String reason) {
+		String result = ChatColor.RED + "You have been permanently banned from the network."
+				+ "\n\n" + ChatColor.WHITE + "Reason: " + ChatColor.YELLOW + reason;
+		return result;
+	}
+	
 	@SuppressWarnings("deprecation")
 	public static void onConnect(AsyncPlayerPreLoginEvent event) {
 		OfflinePlayer player = Bukkit.getOfflinePlayer(event.getName());
+		
+		String ip = event.getAddress().toString();
+		
+		for (String names : ips.getKeys(false)) {
+			if (ips.getString(names + ".ip").equals(ip)) {
+				String reason = ips.getString(names + ".reason");
+				event.disallow(Result.KICK_BANNED, permbanmsg(reason));
+			}
+		}
+		
 		if (player.isBanned()) {
 			BanList list = Bukkit.getBanList(BanList.Type.NAME);
 			BanEntry entry = list.getBanEntry(player.getName());

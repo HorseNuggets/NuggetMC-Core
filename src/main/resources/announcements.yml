@@ -2,9 +2,10 @@ prefix: "&8[&4Alert&8]&f"
 messages:
 - "<prefix> Don't forget to vote! &e/vote"
 - "<prefix> You can do &e/help &fto view the general commands."
+- "<prefix> &e[TIP] &fDeposit your newly gained nuggets at the shop! &e/shop"
 - "<prefix> Do &e/rules &fto view the rules."
-- "<prefix> Do &e/kit &fto recieve a kit."
 - "<prefix> &e[TIP] &fShift-click on the shop signs to sell all of your items at once!"
+- "<prefix> Do &e/kit &fto recieve a kit."
 - "<prefix> &e[TIP] &fShift while placing TNT to auto-ignite it!"
 time:
   delay: 1s

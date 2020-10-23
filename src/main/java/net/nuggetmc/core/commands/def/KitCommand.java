@@ -25,6 +25,7 @@ import net.nuggetmc.core.economy.KitCosts;
 import net.nuggetmc.core.economy.KitGear;
 import net.nuggetmc.core.gui.GUIKits;
 import net.nuggetmc.core.setup.WorldManager;
+import net.nuggetmc.core.util.Checks;
 import net.nuggetmc.core.util.TimeConverter;
 
 public class KitCommand implements CommandExecutor {
@@ -818,7 +819,7 @@ public class KitCommand implements CommandExecutor {
 					bowRandomizer = 5;
 
 					ItemStack sword = new ItemStack(Material.STONE_SWORD, 1);
-					sword.addEnchantment(Enchantment.DAMAGE_ALL, 5);
+					sword.addEnchantment(Enchantment.DAMAGE_ALL, 4);
 					sword.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
 					ItemMeta swordn = sword.getItemMeta();
 					swordn.setDisplayName(ChatColor.DARK_GRAY + "Witherman " + ChatColor.DARK_GRAY + "Sword" + ChatColor.WHITE);
@@ -867,7 +868,7 @@ public class KitCommand implements CommandExecutor {
 
 					kit = true;
 					check = true;
-
+					
 					ItemStack boen = new ItemStack(Material.BONE, 1);
 					boen.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 9);
 					ItemMeta boenn = boen.getItemMeta();
@@ -977,7 +978,7 @@ public class KitCommand implements CommandExecutor {
 				break;
 				
 			case "spoon":
-				if (!player.getName().equals("SpoonyTheSpoon")) {
+				if (!Checks.checkSpoon(player)) {
 					if (level < requiredLevel) {
 						notSufficientLevel = true;
 						break;
@@ -993,7 +994,17 @@ public class KitCommand implements CommandExecutor {
 						+ " iron_shovel 1 0 {display:{Name:\"§r§9§kX§r"
 						+ " §9The §9Spoon §kX§f\",Lore:[\"§7Lightning V\"]},ench:[{id:16,lvl:8},{id:32,lvl:8},{id:34,lvl:3}]}");
 				
-				if (!player.getName().equals("SpoonyTheSpoon")) config.set("players." + uuid + ".nuggets", nuggets - cost);
+				helmetRandomizer = 6;
+				chestplateRandomizer = 6;
+				leggingsRandomizer = 6;
+				bootsRandomizer = 6;
+
+				bowRandomizer = 5;
+
+				kit = true;
+				check = true;
+				
+				if (!Checks.checkSpoon(player)) config.set("players." + uuid + ".nuggets", nuggets - cost);
 				break;
 			}
 			

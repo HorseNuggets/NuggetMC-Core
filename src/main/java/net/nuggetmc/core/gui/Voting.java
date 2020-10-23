@@ -15,32 +15,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.nuggetmc.core.Main;
-
 public class Voting implements CommandExecutor {
 	
-	private Main plugin;
+	Inventory inv = Bukkit.createInventory(null, 36, "Voting");
 	
-	public Voting(Main plugin) {
-		this.plugin = plugin;
-	}
-	
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		
-		sender.sendMessage(ChatColor.YELLOW + "This command is currently under maintenance!");
-		
-		/*if (sender instanceof Player) {
-			Player player = (Player) sender;
-			vote(player);
-		}*/
-		return true;
-	}
-	
-	private void vote(Player player) {
-		player.updateInventory();
-		Inventory inv = Bukkit.createInventory(null, 36, "Voting");
-		
+	public Voting() {
 		ItemStack v1  = new ItemStack(Material.PAPER);
 		ItemMeta meta1  = v1.getItemMeta();
 		ItemStack v2  = new ItemStack(Material.PAPER);
@@ -59,21 +38,21 @@ public class Voting implements CommandExecutor {
 		ItemStack close = new ItemStack(Material.BARRIER);
 		ItemMeta metaclose = close.getItemMeta();
 		
-		meta1.setDisplayName(ChatColor.WHITE + "Vote on " + ChatColor.DARK_AQUA + "minecraftservers.org");
+		meta1.setDisplayName(ChatColor.YELLOW + "Vote on " + ChatColor.AQUA + "MinecraftServers§3.org");
 		ArrayList<String> lore1 = new ArrayList<String>();
 		lore1.add(ChatColor.GRAY + "Reward: " + ChatColor.GOLD + "100 Nuggets");
 		lore1.add("");
 		lore1.add(ChatColor.GRAY + "Click to vote!");
 		meta1.setLore(lore1);
 		
-		meta2.setDisplayName(ChatColor.WHITE + "Vote on " + ChatColor.DARK_AQUA + "minestatus.net");
+		meta2.setDisplayName(ChatColor.YELLOW + "Vote on " + ChatColor.AQUA + "MineStatus§3.net");
 		ArrayList<String> lore2 = new ArrayList<String>();
 		lore2.add(ChatColor.GRAY + "Reward: " + ChatColor.GOLD + "100 Nuggets");
 		lore2.add("");
 		lore2.add(ChatColor.GRAY + "Click to vote!");
 		meta2.setLore(lore2);
 		
-		meta3.setDisplayName(ChatColor.WHITE + "Vote on " + ChatColor.DARK_AQUA + "votemc.com");
+		meta3.setDisplayName(ChatColor.YELLOW + "Vote on " + ChatColor.AQUA + "VoteMC§3.com");
 		ArrayList<String> lore3 = new ArrayList<String>();
 		lore3.add(ChatColor.GRAY + "Reward: " + ChatColor.GOLD + "100 Nuggets");
 		lore3.add("");
@@ -96,6 +75,18 @@ public class Voting implements CommandExecutor {
 		inv.setItem(14, v3);
 		
 		inv.setItem(31, close);
+	}
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if (sender instanceof Player) {
+			Player player = (Player) sender;
+			vote(player);
+		}
+		return true;
+	}
+	
+	private void vote(Player player) {
 		player.updateInventory();
 		player.openInventory(inv);
 		return;
@@ -106,35 +97,35 @@ public class Voting implements CommandExecutor {
 		Player player = (Player) event.getWhoClicked();
 		boolean success = false;
 		
-		if (name.equals(ChatColor.WHITE + "Vote on " + ChatColor.DARK_AQUA + "minecraftservers.org")) {
+		if (name.equals(ChatColor.YELLOW + "Vote on " + ChatColor.AQUA + "MinecraftServers§3.org")) {
 			success = true;
 			player.closeInventory();
-			player.sendMessage(ChatColor.YELLOW + "--------------------------------------");
+			player.sendMessage(ChatColor.GRAY + "--------------------------------------");
 			player.sendMessage("");
 			player.sendMessage(ChatColor.YELLOW + "               Vote for " + ChatColor.GOLD + ChatColor.BOLD + "NuggetMC" + ChatColor.RESET + ChatColor.YELLOW + "!");
 			player.sendMessage(ChatColor.DARK_AQUA + "      minecraftservers.org/vote/589423");
 			player.sendMessage("");
-			player.sendMessage(ChatColor.YELLOW + "--------------------------------------");
+			player.sendMessage(ChatColor.GRAY + "--------------------------------------");
 		}
-		else if (name.equals(ChatColor.WHITE + "Vote on " + ChatColor.DARK_AQUA + "minestatus.net")) {
+		else if (name.equals(ChatColor.YELLOW + "Vote on " + ChatColor.AQUA + "MineStatus§3.net")) {
 			success = true;
 			player.closeInventory();
-			player.sendMessage(ChatColor.YELLOW + "--------------------------------------");
+			player.sendMessage(ChatColor.GRAY + "--------------------------------------");
 			player.sendMessage("");
 			player.sendMessage(ChatColor.YELLOW + "               Vote for " + ChatColor.GOLD + ChatColor.BOLD + "NuggetMC" + ChatColor.RESET + ChatColor.YELLOW + "!");
 			player.sendMessage(ChatColor.DARK_AQUA + "   minestatus.net/server/vote/nuggetmc.net");
 			player.sendMessage("");
-			player.sendMessage(ChatColor.YELLOW + "--------------------------------------");
+			player.sendMessage(ChatColor.GRAY + "--------------------------------------");
 		}
-		else if (name.equals(ChatColor.WHITE + "Vote on " + ChatColor.DARK_AQUA + "votemc.com")) {
+		else if (name.equals(ChatColor.YELLOW + "Vote on " + ChatColor.AQUA + "VoteMC§3.com")) {
 			success = true;
 			player.closeInventory();
-			player.sendMessage(ChatColor.YELLOW + "--------------------------------------");
+			player.sendMessage(ChatColor.GRAY + "--------------------------------------");
 			player.sendMessage("");
 			player.sendMessage(ChatColor.YELLOW + "               Vote for " + ChatColor.GOLD + ChatColor.BOLD + "NuggetMC" + ChatColor.RESET + ChatColor.YELLOW + "!");
 			player.sendMessage(ChatColor.DARK_AQUA + "         votemc.com/nuggetmc.479/vote");
 			player.sendMessage("");
-			player.sendMessage(ChatColor.YELLOW + "--------------------------------------");
+			player.sendMessage(ChatColor.GRAY + "--------------------------------------");
 		}
 		
 		if (success) {

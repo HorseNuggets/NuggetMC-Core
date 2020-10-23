@@ -152,16 +152,24 @@ public class ItemShop implements CommandExecutor {
 			ItemStack bukkitStack = null;
 			
 			try {
-				NBTTagCompound nbt = MojangsonParser.parse(sep[4]);
-				nmsStack.setTag(nbt);
-				bukkitStack = CraftItemStack.asBukkitCopy(nmsStack);
+				if (!sep[4].equals("{}")) {
+					NBTTagCompound nbt = MojangsonParser.parse(sep[4]);
+					nmsStack.setTag(nbt);
+				}
 			}
 			
 			catch (MojangsonParseException e) {
 				bukkitStack = new ItemStack(Material.AIR);
 			}
 			
-			shop.put(keySpace, new Wrapper(sep[1] + " " + sep[2] + " "  + sep[3] + " "  + sep[4], bukkitStack));
+			bukkitStack = CraftItemStack.asBukkitCopy(nmsStack);
+			
+			String nbt = sep[4];
+			if (nbt.equals("{}")) {
+				nbt = "";
+			}
+			
+			shop.put(keySpace, new Wrapper(sep[1] + " " + sep[2] + " " + sep[3] + " " + nbt, bukkitStack));
 			
 			World world = loc.getWorld();
 			for(Entity i : world.getEntities()){
@@ -250,7 +258,8 @@ public class ItemShop implements CommandExecutor {
 							
 							else if (ln[0].equals("[Sell]")) {
 								ItemStack item = val.getValue();
-								if (player.getInventory().containsAtLeast(item, 1)) {
+								int num = Integer.parseInt(ln[1]);
+								if (player.getInventory().containsAtLeast(item, num)) {
 									if (player.isSneaking()) {
 										
 										ItemStack check = item.clone();
@@ -265,8 +274,9 @@ public class ItemShop implements CommandExecutor {
 											}
 										}
 										
-										int sells = (int) amount / item.getAmount();
-										for (int i = 1; i <= amount; i++) {
+										int sells = (int) (amount / num);
+										item.setAmount(num);
+										for (int i = 1; i <= sells; i++) {
 											player.getInventory().removeItem(item);
 										}
 										

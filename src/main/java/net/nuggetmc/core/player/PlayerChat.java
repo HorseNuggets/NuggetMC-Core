@@ -5,13 +5,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.inventory.ItemStack;
 
+import net.minecraft.server.v1_8_R3.ChatComponentText;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.util.Checks;
@@ -112,9 +120,48 @@ public class PlayerChat {
 		 * Later add tags before the :
 		 */
 		
-		if (Checks.checkXDD(player)) {
+		ChatComponentText text = null;
+		
+		if (Checks.checkXD(player)) {
 			message = message.replaceAll("&", "§");
+			if (message.contains("[i]")) {
+				
+				ItemStack item = player.getItemInHand();
+				
+				if (!(item == null || item.getType() == Material.AIR)) {
+					
+					IChatBaseComponent itemMsg = bukkitStackToChatComponent(item);
+					message += "-";
+					
+					String[] parts = message.split(Pattern.quote("[i]"));
+					text = new ChatComponentText(parts[0]);
+					
+					for (int i = 1; i < parts.length; i++) {
+						text.addSibling(itemMsg);
+						if (i == parts.length - 1) {
+							String trimmed = parts[i].substring(0, parts[i].length() - 1);
+							ChatComponentText extra = new ChatComponentText(trimmed);
+							text.addSibling(extra);
+						}
+					}
+				}
+				
+				else {
+					text = new ChatComponentText(message);
+				}
+			}
+			
+			else {
+				text = new ChatComponentText(message);
+			}
 		}
+		
+		else {
+			text = new ChatComponentText(message);
+		}
+		
+		
+		PacketPlayOutChat packet = new PacketPlayOutChat(text);
 		
 		if (Checks.checkStaff(player)) {
 			if (raw.startsWith("#")) {
@@ -129,14 +176,14 @@ public class PlayerChat {
 			}
 			
 			for (Player all : Bukkit.getOnlinePlayers()) {
-				all.sendMessage(message);
+				((CraftPlayer) all).getHandle().playerConnection.sendPacket(packet);
 			}
 		}
 		
 		else {
 			for (Player all : Bukkit.getOnlinePlayers()) {
 				if (!Configs.ignore.getConfig().getStringList(all.getUniqueId().toString()).contains(uuid.toString())) {
-					all.sendMessage(message);
+					((CraftPlayer) all).getHandle().playerConnection.sendPacket(packet);
 				}
 			}
 			
@@ -162,5 +209,10 @@ public class PlayerChat {
 			}
 		}
 		return;
+	}
+	
+	public IChatBaseComponent bukkitStackToChatComponent(ItemStack stack) {
+	    net.minecraft.server.v1_8_R3.ItemStack nms = CraftItemStack.asNMSCopy(stack);
+	    return nms.C();
 	}
 }

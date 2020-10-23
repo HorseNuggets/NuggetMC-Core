@@ -13,6 +13,7 @@ public class Configs {
 	public static ConfigManager homes;
 	public static ConfigManager ignore;
 	public static ConfigManager inventories;
+	public static ConfigManager ips;
 	public static ConfigManager itemshop;
 	public static ConfigManager kitsconfig;
 	public static ConfigManager mutes;
@@ -30,6 +31,7 @@ public class Configs {
 		homesSetup();
 		ignoreSetup();
 		inventoriesSetup();
+		ipsSetup();
 		itemshopSetup();
 		kitsconfigSetup();
 		noFallSetup();
@@ -59,6 +61,8 @@ public class Configs {
 			return ignore;
 		case "playerdata/inventories.yml":
 			return inventories;
+		case "playerdata/ips.yml":
+			return ips;
 		case "playerdata/kits.yml":
 			return kitsconfig;
 		case "playerdata/mutes.yml":
@@ -124,6 +128,12 @@ public class Configs {
 	private void inventoriesSetup() {
 		inventories = new ConfigManager(plugin);
 		inventories.setup("playerdata/inventories.yml");
+		return;
+	}
+	
+	private void ipsSetup() {
+		ips = new ConfigManager(plugin);
+		ips.setup("playerdata/ips.yml");
 		return;
 	}
 	

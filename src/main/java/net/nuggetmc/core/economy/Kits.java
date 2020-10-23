@@ -1,7 +1,9 @@
 package net.nuggetmc.core.economy;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.gui.GUIKits;
+import net.nuggetmc.core.util.Checks;
 
 public class Kits {
 
@@ -57,33 +60,84 @@ public class Kits {
 		kitPreviewMeta.setLore(kitPreviewLore);
 		kitPreview.setItemMeta(kitPreviewMeta);
 		inventory.setItem(20, kitPreview);
-
 		
-		if (level < KitCosts.requiredLevel(kit)) {
-			ItemStack kitUnlock = new ItemStack(Material.STONE, 1, (short) 4);
-			ItemMeta kitUnlockMeta = kitUnlock.getItemMeta();
-			kitUnlockMeta.setDisplayName(ChatColor.YELLOW + "Unlock Kit " + kit);
-			ArrayList<String> kitUnlockLore = new ArrayList<String>();
-			kitUnlockLore.add(ChatColor.GRAY + "You are not high enough level");
-			kitUnlockLore.add(ChatColor.GRAY + "to unlock this kit!");
-			kitUnlockLore.add("");
-			kitUnlockLore.add(ChatColor.GRAY + "Required Level: " + ChatColor.YELLOW + KitCosts.requiredLevel(kit));
-			kitUnlockMeta.setLore(kitUnlockLore);
-			kitUnlock.setItemMeta(kitUnlockMeta);
-			inventory.setItem(24, kitUnlock);
+		int cost = KitCosts.cost(kit);
+		String costStr = NumberFormat.getNumberInstance(Locale.US).format(cost);
+
+		if (!kit.equalsIgnoreCase("spoon")) {
+			if (level < KitCosts.requiredLevel(kit)) {
+				ItemStack kitUnlock = new ItemStack(Material.STONE, 1, (short) 4);
+				ItemMeta kitUnlockMeta = kitUnlock.getItemMeta();
+				kitUnlockMeta.setDisplayName(ChatColor.YELLOW + "Unlock Kit " + kit);
+				ArrayList<String> kitUnlockLore = new ArrayList<String>();
+				kitUnlockLore.add(ChatColor.GRAY + "You are not high enough level");
+				kitUnlockLore.add(ChatColor.GRAY + "to unlock this kit!");
+				kitUnlockLore.add("");
+				kitUnlockLore.add(ChatColor.GRAY + "Required Level: " + ChatColor.YELLOW + KitCosts.requiredLevel(kit));
+				kitUnlockMeta.setLore(kitUnlockLore);
+				kitUnlock.setItemMeta(kitUnlockMeta);
+				inventory.setItem(24, kitUnlock);
+			}
+			
+			else {
+				ItemStack kitPurchase = new ItemStack(Material.EMERALD, 1);
+				ItemMeta kitPurchaseMeta = kitPurchase.getItemMeta();
+				kitPurchaseMeta.setDisplayName(ChatColor.GREEN + "Buy Kit " + kit);
+				ArrayList<String> kitPurchaseLore = new ArrayList<String>();
+				kitPurchaseLore.add(ChatColor.GRAY + "Cost: " + ChatColor.YELLOW + costStr);
+				kitPurchaseLore.add("");
+				kitPurchaseLore.add(ChatColor.GRAY + "Click to purchase!");
+				kitPurchaseMeta.setLore(kitPurchaseLore);
+				kitPurchase.setItemMeta(kitPurchaseMeta);
+				inventory.setItem(24, kitPurchase);
+			}
 		}
 		
 		else {
-			ItemStack kitPurchase = new ItemStack(Material.EMERALD, 1);
-			ItemMeta kitPurchaseMeta = kitPurchase.getItemMeta();
-			kitPurchaseMeta.setDisplayName(ChatColor.GREEN + "Buy Kit " + kit);
-			ArrayList<String> kitPurchaseLore = new ArrayList<String>();
-			kitPurchaseLore.add(ChatColor.GRAY + "Cost: " + ChatColor.YELLOW + KitCosts.cost(kit));
-			kitPurchaseLore.add("");
-			kitPurchaseLore.add(ChatColor.GRAY + "Click to purchase!");
-			kitPurchaseMeta.setLore(kitPurchaseLore);
-			kitPurchase.setItemMeta(kitPurchaseMeta);
-			inventory.setItem(24, kitPurchase);
+			if (Checks.checkSpoon(player)) {
+				ItemStack kitPurchase = new ItemStack(Material.EMERALD, 1);
+				ItemMeta kitPurchaseMeta = kitPurchase.getItemMeta();
+				kitPurchaseMeta.setDisplayName(ChatColor.GREEN + "Buy Kit " + kit);
+				ArrayList<String> kitPurchaseLore = new ArrayList<String>();
+				kitPurchaseLore.add(ChatColor.GRAY + "Cost: " + ChatColor.YELLOW + costStr);
+				kitPurchaseLore.add("");
+				kitPurchaseLore.add(ChatColor.GRAY + "You have the " + ChatColor.WHITE + "Spoon " + ChatColor.GRAY + "rank,");
+				kitPurchaseLore.add(ChatColor.GRAY + "so this kit is free for you.");
+				kitPurchaseLore.add("");
+				kitPurchaseLore.add(ChatColor.GRAY + "Click to purchase!");
+				kitPurchaseMeta.setLore(kitPurchaseLore);
+				kitPurchase.setItemMeta(kitPurchaseMeta);
+				inventory.setItem(24, kitPurchase);
+			}
+			
+			else {
+				if (level < KitCosts.requiredLevel(kit)) {
+					ItemStack kitUnlock = new ItemStack(Material.STONE, 1, (short) 4);
+					ItemMeta kitUnlockMeta = kitUnlock.getItemMeta();
+					kitUnlockMeta.setDisplayName(ChatColor.YELLOW + "Unlock Kit " + kit);
+					ArrayList<String> kitUnlockLore = new ArrayList<String>();
+					kitUnlockLore.add(ChatColor.GRAY + "You are not high enough level");
+					kitUnlockLore.add(ChatColor.GRAY + "to unlock this kit!");
+					kitUnlockLore.add("");
+					kitUnlockLore.add(ChatColor.GRAY + "Required Level: " + ChatColor.YELLOW + KitCosts.requiredLevel(kit));
+					kitUnlockMeta.setLore(kitUnlockLore);
+					kitUnlock.setItemMeta(kitUnlockMeta);
+					inventory.setItem(24, kitUnlock);
+				}
+				
+				else {
+					ItemStack kitPurchase = new ItemStack(Material.EMERALD, 1);
+					ItemMeta kitPurchaseMeta = kitPurchase.getItemMeta();
+					kitPurchaseMeta.setDisplayName(ChatColor.GREEN + "Buy Kit " + kit);
+					ArrayList<String> kitPurchaseLore = new ArrayList<String>();
+					kitPurchaseLore.add(ChatColor.GRAY + "Cost: " + ChatColor.YELLOW + costStr);
+					kitPurchaseLore.add("");
+					kitPurchaseLore.add(ChatColor.GRAY + "Click to purchase!");
+					kitPurchaseMeta.setLore(kitPurchaseLore);
+					kitPurchase.setItemMeta(kitPurchaseMeta);
+					inventory.setItem(24, kitPurchase);
+				}
+			}
 		}
 
 		ItemStack back = new ItemStack(Material.ARROW);

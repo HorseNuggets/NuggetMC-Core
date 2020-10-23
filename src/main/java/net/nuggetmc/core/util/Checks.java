@@ -122,6 +122,17 @@ public class Checks {
 		return true;
 	}
 	
+	public static boolean checkSpoon(Player player) {
+		UUID uuid = player.getUniqueId();
+		User user = api.getUserManager().getUser(uuid);
+		
+		switch (user.getPrimaryGroup()) {
+		case "spoon":
+			return true;
+		}
+		return false;
+	}
+	
 	public static boolean cmCheck1(String base) {
 		switch (base.toLowerCase()) {
 		case "/plugins":

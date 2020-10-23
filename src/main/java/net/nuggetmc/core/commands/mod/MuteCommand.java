@@ -37,7 +37,7 @@ public class MuteCommand implements CommandExecutor {
 			if (args.length >= 1) {
 				
 				String reason = "No reason specified";
-				int mutetime = TimeConverter.stringToInt("1d");
+				int mutetime = TimeConverter.stringToInt("6h");
 				
 				if (args.length >= 2) {
 					
@@ -55,6 +55,10 @@ public class MuteCommand implements CommandExecutor {
 							if (Checks.isInteger(numtest)) {
 								timeResult = timeResult + subArgs[i] + " ";
 								continue;
+							}
+							else {
+								ultraSubArgs = Arrays.copyOfRange(subArgs, i, subArgs.length);
+								break;
 							}
 						}
 						else {
@@ -118,8 +122,8 @@ public class MuteCommand implements CommandExecutor {
 				}
 				
 				Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Alert" + ChatColor.DARK_GRAY + "] " + ChatColor.RED
-						+ sender.getName() + " muted player " + mutedPlayerName + ChatColor.RED + " with reason [" + ChatColor.YELLOW
-						+ reason + ChatColor.RED + "] and time" + ChatColor.YELLOW + TimeConverter.intToString(mutetime) + ChatColor.RED + ".");
+						+ sender.getName() + " muted " + mutedPlayerName + ChatColor.RED + " with reason [" + ChatColor.YELLOW
+						+ reason + ChatColor.RED + "] for" + ChatColor.YELLOW + TimeConverter.intToStringElongated(mutetime) + ChatColor.RED + ".");
 			}
 			else {
 				sender.sendMessage(ChatColor.RED + "Usage: /mute <player> <time> <reason>");

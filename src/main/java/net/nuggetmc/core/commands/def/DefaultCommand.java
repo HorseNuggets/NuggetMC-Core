@@ -163,7 +163,7 @@ public class DefaultCommand implements CommandExecutor {
 		case "wrt":
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 				sender.sendMessage(linspace);
-				sender.sendMessage(ChatColor.WHITE + "World reload times:");
+				sender.sendMessage(ChatColor.WHITE + "World reset times:");
 				sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "Overworld:" + ChatColor.RED + TimeConverter.intToString(WorldManager.count));
 				sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "Nether:" + ChatColor.RED + TimeConverter.intToString(WorldManager.countNether));
 				sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "The End:" + ChatColor.RED + TimeConverter.intToString(WorldManager.countEnd));

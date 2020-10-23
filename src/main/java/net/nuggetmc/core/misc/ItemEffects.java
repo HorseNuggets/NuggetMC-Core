@@ -23,16 +23,22 @@ import org.bukkit.entity.Horse.Style;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -44,22 +50,33 @@ import net.nuggetmc.core.modifiers.CombatTracker;
 import net.nuggetmc.core.setup.WorldManager;
 import net.nuggetmc.core.util.ActionBar;
 import net.nuggetmc.core.util.ColorCodes;
+import net.nuggetmc.core.util.TimeConverter;
 
 public class ItemEffects {
 
 	private static List<String> worldlist;
-	private static Map<Player, Long> heal;
 	private static Set<Arrow> explosiveArrows;
+	private static Set<Arrow> switchArrows;
+	private static Map<Player, Integer> rune;
+	private static Map<Player, Long> heal;
+	private static Map<Player, Long> fire;
 	private static Map<Player, Long> boom;
+	private static Map<Player, Long> pearl;
+	private static Map<String, Long> gapple;
 
 	public static Main plugin;
 
 	public ItemEffects(Main plugin) {
 		ItemEffects.plugin = plugin;
 		ItemEffects.worldlist = Configs.worldsettings.getConfig().getStringList("uhckit-worlds");
-		ItemEffects.heal = new HashMap<>();
 		ItemEffects.explosiveArrows = new HashSet<>();
+		ItemEffects.switchArrows = new HashSet<>();
+		ItemEffects.rune = new HashMap<>();
+		ItemEffects.heal = new HashMap<>();
+		ItemEffects.fire = new HashMap<>();
 		ItemEffects.boom = new HashMap<>();
+		ItemEffects.pearl = new HashMap<>();
+		ItemEffects.gapple = new HashMap<>();
 	}
 
 	public static void boomBox(BlockPlaceEvent event) {
@@ -100,8 +117,9 @@ public class ItemEffects {
 	}
 
 	public static void onEntityDamage(EntityDamageByEntityEvent event) {
-		if (event.getDamager() instanceof Player) {
-			if (event.getEntity() instanceof Player) {
+		if (event.getEntity() instanceof Player) {
+			Player victim = (Player) event.getEntity();
+			if (event.getDamager() instanceof Player) {
 				Player player = (Player) event.getDamager();
 				if (event.getDamage() > 0 && !event.isCancelled()) {
 					if (worldlist.contains(player.getWorld().getName())) {
@@ -117,14 +135,15 @@ public class ItemEffects {
 							}
 						}
 						
-						Player victim = (Player) event.getEntity();
 						ItemStack item = player.getItemInHand();
 						if (item != null) {
 							if (item.hasItemMeta()) {
 								ItemMeta meta = item.getItemMeta();
 								if (meta.hasDisplayName()) {
 									String name = meta.getDisplayName();
-									if (name.equals(ChatColor.AQUA + "Horseman Axe") || name.equals(ChatColor.AQUA + "Jouster Axe")) {
+									
+									switch(name) {
+									case "§bHorseman Axe":
 										Entity vehicle = player.getVehicle();
 										if (vehicle != null) {
 											if (vehicle.getType() == EntityType.HORSE) {
@@ -143,9 +162,30 @@ public class ItemEffects {
 												}
 											}
 										}
-									}
-									
-									else if (name.equals(ChatColor.RED + "The Scythe")) {
+										break;
+										
+									case "§bJouster Axe":
+										Entity vehicle1 = player.getVehicle();
+										if (vehicle1 != null) {
+											if (vehicle1.getType() == EntityType.HORSE) {
+												event.setDamage(event.getDamage() * 2);
+												Location loc = victim.getLocation().add(0, 1, 0);
+												
+												float x = (float) loc.getX();
+												float y = (float) loc.getY();
+												float z = (float) loc.getZ();
+												
+												PacketPlayOutWorldParticles lavaParticles = new PacketPlayOutWorldParticles(EnumParticle.LAVA,
+														true, x, y, z, (float) 0.3, (float) 0.3, (float) 0.3, (float) 0, 10, null);
+												
+												for (Player all : Bukkit.getOnlinePlayers()) {
+													((CraftPlayer) all).getHandle().playerConnection.sendPacket(lavaParticles);
+												}
+											}
+										}
+										break;
+										
+									case "§cThe Scythe":
 										if (victim.getHealth() <= 6) {
 											event.setDamage(1000);
 										}
@@ -154,30 +194,84 @@ public class ItemEffects {
 										} else {
 											item.setAmount(item.getAmount() - 1);
 										}
-									}
-									
-									else if (name.equals(ChatColor.YELLOW + "Sword of JUSTICE")) {
+										break;
+										
+									case "§eSword of JUSTICE":
 										victim.getWorld().strikeLightning(victim.getLocation());
-									}
-									
-									else if (name.equals("§r§9§kX§r §9The §9Spoon §kX§f")) {
+										break;
+										
+									case "§r§9§kX§r §9The §9Spoon §kX§f":
 										int rando = (int) (Math.random() * 4);
 
 										if (rando == 2) {
 											victim.getWorld().strikeLightning(victim.getLocation());
 										}
-									}
-									
-									else if (name.equals(ChatColor.DARK_GRAY + "Witherman " + ChatColor.DARK_GRAY + "Sword" + ChatColor.WHITE)) {
+										break;
+										
+									case "§8Witherman §8Sword§f":
 										Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
 												"effect " + victim.getName() + " wither 3");
-									}
-									
-									else if (name.equals(ChatColor.DARK_PURPLE + "The " + ChatColor.DARK_PURPLE + "Infinity "
-											+ ChatColor.DARK_PURPLE + "Gauntlet" + ChatColor.WHITE)) {
-										int rando = (int) (Math.random() * 50 + 1);
+										break;
+										
+									case "§4Venomshank":
+										Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
+												"effect " + victim.getName() + " poison 3");
+										break;
+										
+									case "§3Runeblade":
+										int rando0 = (int) (Math.random() * 3);
+										if (rando0 == 0) {
+											for (Player all : Bukkit.getOnlinePlayers()) {
+												all.playSound(victim.getLocation(), Sound.BLAZE_BREATH, (float) 0.4, 2);
+											}
+											
+											Location loc = player.getLocation().add(0, 1, 0);
+											float x = (float) loc.getX();
+											float y = (float) loc.getY();
+											float z = (float) loc.getZ();
+											
+											PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.HEART, true, x, y, z, (float) 0.5, (float) 0.5, (float) 0.5, (float) 0.15, 2, null);
+											for (Player all : Bukkit.getOnlinePlayers()) {
+												((CraftPlayer) all).getHandle().playerConnection.sendPacket(packet);
+											}
+											if (player.getHealth() < 39)
+												player.setHealth(player.getHealth() + 1);
+											else
+												player.setHealth(40);
+										}
+										
+										if (rune.containsKey(player)) {
+											if (rune.get(player) >= 30) {
+												for (Player all : Bukkit.getOnlinePlayers()) {
+													all.playSound(victim.getLocation(), Sound.ZOMBIE_WOODBREAK, 1, 1);
+												}
+												event.setDamage(DamageModifier.ARMOR, 0);
+												rune.remove(player);
+											}
+											else {
+												rune.put(player, rune.get(player) + 1);
+												if (rune.get(player) == 30) {
+													ActionBar ab = new ActionBar("Hits: §a(" + rune.get(player) + "/30)");
+													ab.Send(player);
+												}
+												
+												else {
+													ActionBar ab = new ActionBar("Hits: (§a" + rune.get(player) + "§r/30)");
+													ab.Send(player);
+												}
+											}
+										}
+										else {
+											rune.put(player, 1);
+											ActionBar ab = new ActionBar("Hits: (§a" + rune.get(player) + "§r/30)");
+											ab.Send(player);
+										}
+										return;
+										
+									case "§5The §5Infinity §5Gauntlet§f":
+										int rando1 = (int) (Math.random() * 50 + 1);
 
-										if (rando == 29) {
+										if (rando1 == 29) {
 											double health = victim.getHealth() / 2;
 											victim.setHealth(health);
 											
@@ -185,18 +279,91 @@ public class ItemEffects {
 												all.playSound(victim.getLocation(), Sound.ZOMBIE_WOODBREAK, 1, 1);
 											}
 										}
-									}
-									
-									else if (name.equals(ChatColor.AQUA + "Valkyrie " + ChatColor.AQUA + "Sword" + ChatColor.WHITE)) {
-										int rando = (int) (Math.random() * 20);
+										break;
+										
+									case "§bValkyrie §bSword§f":
+										int rando2 = (int) (Math.random() * 20);
 
-										if (rando == 7) {
+										if (rando2 == 7) {
 											victim.getWorld().strikeLightning(victim.getLocation());
 										}
+										break;
+									}
+									
+									if (name.equals("§0Omega")) {
+										victim.setMaximumNoDamageTicks(1);
+										victim.setNoDamageTicks(1);
+										return;
 									}
 								}
 							}
 						}
+						rune.remove(player);
+						victim.setMaximumNoDamageTicks(20);
+						victim.setNoDamageTicks(20);
+					}
+				}
+				return;
+			}
+			
+			else if (event.getDamager() instanceof Arrow) {
+				Arrow arrow = (Arrow) event.getDamager();
+				if (switchArrows.contains(arrow)) {
+					if (arrow.getShooter() instanceof Player) {
+						Player player = (Player) arrow.getShooter();
+						
+						Location playerLoc = player.getLocation();
+						Location victimLoc = victim.getLocation();
+						
+						if (WorldManager.isInSpawn(playerLoc)) return;
+						if (WorldManager.isInSpawn(victimLoc)) return;
+						
+						player.teleport(victimLoc);
+						victim.teleport(playerLoc);
+						
+						float x1 = (float) playerLoc.getX();
+						float y1 = (float) (playerLoc.getY() + 1);
+						float z1 = (float) playerLoc.getZ();
+						
+						float x2 = (float) victimLoc.getX();
+						float y2 = (float) (victimLoc.getY() + 1);
+						float z2 = (float) victimLoc.getZ();
+						
+						PacketPlayOutWorldParticles packet1 = new PacketPlayOutWorldParticles(EnumParticle.SPELL_WITCH, true, x1, y1, z1, (float) 0.5, (float) 0.5, (float) 0.5, (float) 0.15, 40, null);
+						PacketPlayOutWorldParticles packet2 = new PacketPlayOutWorldParticles(EnumParticle.SPELL_WITCH, true, x2, y2, z2, (float) 0.5, (float) 0.5, (float) 0.5, (float) 0.15, 40, null);
+						
+						for (Player all : Bukkit.getOnlinePlayers()) {
+							all.playSound(playerLoc, Sound.ENDERMAN_TELEPORT, 1, 1);
+							all.playSound(victimLoc, Sound.ENDERMAN_TELEPORT, 1, 1);
+							((CraftPlayer) all).getHandle().playerConnection.sendPacket(packet1);
+							((CraftPlayer) all).getHandle().playerConnection.sendPacket(packet2);
+						}
+					}
+				}
+				return;
+			}
+		}
+		return;
+	}
+	
+	public static void durability(PlayerItemDamageEvent event) {
+		ItemStack item = event.getItem();
+		if (item != null) {
+			if (item.hasItemMeta()) {
+				ItemMeta meta = item.getItemMeta();
+				if (meta.hasDisplayName()) {
+					String name = meta.getDisplayName();
+					if (name.equals("§0Omega")) {
+						int damage = event.getDamage();
+						if ((131 - item.getDurability()) > 5) {
+							if (damage > 0) {
+								int random = (int) (Math.random() * 10);
+								if (random != 4) {
+									event.setDamage(0);
+								}
+							}
+						}
+						return;
 					}
 				}
 			}
@@ -320,8 +487,13 @@ public class ItemEffects {
 				ItemMeta meta = bow.getItemMeta();
 				if (meta.hasDisplayName()) {
 					String name = meta.getDisplayName();
-					if (name.equals(ChatColor.BLUE + "Gaster " + ChatColor.BLUE + "Blaster" + ChatColor.WHITE)) {
+					switch(name) {
+					case "§9Gaster §9Blaster§f":
 						explosiveArrows.add((Arrow) event.getProjectile());
+						break;
+					case "§dSwitchbow":
+						switchArrows.add((Arrow) event.getProjectile());
+						break;
 					}
 				}
 			}
@@ -344,6 +516,77 @@ public class ItemEffects {
 		return;
 	}
 	
+	@SuppressWarnings({"deprecation", "incomplete-switch"})
+	public static void eat(PlayerItemConsumeEvent event) {
+		Player player = event.getPlayer();
+		String playername = player.getName();
+		ItemStack item = event.getItem();
+		
+		switch (item.getType()) {
+		case GOLDEN_APPLE:
+			if (item.getData().getData() == 1) {
+				if (gapple.containsKey(playername)) {
+					Long difference = gapple.get(playername) - System.currentTimeMillis() / 1000;
+					if (difference > 0) {
+						String msg = TimeConverter.intToString(difference.intValue());
+						if (msg.startsWith(" ")) {
+							msg = msg.substring(1);
+						}
+						ActionBar actionBar = new ActionBar("You are on a cooldown! (§e" + msg + "§r)");
+						actionBar.Send(player);
+						event.setCancelled(true);
+						return;
+					}
+					
+					else {
+						gapple.remove(playername);
+					}
+				}
+				
+				gapple.put(playername, (System.currentTimeMillis() / 1000) + 720);
+			}
+			break;
+			
+		case POTION:
+			Potion potion = Potion.fromItemStack(item);
+			for (PotionEffect effect : potion.getEffects()) {
+				if (effect.getType().equals(PotionEffectType.INCREASE_DAMAGE)) {
+					if (worldlist.contains(player.getWorld().getName())) {
+						event.setCancelled(true);
+						player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 240, 0));
+						if (item.getAmount() == 1) {
+							player.setItemInHand(new ItemStack(Material.GLASS_BOTTLE));
+						} else {
+							item.setAmount(item.getAmount() - 1);
+						}
+						break;
+					}
+				}
+			}
+			break;
+		}
+		return;
+	}
+	
+	public static void splashPotion(PotionSplashEvent event) {
+		ThrownPotion potion = event.getPotion();
+		for (Entity entity : event.getAffectedEntities()) {
+			if (entity instanceof Player) {
+				Player player = (Player) entity;
+				for (PotionEffect effect : potion.getEffects()) {
+					if (effect.getType().equals(PotionEffectType.INCREASE_DAMAGE)) {
+						if (worldlist.contains(player.getWorld().getName())) {
+							event.setCancelled(true);
+							player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 240, 0));
+							break;
+						}
+					}
+				}
+			}
+		}
+		return;
+	}
+	
 	public static void itemInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		ItemStack item = player.getItemInHand();
@@ -356,8 +599,8 @@ public class ItemEffects {
 					
 					if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
 						if (player.getItemInHand().getType() == Material.IRON_SWORD) {
-							if (name.equals(ChatColor.AQUA + "Samurai " + ChatColor.AQUA + "Sword" + ChatColor.WHITE)) {
-								
+							switch(name) {
+							case "§bSamurai §bSword§f":
 								Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
 										"effect " + player.getName() + " resistance 1");
 								
@@ -366,6 +609,53 @@ public class ItemEffects {
 										all.playSound(player.getLocation(), Sound.ANVIL_LAND, 1, (float) 1.7);
 									}
 								});
+								break;
+								
+							case "§cFlameweaver":
+								Location loc = player.getLocation().add(0, 1, 0);
+								
+								if (fire.containsKey(player)) {
+									Long difference = fire.get(player) - System.currentTimeMillis() / 1000;
+									if (difference > 0) {
+										ActionBar actionBar = new ActionBar("You are on a cooldown! (§e" + difference + "s§r)");
+										actionBar.Send(player);
+										return;
+									}
+									
+									else {
+										fire.remove(player);
+									}
+								}
+										
+								Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+									float x = (float) loc.getX();
+									float y = (float) loc.getY();
+									float z = (float) loc.getZ();
+									
+									PacketPlayOutWorldParticles lavaParticles = new PacketPlayOutWorldParticles(EnumParticle.LAVA,
+											true, x, y, z, (float) 3, (float) 0.1, (float) 3, (float) 10, 50, null);
+									
+									PacketPlayOutWorldParticles lavaParticles2 = new PacketPlayOutWorldParticles(EnumParticle.LAVA,
+											true, x, y, z, (float) 0.3, (float) 0.3, (float) 0.3, (float) 0, 10, null);
+									
+									for (Player all : Bukkit.getOnlinePlayers()) {
+										((CraftPlayer) all).getHandle().playerConnection.sendPacket(lavaParticles);
+										((CraftPlayer) all).getHandle().playerConnection.sendPacket(lavaParticles2);
+										all.playSound(loc, Sound.GHAST_FIREBALL, 1, 1);
+										if (all != player) {
+											if (!WorldManager.isInSpawn(all.getLocation())) {
+												if (all.getLocation().distance(loc) < 16) {
+													all.setFireTicks(300);
+												}
+											}
+										}
+									}
+								});
+								
+								fire.put(player, (System.currentTimeMillis() / 1000) + 10);
+								
+								
+								break;
 							}
 						}
 					}
@@ -445,6 +735,28 @@ public class ItemEffects {
 							
 							boom.put(player, ((Long) ((System.currentTimeMillis() / 1000)) + 10));
 						}
+					}
+				}
+			}
+			
+			else {
+				if (item.getType() == Material.ENDER_PEARL) {
+					if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
+						if (pearl.containsKey(player)) {
+							Long difference = pearl.get(player) - System.currentTimeMillis() / 1000;
+							if (difference > 0) {
+								ActionBar actionBar = new ActionBar("You are on a cooldown! (§e" + difference + "s§r)");
+								actionBar.Send(player);
+								event.setCancelled(true);
+								return;
+							}
+							
+							else {
+								pearl.remove(player);
+							}
+						}
+						
+						pearl.put(player, (System.currentTimeMillis() / 1000) + 15);
 					}
 				}
 			}

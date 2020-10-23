@@ -1,7 +1,9 @@
 package net.nuggetmc.core.modifiers;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,6 +14,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
@@ -22,14 +25,16 @@ import net.nuggetmc.core.util.Checks;
 public class CombatTracker {
 	
 	private Main plugin;
-	private Map<Player, BukkitRunnable> combatTask;
+	private static Map<Player, BukkitRunnable> combatTask;
+	
+	private static Set<Player> kicklist;
 	
 	public static Map<Player, Integer> combatTime;
 	
 	public CombatTracker(Main plugin) {
 		this.plugin = plugin;
-		this.combatTask = new HashMap<>();
-		
+		CombatTracker.combatTask = new HashMap<>();
+		CombatTracker.kicklist = new HashSet<>();
 		CombatTracker.combatTime = new HashMap<>();
 	}
 	
@@ -63,16 +68,31 @@ public class CombatTracker {
 		return;
 	}
 	
-	public void onQuit(PlayerQuitEvent event) {
+	private static void check(Player player) {
+		if (kicklist.contains(player)) {
+			kicklist.remove(player);
+			return;
+		}
+		else {
+			player.setHealth(0);
+		}
+		return;
+	}
+	
+	public static void onQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		if (combatTime.containsKey(player)) {
 			combatTime.remove(player);
-			player.setHealth(0);
+			check(player);
 		}
 		if (combatTask.containsKey(player)) {
 			combatTask.remove(player);
-			player.setHealth(0);
 		}
+		return;
+	}
+	
+	public static void onKick(PlayerKickEvent event) {
+		kicklist.add(event.getPlayer());
 		return;
 	}
 	

@@ -73,6 +73,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 	public HealthBoost healthboost;
 	public AdminCommand adminCommand;
 	public Announcements announcements;
+	public BanCommand banCommand;
 	public CombatTracker combatTracker;
 	public Configs configs;
 	public DefaultCommand defaultCommand;
@@ -180,10 +181,14 @@ public class Main extends JavaPlugin implements TabCompleter {
 		getCommand("unignore").setExecutor(msgCommand);
 		getCommand("ignorelist").setExecutor(msgCommand);
 		
-		this.getCommand("ushop").setExecutor(itemShop);
+		this.banCommand = new BanCommand(this);
+		getCommand("ban").setExecutor(banCommand);
+		getCommand("banlist").setExecutor(banCommand);
+		getCommand("ban-ip").setExecutor(banCommand);
+		getCommand("pardon-ip").setExecutor(banCommand);
+		getCommand("ipbanlist").setExecutor(banCommand);
 		
-		this.getCommand("ban").setExecutor(new BanCommand(this));
-		this.getCommand("banlist").setExecutor(new BanCommand(this));
+		this.getCommand("ushop").setExecutor(itemShop);
 		this.getCommand("debug").setExecutor(new DebugCommand(this));
 		this.getCommand("ghead").setExecutor(new GHeadCommand());
 		this.getCommand("head").setExecutor(new HeadCommand());
@@ -192,7 +197,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.getCommand("nuggetmc").setExecutor(new NMCMainCommand(this));
 		this.getCommand("rank").setExecutor(new RankCommand(this));
 		this.getCommand("vanish").setExecutor(new FlyVanish(this));
-		this.getCommand("vote").setExecutor(new Voting(this));
+		this.getCommand("vote").setExecutor(new Voting());
 		this.getCommand("kit").setExecutor(new KitCommand(this));
 		return;
 	}
@@ -213,6 +218,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.getCommand("nuggetmc").setTabCompleter(this);
 		this.getCommand("rank").setTabCompleter(this);
 		this.getCommand("unignore").setTabCompleter(this);
+		this.getCommand("pardon-ip").setTabCompleter(this);
 		return;
 	}
 	

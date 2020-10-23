@@ -45,9 +45,9 @@ public class WorldManager {
 	private FileConfiguration worldsettings;
 	
 	public static String spawnworld;
-	public static int count = 3600;
-	public static int countNether = 3602;
-	public static int countEnd = 3602;
+	public static int count = 5400;
+	public static int countNether = 5400;
+	public static int countEnd = 5400;
 	public static int[] pos1;
 	public static int[] pos2;
 	
@@ -438,24 +438,24 @@ public class WorldManager {
 		        deleteWorld(path);
 		    }
 		    
-		    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-		    	File file = new File(fpath + "/backups/world_end/");
-		    	File[] files = file.listFiles(new FileFilter() {
-		    	    @Override
-		    	    public boolean accept(File f) {
-		    	        return f.isDirectory();
-		    	    }
-		    	});
-		    	
-		    	String random = "" + (int) (Math.random() * files.length);
-		    	
-		    	if (args != null) {
+			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+				File file = new File(fpath + "/backups/world_the_end/");
+				File[] files = file.listFiles(new FileFilter() {
+				    @Override
+				    public boolean accept(File f) {
+				        return f.isDirectory();
+				    }
+				});
+				
+				String random = "" + (int) (Math.random() * files.length);
+				
+				if (args != null) {
 			    	if (args.length >= 2) {
 			    		random = args[1];
 			    	}
-		    	}
-		    	
-		    	File sourceFolder = new File(fpath + "/backups/world_end/" + random);
+				}
+				
+				File sourceFolder = new File(fpath + "/backups/world_the_end/" + random);
 				File targetFolder = new File(fpath + "/" + name);
 					
 				copyWorld(sourceFolder, targetFolder);
@@ -466,7 +466,7 @@ public class WorldManager {
 					creator.createWorld();
 					countEnd = 3600;
 				});
-		    });
+			});
 			break;
 		}
 		return;
@@ -513,7 +513,7 @@ public class WorldManager {
 	            }
 	        }
 	    } catch (IOException e) {
-	 
+	    	return;
 	    }
 	}
 }

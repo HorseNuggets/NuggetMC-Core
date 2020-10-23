@@ -21,6 +21,10 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>bintray-repo</id>
+            <url>https://dl.bintray.com/ichbinjoe/public/</url>
+        </repository>
 	</repositories>
 	<dependencies>
 		<dependency>
@@ -39,6 +43,12 @@
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
             <version>6.1.4-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vexsoftware</groupId>
+            <artifactId>nuvotifier-universal</artifactId>
+            <version>2.6.0</version>
             <scope>provided</scope>
         </dependency>
 	</dependencies>

@@ -1,7 +1,7 @@
 name: NuggetMC-Core
 main: net.nuggetmc.core.Main
 version: 2.0
-depend: ['LuckPerms', 'WorldEdit']
+depend: ['LuckPerms', 'Votifier', 'WorldEdit']
 commands:
   help:
     description: "Lists all commands and their purposes."
@@ -97,9 +97,21 @@ commands:
     description: "Bans a player."
     usage: /ban <player> <time> <reason>
     permission: nmc.staff
+  ban-ip:
+    description: "IP-bans a player."
+    usage: /ban-ip <player> <time> <reason>
+    permission: nmc.staff
+  pardon-ip:
+    description: "IP-pardons a player."
+    usage: /pardon-ip <player>
+    permission: nmc.staff
   banlist:
     description: "List all banned players."
     usage: /banlist
+    permission: nmc.staff
+  ipbanlist:
+    description: "List all banned players."
+    usage: /ipbanlist
     permission: nmc.staff
   mod:
     description: "Lists all moderator commands and their purposes."

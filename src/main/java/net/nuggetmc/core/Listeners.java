@@ -7,19 +7,23 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -29,7 +33,10 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -38,12 +45,17 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scoreboard.Team;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
+import com.vexsoftware.votifier.model.Vote;
+import com.vexsoftware.votifier.model.VotifierEvent;
+
 import net.minecraft.server.v1_8_R3.BlockPosition;
 import net.nuggetmc.core.commands.mod.BanCommand;
 import net.nuggetmc.core.gui.EnderChest;
 import net.nuggetmc.core.gui.GUIMain;
 import net.nuggetmc.core.misc.FlyVanish;
 import net.nuggetmc.core.misc.ItemEffects;
+import net.nuggetmc.core.modifiers.CombatTracker;
+import net.nuggetmc.core.util.ColorCodes;
 
 public class Listeners implements Listener {
 	
@@ -85,6 +97,13 @@ public class Listeners implements Listener {
 	public void entityDamageEvent(EntityDamageEvent event) {
 		plugin.combatTracker.combatContinue(event);
 		plugin.fallListener.onFall(event);
+		if (event.getEntity() instanceof Player) {
+			if (event.getCause() != DamageCause.ENTITY_ATTACK) {
+				Player victim = (Player) event.getEntity();
+				victim.setMaximumNoDamageTicks(20);
+				victim.setNoDamageTicks(20);
+			}
+		}
 		return;
 	}
 	
@@ -123,6 +142,11 @@ public class Listeners implements Listener {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 			player.spigot().respawn();
 		}, 12);
+		
+		Entity vehicle = player.getVehicle();
+		if (vehicle != null) {
+			vehicle.eject();
+		}
 		
 		plugin.combatTracker.onDeath(event);
 		plugin.gheads.onDeath(event);
@@ -170,6 +194,18 @@ public class Listeners implements Listener {
 	}
 	
 	@EventHandler
+	public void playerItemConsumeEvent(PlayerItemConsumeEvent event) {
+		ItemEffects.eat(event);
+		return;
+	}
+	
+	@EventHandler
+	public void playerItemDamageEvent(PlayerItemDamageEvent event) {
+		ItemEffects.durability(event);
+		return;
+	}
+	
+	@EventHandler
 	public void playerJoinEvent(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
@@ -199,6 +235,18 @@ public class Listeners implements Listener {
 		if (plugin.playerTracker != null) {
 			plugin.playerTracker.onJoin(event);
 		}
+		return;
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void playerKickEvent(PlayerKickEvent event) {
+		CombatTracker.onKick(event);
+		return;
+	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void playerCombatQuitEvent(PlayerQuitEvent event) {
+		CombatTracker.onQuit(event);
 		return;
 	}
 	
@@ -262,7 +310,6 @@ public class Listeners implements Listener {
 			vehicle.eject();
 		}
 		
-		plugin.combatTracker.onQuit(event);
 		plugin.guiMain.hardRemove(event.getPlayer());
 		//plugin.packetHandler.removePlayer(player);
 		if (plugin.playerTracker != null) {
@@ -272,8 +319,29 @@ public class Listeners implements Listener {
 	}
 	
 	@EventHandler
+	public void potionSplashEvent(PotionSplashEvent event) {
+		ItemEffects.splashPotion(event);
+		return;
+	}
+	
+	@EventHandler
 	public void projectileHitEvent(ProjectileHitEvent event) {
 		ItemEffects.onProjectileHit(event);
+		return;
+	}
+	
+	@EventHandler
+	public void votifierEvent(VotifierEvent event) {
+		Vote vote = event.getVote();
+		String playername = vote.getUsername();
+		Player player = Bukkit.getPlayer(playername);
+		
+		if (player != null) {
+			Bukkit.broadcastMessage("§8[§4Alert§8] §f" + ColorCodes.colorName(player.getUniqueId(), playername) + " §fjust voted and won §e100 §fnuggets!");
+			player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + playername + " gold_nugget 64");
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + playername + " gold_nugget 36");
+		}
 		return;
 	}
 }

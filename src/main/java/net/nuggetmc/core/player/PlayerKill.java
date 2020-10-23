@@ -46,6 +46,9 @@ public class PlayerKill {
 			
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 				Player player = victim.getKiller();
+				
+				if (player == victim) return;
+				
 				String playername = player.getName();
 				String victimname = victim.getName();
 				
@@ -79,6 +82,18 @@ public class PlayerKill {
 					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + playername + " gold_nugget " + gainedNuggets);
 					player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 0));
 				});
+				
+				int uncNugget = (int) (Math.random() * 25);
+				
+				if (uncNugget == 0) {
+					Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, () -> {
+						player.sendMessage(ChatColor.GRAY + " ▪" + ChatColor.WHITE + " Uncommon Nuggets: " + ChatColor.GREEN + "+1");
+					}, 1);
+					Bukkit.getScheduler().runTask(plugin, () -> {
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + playername + " gold_nugget 1 0 "
+								+ "{display:{Name:\"§aUncommon Nugget§r\",Lore:[\"§7A pretty fine piece of§r\",\"§7nugget if you ask me.§r\"]},ench:[{id:51,lvl:1}],HideFlags:1}");
+					});
+				}
 				
 				int kills = config.getInt("players." + playerUUID + ".kills");
 				config.set("players." + playerUUID + ".kills", kills + 1);

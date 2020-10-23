@@ -70,8 +70,13 @@ public class MSGCommand implements CommandExecutor {
 				case "r":
 					if (replies.containsKey(player)) {
 						Player to = replies.get(player);
-						if (to != null) {
+						if (to.isOnline()) {
 							message(player, to, args);
+							return;
+						}
+						
+						else {
+							player.sendMessage(ChatColor.RED + to.getName() + " is not online!");
 						}
 					}
 					
