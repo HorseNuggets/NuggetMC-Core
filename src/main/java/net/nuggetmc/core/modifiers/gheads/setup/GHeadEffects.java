@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.setup.WorldManager;
 import net.nuggetmc.core.util.ActionBar;
 
 public class GHeadEffects {
@@ -75,11 +76,11 @@ public class GHeadEffects {
 			break;
 			
 		case "ghead":
-			if (cooldown.containsKey(player)) {
+			if (cooldown.containsKey(player) && !WorldManager.isInArena(player.getLocation())) {
 				Long difference = cooldown.get(player) - System.currentTimeMillis() / 1000;
 				if (difference > 0) {
 					ActionBar actionBar = new ActionBar("You are on a cooldown! (§e" + difference + "s§r)");
-					actionBar.Send(player);
+					actionBar.send(player);
 					return;
 				}
 				

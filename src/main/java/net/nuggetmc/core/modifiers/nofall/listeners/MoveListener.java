@@ -44,20 +44,18 @@ public class MoveListener implements Listener {
 		BukkitRunnable runnable = new BukkitRunnable() {
 			public void run() {
 				for (Player player : Bukkit.getOnlinePlayers()) {
-					for (int i = 0; i < plugin.noFall.worlds.size(); i++) {
-						if (player.getWorld().getName().equals(plugin.noFall.worlds.get(i))) {
-							if (player.getLocation().getBlockY() < Configs.nofall.getConfig().getInt("y-level")) {
-								if (!plugin.noFall.fallList.contains(player)) {
-									if (!plugin.noFall.downTime.containsKey(player)) {
-										plugin.noFall.downTime.put(player, (byte) 0);
-									}
-									else {
-										plugin.noFall.downTime.put(player, (byte) (plugin.noFall.downTime.get(player) + 1));
-									}
-									
-									if (plugin.noFall.downTime.get(player) >= 5) {
-										plugin.noFall.fallList.add(player);
-									}
+					if (player.getWorld().getName().equals("main")) {
+						if (player.getLocation().getBlockY() < 140) {
+							if (!plugin.noFall.fallList.contains(player)) {
+								if (!plugin.noFall.downTime.containsKey(player)) {
+									plugin.noFall.downTime.put(player, (byte) 0);
+								}
+								else {
+									plugin.noFall.downTime.put(player, (byte) (plugin.noFall.downTime.get(player) + 1));
+								}
+								
+								if (plugin.noFall.downTime.get(player) >= 5) {
+									plugin.noFall.fallList.add(player);
 								}
 							}
 						}

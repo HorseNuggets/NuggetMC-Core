@@ -7,7 +7,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
-import net.nuggetmc.core.util.TimeConverter;
 
 public class Announcements {
 	
@@ -49,8 +48,7 @@ public class Announcements {
 			}
 		};
 		
-		runnable.runTaskTimer(plugin, 20 * TimeConverter.stringToInt(Configs.announcements.getConfig().getString("time.delay")),
-				20 * TimeConverter.stringToInt(Configs.announcements.getConfig().getString("time.period")));
+		runnable.runTaskTimerAsynchronously(plugin, 20, 6000);
 		return;
 	}
 	

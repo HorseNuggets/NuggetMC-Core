@@ -42,6 +42,7 @@ import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.EnumParticle;
 import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 import net.nuggetmc.core.Main;
@@ -57,6 +58,8 @@ public class ItemEffects {
 	private static List<String> worldlist;
 	private static Set<Arrow> explosiveArrows;
 	private static Set<Arrow> switchArrows;
+	private static Set<Arrow> lightningArrows;
+	public static Map<TNTPrimed, Player> boomBox;
 	private static Map<Player, Integer> rune;
 	private static Map<Player, Long> heal;
 	private static Map<Player, Long> fire;
@@ -71,6 +74,8 @@ public class ItemEffects {
 		ItemEffects.worldlist = Configs.worldsettings.getConfig().getStringList("uhckit-worlds");
 		ItemEffects.explosiveArrows = new HashSet<>();
 		ItemEffects.switchArrows = new HashSet<>();
+		ItemEffects.lightningArrows = new HashSet<>();
+		ItemEffects.boomBox = new HashMap<>();
 		ItemEffects.rune = new HashMap<>();
 		ItemEffects.heal = new HashMap<>();
 		ItemEffects.fire = new HashMap<>();
@@ -104,6 +109,7 @@ public class ItemEffects {
 										Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 											TNTPrimed tnt = (TNTPrimed) player.getWorld().spawnEntity(location, EntityType.PRIMED_TNT);
 											tnt.setFuseTicks(0);
+											boomBox.put(tnt, player);
 										}, 2);
 									}
 								}
@@ -115,7 +121,7 @@ public class ItemEffects {
 		}
 		return;
 	}
-
+	
 	public static void onEntityDamage(EntityDamageByEntityEvent event) {
 		if (event.getEntity() instanceof Player) {
 			Player victim = (Player) event.getEntity();
@@ -148,18 +154,20 @@ public class ItemEffects {
 										if (vehicle != null) {
 											if (vehicle.getType() == EntityType.HORSE) {
 												event.setDamage(event.getDamage() * 2);
-												Location loc = victim.getLocation().add(0, 1, 0);
-												
-												float x = (float) loc.getX();
-												float y = (float) loc.getY();
-												float z = (float) loc.getZ();
-												
-												PacketPlayOutWorldParticles lavaParticles = new PacketPlayOutWorldParticles(EnumParticle.LAVA,
-														true, x, y, z, (float) 0.3, (float) 0.3, (float) 0.3, (float) 0, 10, null);
-												
-												for (Player all : Bukkit.getOnlinePlayers()) {
-													((CraftPlayer) all).getHandle().playerConnection.sendPacket(lavaParticles);
-												}
+												Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+													Location loc = victim.getLocation().add(0, 1, 0);
+													
+													float x = (float) loc.getX();
+													float y = (float) loc.getY();
+													float z = (float) loc.getZ();
+													
+													PacketPlayOutWorldParticles lavaParticles = new PacketPlayOutWorldParticles(EnumParticle.LAVA,
+															true, x, y, z, (float) 0.3, (float) 0.3, (float) 0.3, (float) 0, 10, null);
+													
+													for (Player all : Bukkit.getOnlinePlayers()) {
+														((CraftPlayer) all).getHandle().playerConnection.sendPacket(lavaParticles);
+													}
+												});
 											}
 										}
 										break;
@@ -169,31 +177,37 @@ public class ItemEffects {
 										if (vehicle1 != null) {
 											if (vehicle1.getType() == EntityType.HORSE) {
 												event.setDamage(event.getDamage() * 2);
-												Location loc = victim.getLocation().add(0, 1, 0);
-												
-												float x = (float) loc.getX();
-												float y = (float) loc.getY();
-												float z = (float) loc.getZ();
-												
-												PacketPlayOutWorldParticles lavaParticles = new PacketPlayOutWorldParticles(EnumParticle.LAVA,
-														true, x, y, z, (float) 0.3, (float) 0.3, (float) 0.3, (float) 0, 10, null);
-												
-												for (Player all : Bukkit.getOnlinePlayers()) {
-													((CraftPlayer) all).getHandle().playerConnection.sendPacket(lavaParticles);
-												}
+												Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+													Location loc = victim.getLocation().add(0, 1, 0);
+													
+													float x = (float) loc.getX();
+													float y = (float) loc.getY();
+													float z = (float) loc.getZ();
+													
+													PacketPlayOutWorldParticles lavaParticles = new PacketPlayOutWorldParticles(EnumParticle.LAVA,
+															true, x, y, z, (float) 0.3, (float) 0.3, (float) 0.3, (float) 0, 10, null);
+													
+													for (Player all : Bukkit.getOnlinePlayers()) {
+														((CraftPlayer) all).getHandle().playerConnection.sendPacket(lavaParticles);
+													}
+												});
 											}
 										}
 										break;
 										
-									case "§cThe Scythe":
-										if (victim.getHealth() <= 6) {
+									case "§4The Scythe":
+										EntityPlayer entity = (EntityPlayer) ((CraftPlayer) victim).getHandle();
+										float abs = (float) victim.getHealth() + entity.getAbsorptionHearts();
+										if (abs <= 6) {
 											event.setDamage(1000);
 										}
-										if (item.getAmount() == 1) {
-											player.setItemInHand(null);
-										} else {
-											item.setAmount(item.getAmount() - 1);
-										}
+										Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+											if (item.getAmount() == 1) {
+												player.setItemInHand(null);
+											} else {
+												item.setAmount(item.getAmount() - 1);
+											}
+										}, 1);
 										break;
 										
 									case "§eSword of JUSTICE":
@@ -204,7 +218,8 @@ public class ItemEffects {
 										int rando = (int) (Math.random() * 4);
 
 										if (rando == 2) {
-											victim.getWorld().strikeLightning(victim.getLocation());
+											victim.getWorld().strikeLightningEffect(victim.getLocation());
+											event.setDamage(event.getDamage() * 2);
 										}
 										break;
 										
@@ -219,27 +234,29 @@ public class ItemEffects {
 										break;
 										
 									case "§3Runeblade":
-										int rando0 = (int) (Math.random() * 3);
-										if (rando0 == 0) {
-											for (Player all : Bukkit.getOnlinePlayers()) {
-												all.playSound(victim.getLocation(), Sound.BLAZE_BREATH, (float) 0.4, 2);
+										Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+											int rando0 = (int) (Math.random() * 3);
+											if (rando0 == 0) {
+												for (Player all : Bukkit.getOnlinePlayers()) {
+													all.playSound(victim.getLocation(), Sound.BLAZE_BREATH, (float) 0.4, 2);
+												}
+												
+												Location loc = player.getLocation().add(0, 1, 0);
+												float x = (float) loc.getX();
+												float y = (float) loc.getY();
+												float z = (float) loc.getZ();
+												
+												PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.HEART, true, x, y, z, (float) 0.5, (float) 0.5, (float) 0.5, (float) 0.15, 2, null);
+												for (Player all : Bukkit.getOnlinePlayers()) {
+													((CraftPlayer) all).getHandle().playerConnection.sendPacket(packet);
+												}
+												if (player.getHealth() < 39)
+													player.setHealth(player.getHealth() + 1);
+												else
+													player.setHealth(40);
 											}
+										});
 											
-											Location loc = player.getLocation().add(0, 1, 0);
-											float x = (float) loc.getX();
-											float y = (float) loc.getY();
-											float z = (float) loc.getZ();
-											
-											PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.HEART, true, x, y, z, (float) 0.5, (float) 0.5, (float) 0.5, (float) 0.15, 2, null);
-											for (Player all : Bukkit.getOnlinePlayers()) {
-												((CraftPlayer) all).getHandle().playerConnection.sendPacket(packet);
-											}
-											if (player.getHealth() < 39)
-												player.setHealth(player.getHealth() + 1);
-											else
-												player.setHealth(40);
-										}
-										
 										if (rune.containsKey(player)) {
 											if (rune.get(player) >= 30) {
 												for (Player all : Bukkit.getOnlinePlayers()) {
@@ -252,19 +269,19 @@ public class ItemEffects {
 												rune.put(player, rune.get(player) + 1);
 												if (rune.get(player) == 30) {
 													ActionBar ab = new ActionBar("Hits: §a(" + rune.get(player) + "/30)");
-													ab.Send(player);
+													ab.send(player);
 												}
 												
 												else {
 													ActionBar ab = new ActionBar("Hits: (§a" + rune.get(player) + "§r/30)");
-													ab.Send(player);
+													ab.send(player);
 												}
 											}
 										}
 										else {
 											rune.put(player, 1);
 											ActionBar ab = new ActionBar("Hits: (§a" + rune.get(player) + "§r/30)");
-											ab.Send(player);
+											ab.send(player);
 										}
 										return;
 										
@@ -285,7 +302,8 @@ public class ItemEffects {
 										int rando2 = (int) (Math.random() * 20);
 
 										if (rando2 == 7) {
-											victim.getWorld().strikeLightning(victim.getLocation());
+											victim.getWorld().strikeLightningEffect(victim.getLocation());
+											event.setDamage(event.getDamage() * 2);
 										}
 										break;
 									}
@@ -299,8 +317,10 @@ public class ItemEffects {
 							}
 						}
 						rune.remove(player);
-						victim.setMaximumNoDamageTicks(20);
-						victim.setNoDamageTicks(20);
+						if (victim.getMaximumNoDamageTicks() == 1) {
+							victim.setMaximumNoDamageTicks(20);
+							victim.setNoDamageTicks(20);
+						}
 					}
 				}
 				return;
@@ -342,6 +362,20 @@ public class ItemEffects {
 				}
 				return;
 			}
+			
+			else if(event.getDamager() instanceof TNTPrimed) {
+	            TNTPrimed tnt = (TNTPrimed) event.getDamager();
+	            if(boomBox.containsKey(tnt)) {
+	                if (boomBox.get(tnt) != victim) {
+	                	CombatTracker.combatCount(victim, 15);
+	                }
+	                Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+	                	if(boomBox.containsKey(tnt)) {
+	                		boomBox.remove(tnt);
+	                	}
+	                }, 1);
+	            }
+	        }
 		}
 		return;
 	}
@@ -405,13 +439,6 @@ public class ItemEffects {
 		return;
 	}
 	
-	private static String horseman = ChatColor.RESET + "Spawn Horse " + ChatColor.GRAY + "(Horseman)";
-	private static String jouster = ChatColor.RESET + "Spawn Horse " + ChatColor.GRAY + "(Jouster)";
-	private static String areion = ChatColor.RESET + "Spawn Horse " + ChatColor.GRAY + "(Areion)";
-	private static String tulpar = ChatColor.RESET + "Spawn Horse " + ChatColor.GRAY + "(Tulpar)";
-	private static String sleipnir = ChatColor.RESET + "Spawn Horse " + ChatColor.GRAY + "(Sleipnir)";
-	private static String phaethon = ChatColor.RESET + "Spawn Horse " + ChatColor.GRAY + "(Phaethon)";
-	
 	public static void templar(PlayerInteractEntityEvent event) {
 		Player healer = event.getPlayer();
 		if (event.getRightClicked() instanceof Player) {
@@ -428,7 +455,7 @@ public class ItemEffects {
 								
 								if (CombatTracker.combatTime.containsKey(player)) {
 									ActionBar actionBar = new ActionBar("§cYou cannot heal someone who is in combat!");
-									actionBar.Send(healer);
+									actionBar.send(healer);
 									return;
 								}
 								
@@ -444,7 +471,7 @@ public class ItemEffects {
 										Long difference = heal.get(healer) - System.currentTimeMillis() / 1000;
 										if (difference > 0) {
 											ActionBar actionBar = new ActionBar("You are on a cooldown! (§e" + difference + "s§r)");
-											actionBar.Send(healer);
+											actionBar.send(healer);
 											return;
 										}
 										
@@ -462,10 +489,10 @@ public class ItemEffects {
 									}
 									
 									ActionBar actionBar = new ActionBar("You have been healed by " + ColorCodes.colorName(healer.getUniqueId(), healer.getName()) + "§r!");
-									actionBar.Send(player);
+									actionBar.send(player);
 									
 									ActionBar healConf = new ActionBar("You have healed " + ColorCodes.colorName(player.getUniqueId(), player.getName()) + "§r!");
-									healConf.Send(healer);
+									healConf.send(healer);
 									
 									heal.put(healer, ((Long) ((System.currentTimeMillis() / 1000)) + 12));
 								}
@@ -494,6 +521,9 @@ public class ItemEffects {
 					case "§dSwitchbow":
 						switchArrows.add((Arrow) event.getProjectile());
 						break;
+					case "§1Zeus":
+						lightningArrows.add((Arrow) event.getProjectile());
+						break;
 					}
 				}
 			}
@@ -512,6 +542,16 @@ public class ItemEffects {
 				}
 			}
 			explosiveArrows.remove(projectile);
+			return;
+		}
+		else if (lightningArrows.contains(projectile)) {
+			if (worldlist.contains(projectile.getWorld().getName())) {
+				if (!WorldManager.isInSpawn(loc)) {
+					projectile.getWorld().strikeLightning(loc);
+				}
+			}
+			lightningArrows.remove(projectile);
+			return;
 		}
 		return;
 	}
@@ -533,7 +573,7 @@ public class ItemEffects {
 							msg = msg.substring(1);
 						}
 						ActionBar actionBar = new ActionBar("You are on a cooldown! (§e" + msg + "§r)");
-						actionBar.Send(player);
+						actionBar.send(player);
 						event.setCancelled(true);
 						return;
 					}
@@ -618,7 +658,7 @@ public class ItemEffects {
 									Long difference = fire.get(player) - System.currentTimeMillis() / 1000;
 									if (difference > 0) {
 										ActionBar actionBar = new ActionBar("You are on a cooldown! (§e" + difference + "s§r)");
-										actionBar.Send(player);
+										actionBar.send(player);
 										return;
 									}
 									
@@ -644,8 +684,10 @@ public class ItemEffects {
 										all.playSound(loc, Sound.GHAST_FIREBALL, 1, 1);
 										if (all != player) {
 											if (!WorldManager.isInSpawn(all.getLocation())) {
-												if (all.getLocation().distance(loc) < 16) {
-													all.setFireTicks(300);
+												if (all.getWorld() == player.getWorld()) {
+													if (all.getLocation().distance(loc) < 16) {
+														all.setFireTicks(300);
+													}
 												}
 											}
 										}
@@ -653,8 +695,6 @@ public class ItemEffects {
 								});
 								
 								fire.put(player, (System.currentTimeMillis() / 1000) + 10);
-								
-								
 								break;
 							}
 						}
@@ -668,7 +708,9 @@ public class ItemEffects {
 								if (player.getWorld() == victim.getWorld()) {
 									if (player.getLocation().distance(victim.getLocation()) <= 10 && !player.equals(victim) && !victim.isDead() && victim.getGameMode() == GameMode.SURVIVAL) {
 										if (near == null) {
-											near = victim;
+											if (!WorldManager.isInArena(victim.getLocation())) {
+												near = victim;
+											}
 										}
 										else if (player.getLocation().distance(victim.getLocation()) < player.getLocation().distance(near.getLocation())) {
 											near = victim;
@@ -686,19 +728,21 @@ public class ItemEffects {
 									item.setAmount(item.getAmount() - 1);
 								}
 								
-								float x = (float) player.getLocation().getX();
-								float y = (float) (player.getLocation().getY() + 1);
-								float z = (float) player.getLocation().getZ();
-								
-								Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "playsound mob.endermen.portal @a " + x + " " + y + " " + z);
-								
-								PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.SPELL_WITCH, true, x, y, z, (float) 0.5, (float) 0.5, (float) 0.5, (float) 0.15, 40, null);
-								for (Player all : Bukkit.getOnlinePlayers()) ((CraftPlayer) all).getHandle().playerConnection.sendPacket(packet);
+								Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+									float x = (float) player.getLocation().getX();
+									float y = (float) (player.getLocation().getY() + 1);
+									float z = (float) player.getLocation().getZ();
+									
+									Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "playsound mob.endermen.portal @a " + x + " " + y + " " + z);
+									
+									PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.SPELL_WITCH, true, x, y, z, (float) 0.5, (float) 0.5, (float) 0.5, (float) 0.15, 40, null);
+									for (Player all : Bukkit.getOnlinePlayers()) ((CraftPlayer) all).getHandle().playerConnection.sendPacket(packet);
+								});
 							}
 							
 							else {
 								ActionBar actionBar = new ActionBar("No players within §e10 §rmeters!");
-								actionBar.Send(player);
+								actionBar.send(player);
 							}
 						}
 					}
@@ -711,7 +755,7 @@ public class ItemEffects {
 								Long difference = boom.get(player) - System.currentTimeMillis() / 1000;
 								if (difference > 0) {
 									ActionBar actionBar = new ActionBar("You are on a cooldown! (§e" + difference + "s§r)");
-									actionBar.Send(player);
+									actionBar.send(player);
 									return;
 								}
 								
@@ -724,7 +768,7 @@ public class ItemEffects {
 							
 							if (WorldManager.isInSpawn(loc)) {
 								ActionBar ab = new ActionBar("You cannot use this here!");
-								ab.Send(player);
+								ab.send(player);
 								return;
 							}
 
@@ -746,8 +790,9 @@ public class ItemEffects {
 							Long difference = pearl.get(player) - System.currentTimeMillis() / 1000;
 							if (difference > 0) {
 								ActionBar actionBar = new ActionBar("You are on a cooldown! (§e" + difference + "s§r)");
-								actionBar.Send(player);
+								actionBar.send(player);
 								event.setCancelled(true);
+								player.updateInventory();
 								return;
 							}
 							
@@ -775,7 +820,8 @@ public class ItemEffects {
 								Horse horse = (Horse) player.getWorld().spawnEntity(loc, EntityType.HORSE);
 								String name = meta.getDisplayName();
 								
-								if (name.equals(horseman)) {
+								switch (name) {
+								case "§rSpawn Horse §7(Horseman)":
 									check = true;
 									horse.setVariant(Horse.Variant.HORSE);
 									horse.setStyle(Style.NONE);
@@ -791,9 +837,9 @@ public class ItemEffects {
 									Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 										horse.setHealth(24);
 									}, 3);
-								}
-								
-								else if (name.equals(jouster)) {
+									break;
+									
+								case "§rSpawn Horse §7(Jouster)":
 									check = true;
 									horse.setVariant(Horse.Variant.HORSE);
 									horse.setStyle(Style.NONE);
@@ -809,9 +855,9 @@ public class ItemEffects {
 									Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 										horse.setHealth(52);
 									}, 3);
-								}
-								
-								else if (name.equals(areion)) {
+									break;
+									
+								case "§rSpawn Horse §7(Areion)":
 									check = true;
 									horse.setVariant(Horse.Variant.HORSE);
 									horse.setStyle(Style.WHITEFIELD);
@@ -828,9 +874,9 @@ public class ItemEffects {
 									Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 										horse.setHealth(56);
 									}, 3);
-								}
-								
-								else if (name.equals(tulpar)) {
+									break;
+									
+								case "§rSpawn Horse §7(Tulpar)":
 									check = true;
 									horse.setVariant(Horse.Variant.HORSE);
 									horse.setStyle(Style.BLACK_DOTS);
@@ -847,9 +893,9 @@ public class ItemEffects {
 									Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 											horse.setHealth(60);
 									}, 3);
-								}
-								
-								else if (name.equals(sleipnir)) {
+									break;
+									
+								case "§rSpawn Horse §7(Sleipnir)":
 									check = true;
 									horse.setVariant(Horse.Variant.HORSE);
 									horse.setStyle(Style.WHITE_DOTS);
@@ -866,9 +912,9 @@ public class ItemEffects {
 									Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 										horse.setHealth(56);
 									}, 3);
-								}
-								
-								else if (name.equals(phaethon)) {
+									break;
+									
+								case "§rSpawn Horse §7(Phaethon)":
 									check = true;
 									horse.setVariant(Horse.Variant.SKELETON_HORSE);
 									horse.setMaxHealth(36);
@@ -882,6 +928,7 @@ public class ItemEffects {
 									Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 										horse.setHealth(36);
 									}, 3);
+									break;
 								}
 								
 								if (check) {

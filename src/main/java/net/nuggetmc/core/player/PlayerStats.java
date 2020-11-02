@@ -10,13 +10,13 @@ import net.nuggetmc.core.data.Configs;
 
 public class PlayerStats {
 	
-	private Main plugin;
+	private static Main plugin;
 	
 	public PlayerStats(Main plugin) {
-		this.plugin = plugin;
+		PlayerStats.plugin = plugin;
 	}
 	
-	public void allign(Player player, UUID uuid, int kills) {
+	public static void allign(Player player, UUID uuid, int kills) {
 		if (kills < 12) {
 			Configs.playerstats.getConfig().set("players." + uuid + ".level", 1);
 		}
@@ -69,7 +69,7 @@ public class PlayerStats {
 		return;
 	}
 	
-	public void asyncAllign(Player player, UUID uuid, int kills) {
+	public static void asyncAllign(Player player, UUID uuid, int kills) {
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 			allign(player, uuid, kills);
 		});

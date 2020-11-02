@@ -155,6 +155,10 @@ public class Checks {
 		switch (base.toLowerCase()) {
 		case "/spawn":
 			return true;
+		case "/shop":
+			return true;
+		case "/join":
+			return true;
 		case "/warp":
 			return true;
 		case "/tphere":
@@ -164,8 +168,6 @@ public class Checks {
 		case "/h":
 			return true;
 		case "/tpyes":
-			return true;
-		case "/tpno":
 			return true;
 		case "/pv":
 			return true;

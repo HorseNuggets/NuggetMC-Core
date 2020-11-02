@@ -6,21 +6,8 @@ public class Configs {
 	
 	private Main plugin;
 	
-	public static ConfigManager mainconfig;
-	public static ConfigManager announcements;
-	public static ConfigManager defaults;
-	public static ConfigManager gheads;
-	public static ConfigManager homes;
-	public static ConfigManager ignore;
-	public static ConfigManager inventories;
-	public static ConfigManager ips;
-	public static ConfigManager itemshop;
-	public static ConfigManager kitsconfig;
-	public static ConfigManager mutes;
-	public static ConfigManager nofall;
-	public static ConfigManager playerstats;
-	public static ConfigManager playerstatsArchive;
-	public static ConfigManager worldsettings;
+	public static ConfigManager mainconfig, announcements, defaults, gheads, homes, ignore, inventories, ips, itemshop, kitsconfig,
+			lead, mutes, nofall, playerstats, promo, worldsettings;
 	
 	public Configs(Main plugin) {
 		this.plugin = plugin;
@@ -34,10 +21,11 @@ public class Configs {
 		ipsSetup();
 		itemshopSetup();
 		kitsconfigSetup();
+		leadSetup();
 		noFallSetup();
 		mutesSetup();
 		playerstatsSetup();
-		playerstatsArchiveSetup();
+		promoSetup();
 		worldsettingsSetup();
 	}
 	
@@ -65,12 +53,14 @@ public class Configs {
 			return ips;
 		case "playerdata/kits.yml":
 			return kitsconfig;
+		case "playerdata/lead.yml":
+			return lead;
 		case "playerdata/mutes.yml":
 			return mutes;
+		case "playerdata/promo.yml":
+			return promo;
 		case "playerdata/stats.yml":
 			return playerstats;
-		case "playerdata/archive/config.yml":
-			return playerstatsArchive;
 		case "worldsettings.yml":
 			return worldsettings;
 		}
@@ -149,6 +139,12 @@ public class Configs {
 		return;
 	}
 	
+	private void leadSetup() {
+		lead = new ConfigManager(plugin);
+		lead.setup("playerdata/lead.yml");
+		return;
+	}
+	
 	private void mutesSetup() {
 		mutes = new ConfigManager(plugin);
 		mutes.setup("playerdata/mutes.yml");
@@ -167,9 +163,9 @@ public class Configs {
 		return;
 	}
 	
-	private void playerstatsArchiveSetup() {
-		playerstatsArchive = new ConfigManager(plugin);
-		playerstatsArchive.setup("playerdata/archive/config.yml");
+	private void promoSetup() {
+		promo = new ConfigManager(plugin);
+		promo.setup("playerdata/promo.yml");
 		return;
 	}
 	

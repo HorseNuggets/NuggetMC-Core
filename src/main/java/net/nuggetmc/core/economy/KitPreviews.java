@@ -1052,7 +1052,7 @@ public class KitPreviews {
 		pearl.addEnchantment(Enchantment.DURABILITY, 1);
 		pearl.setDurability((short) 250);
 		ItemMeta pearln = pearl.getItemMeta();
-		pearln.setDisplayName(ChatColor.RED + "The Scythe");
+		pearln.setDisplayName(ChatColor.DARK_RED + "The Scythe");
 		ArrayList<String> pearl1 = new ArrayList<String>();
 		pearl1.add(ChatColor.GRAY + "Executioner I");
 		pearl1.add("");
@@ -2060,7 +2060,7 @@ public class KitPreviews {
 		pearl.addEnchantment(Enchantment.DURABILITY, 1);
 		pearl.setDurability((short) 250);
 		ItemMeta pearln = pearl.getItemMeta();
-		pearln.setDisplayName(ChatColor.RED + "The Scythe");
+		pearln.setDisplayName(ChatColor.DARK_RED + "The Scythe");
 		ArrayList<String> pearl1 = new ArrayList<String>();
 		pearl1.add(ChatColor.GRAY + "Executioner I");
 		pearl1.add("");

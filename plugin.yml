@@ -13,6 +13,12 @@ commands:
   homes:
     description: "Lists a player's set homes + extra home options."
     usage: /homes <playername/remove> <homename>
+  credit:
+    description: "Credits a player for inviting you to NuggetMC!"
+    usage: /credit <player>
+  promo:
+    description: "Displays the top 10 promoters, as well as your rank."
+    usage: /promo
   levels:
     description: "Displays leveling information."
     usage: /levels
@@ -22,6 +28,9 @@ commands:
   blocks:
     description: "Gives the player sum blocc"
     usage: /blocks
+  join:
+    description: "Join an event."
+    usage: /join
   suicide:
     description: "kys"
     usage: /suicide
@@ -60,6 +69,9 @@ commands:
   wrt:
     description: "Displays the world reload times."
     usage: /wrt
+  lead:
+    description: "Displays the leaderboards."
+    usage: /lead
   ignore:
     description: "Ignore a player."
     usage: /ignore <player>
@@ -78,6 +90,9 @@ commands:
   spawn:
     description: "Teleports to spawn."
     usage: /spawn
+  shop:
+    description: "Teleports to the shop."
+    usage: /shop
   warp:
     description: "Warps to a location."
     usage: /warp <location>
@@ -126,10 +141,6 @@ commands:
     description: "A command used to inject code when debugging."
     usage: /debug
     permission: nmc
-  votealert:
-    description: "Announce player votes."
-    usage: /votealert
-    permission: nmc
   alert:
     description: "Broadcasts a message to the server."
     usage: /alert
@@ -143,12 +154,24 @@ commands:
     usage: /wr <world>
     permission: nmc
   wrset:
-    description: "Changes a world's reload time."
-    usage: /wrset <world> <time>
+    description: "Changes the world reset time."
+    usage: /wrset <time>
+    permission: nmc
+  event:
+    description: "Start an event."
+    usage: /event <event>
+    permission: nmc
+  ar:
+    description: "Reset the arena."
+    usage: /ar
     permission: nmc
   gma:
     description: "Adventure mode."
     usage: /gma
+    permission: nmc
+  justice:
+    description: "JUSTICE"
+    usage: /justice
     permission: nmc
   gmc:
     description: "Creative mode."

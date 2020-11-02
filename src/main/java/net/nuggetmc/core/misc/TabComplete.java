@@ -17,6 +17,7 @@ import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.economy.KitCosts;
 
 public class TabComplete {
 	
@@ -101,6 +102,31 @@ public class TabComplete {
 				return groupnames;
 			}
 			break;
+			
+		case "kit":
+			if (args.length == 1) {
+				List<String> groupnames = new ArrayList<>(KitCosts.kitList);
+				Collections.sort(groupnames);
+				
+				if (tabConditional(args[0])) {
+					groupnames = autofill(groupnames, args[0]);
+				}
+				
+				return groupnames;
+			}
+			
+		case "lead":
+			if (args.length == 1) {
+				List<String> groupnames = new ArrayList<>();
+				groupnames.add("kills");
+				groupnames.add("nuggets");
+				
+				if (tabConditional(args[0])) {
+					groupnames = autofill(groupnames, args[0]);
+				}
+				
+				return groupnames;
+			}
 			
 		case "unignore":
 			if (args.length == 1) {

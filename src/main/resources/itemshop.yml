@@ -68,8 +68,8 @@ Diamond:
     value: 69
     amount: 1
   sell:
-    value: 69
-    amount: 1
+    value: -1
+    amount: -1
 Areion:
   code: MONSTER_EGG%%minecraft:spawn_egg%%1%%100%%{display:{Name:"&rSpawn Horse &7(Areion)",Lore:["&8Health Boost IX","&8Jump Boost I","&8Regeneration I"]}}
   pos: [41, 223, 14, 0]
@@ -107,7 +107,7 @@ Phaethon:
     value: 36
     amount: 1
 Switchbow:
-  code: BOW%%minecraft:bow%%1%%355%%{display:{Name:"&dSwitchbow",Lore:["&7Swap I"]},ench:[{id:51,lvl:1}],HideFlags:1}
+  code: BOW%%minecraft:bow%%1%%355%%{display:{Name:"&dSwitchbow",Lore:["&7Swap I"]},ench:[{id:51,lvl:1}]}
   pos: [35, 223, 16, 1]
   buy:
     value: 420

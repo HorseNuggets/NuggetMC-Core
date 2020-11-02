@@ -17,6 +17,8 @@ public class HelpCommand implements CommandExecutor {
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/tphere <player>" + ChatColor.GRAY + " » Requests a player to tp to you.");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/kit" + ChatColor.GRAY + " » Receives a kit.");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/spawn" + ChatColor.GRAY + " » Warps to spawn.");
+		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/lead" + ChatColor.GRAY + " » Displays the server leaderboards.");
+		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/levels" + ChatColor.GRAY + " » Displays the server levels.");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/warp <warp>" + ChatColor.GRAY + " » Warps to a warp.");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/msg <player> <message>" + ChatColor.GRAY + " » Messages a player.");
 		sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "/r <message>" + ChatColor.GRAY + " » Replies to a message.");

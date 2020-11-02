@@ -44,17 +44,18 @@ public class WorldManager {
 	private static double z;
 	private FileConfiguration worldsettings;
 	
+	public static List<String> worldlist;
 	public static String spawnworld;
 	public static int count = 5400;
-	public static int countNether = 5400;
-	public static int countEnd = 5400;
 	public static int[] pos1;
 	public static int[] pos2;
 	
 	public WorldManager(Main plugin) {
 		WorldManager.plugin = plugin;
-		this.worldsettings = Configs.worldsettings.getConfig();
 		WorldManager.spawnRegen();
+		WorldManager.worldlist = Configs.worldsettings.getConfig().getStringList("uhckit-worlds");
+		
+		this.worldsettings = Configs.worldsettings.getConfig();
 		
 		spawnworld = worldsettings.getString("spawn.world");
 		x = worldsettings.getDouble("spawn.coordinates.x");
@@ -73,15 +74,33 @@ public class WorldManager {
 		return;
 	}
 	
+	private static PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 60, 255); 
+	private static PotionEffect fireres = new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 60, 255);
+	
 	public static void spawnRegen() {
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
 			for (Player all : Bukkit.getOnlinePlayers()) {
-				if (WorldManager.isInSpawn(all.getLocation())) {
-					all.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 40, 255));
+				Location loc = all.getLocation();
+				if (WorldManager.isInSpawn(loc)) {
+					if (!WorldManager.isInArena(loc)) {
+						all.addPotionEffect(regen);
+						all.addPotionEffect(fireres);
+					}
 				}
 			}
 		}, 0, 20);
 		return;
+	}
+	
+	public static boolean isInArena(Location loc) {
+		int x = loc.getBlockX();
+    	int y = loc.getBlockY();
+    	int z = loc.getBlockZ();
+    	
+		if ((Math.sqrt(Math.pow((x - 21), 2) + Math.pow((z + 90), 2)) <= 21) && y >= 214 && y <= 224) {
+			return true;
+		}
+		return false;
 	}
 	
 	public static boolean isInSpawn(Location loc) {
@@ -97,85 +116,40 @@ public class WorldManager {
 		return false;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void worldReloadTimer() {
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-			World world = Bukkit.getWorld(spawnworld);
+		Bukkit.getScheduler().scheduleAsyncRepeatingTask(plugin, () -> {
 			
 			if (count < 0) {
-				count = 3600;
+				count = 5400;
 			}
 			
 			if (count == 60 || count == 30 || count == 10 || count == 3 || count == 2) {
-				for (Player player : world.getPlayers()) {
-					player.sendMessage(ChatColor.YELLOW + "The world you are in will reset in " + ChatColor.RED + count + ChatColor.YELLOW + " seconds.");
-					player.playSound(player.getLocation(), Sound.WOOD_CLICK, 1, 1);
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					if (worldlist.contains(player.getWorld().getName())) {
+						player.sendMessage(ChatColor.YELLOW + "The world you are in will reset in " + ChatColor.RED + count + ChatColor.YELLOW + " seconds.");
+						player.playSound(player.getLocation(), Sound.WOOD_CLICK, 1, 1);
+					}
 				}
 			}
 			
 			else if (count == 1) {
-				for (Player player : world.getPlayers()) {
-					player.sendMessage(ChatColor.YELLOW + "The world you are in will reset in " + ChatColor.RED + "1" + ChatColor.YELLOW + " second.");
-					player.playSound(player.getLocation(), Sound.WOOD_CLICK, 1, 1);
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					if (worldlist.contains(player.getWorld().getName())) {
+						player.sendMessage(ChatColor.YELLOW + "The world you are in will reset in " + ChatColor.RED + "1" + ChatColor.YELLOW + " second.");
+						player.playSound(player.getLocation(), Sound.WOOD_CLICK, 1, 1);
+					}
 				}
 			}
 			
 			else if (count == 0) {
-				worldReload(spawnworld, null);
+				Bukkit.getScheduler().runTask(plugin, () -> {
+					worldReload("nether", null);
+					worldReload("end", null);
+					worldReload(spawnworld, null);
+				});
 			}
-			
 			count--;
-		}, 0, 20);
-		
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-			World world = Bukkit.getWorld("nether");
-			
-			if (countNether < 0) {
-				countNether = 3600;
-			}
-			
-			if (countNether == 60 || countNether == 30 || countNether == 10 || countNether == 3 || countNether == 2) {
-				for (Player player : world.getPlayers()) {
-					player.sendMessage(ChatColor.YELLOW + "The world you are in will reset in " + ChatColor.RED + countNether + ChatColor.YELLOW + " seconds.");
-				}
-			}
-			
-			else if (countNether == 1) {
-				for (Player player : world.getPlayers()) {
-					player.sendMessage(ChatColor.YELLOW + "The world you are in will reset in " + ChatColor.RED + "1" + ChatColor.YELLOW + " second.");
-				}
-			}
-			
-			else if (countNether == 0) {
-				worldReload("nether", null);
-			}
-			
-			countNether--;
-		}, 0, 20);
-		
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-			World world = Bukkit.getWorld("end");
-			
-			if (countEnd < 0) {
-				countEnd = 3600;
-			}
-			
-			if (countEnd == 60 || countEnd == 30 || countEnd == 10 || countEnd == 3 || countEnd == 2) {
-				for (Player player : world.getPlayers()) {
-					player.sendMessage(ChatColor.YELLOW + "The world you are in will reset in " + ChatColor.RED + countEnd + ChatColor.YELLOW + " seconds.");
-				}
-			}
-			
-			else if (countEnd == 1) {
-				for (Player player : world.getPlayers()) {
-					player.sendMessage(ChatColor.YELLOW + "The world you are in will reset in " + ChatColor.RED + "1" + ChatColor.YELLOW + " second.");
-				}
-			}
-			
-			else if (countEnd == 0) {
-				worldReload("end", null);
-			}
-			
-			countEnd--;
 		}, 0, 20);
 		return;
 	}
@@ -310,8 +284,10 @@ public class WorldManager {
 		    			if (CombatTracker.combatTime.containsKey(player)) {
 		    				CombatTracker.combatTime.remove(player);
 		    				Team display = player.getScoreboard().getTeam("status");
-	        				String output = ChatColor.GREEN + "Idle";
-	        				display.setSuffix(output);
+		    				if (display != null) {
+		        				String output = ChatColor.GREEN + "Idle";
+		        				display.setSuffix(output);
+		    				}
 		    			}
 		    		}
 		    	}
@@ -355,7 +331,7 @@ public class WorldManager {
 						player.sendMessage(ChatColor.YELLOW + "Done!");
 						Location spawn = new Location(freshWorld, x, y, z);
 						player.teleport(spawn);
-						count = 3600;
+						count = 5400;
 					}
 				});
 				
@@ -369,17 +345,17 @@ public class WorldManager {
 		    if(!world.equals(null)) {
 		    	Location spawn = new Location(Bukkit.getWorld(spawnworld), x, y, z);
 		    	for (Player player : world.getPlayers()) {
-		    		if (player.getWorld().getName().equals(name)) {
-		    			player.teleport(spawn);
-		    			player.sendMessage(ChatColor.YELLOW + "Resetting world...");
-		    			player.sendMessage(ChatColor.YELLOW + "Done!");
-		    			if (CombatTracker.combatTime.containsKey(player)) {
-		    				CombatTracker.combatTime.remove(player);
-		    				Team display = player.getScoreboard().getTeam("status");
+	    			player.teleport(spawn);
+	    			player.sendMessage(ChatColor.YELLOW + "Resetting world...");
+	    			player.sendMessage(ChatColor.YELLOW + "Done!");
+	    			if (CombatTracker.combatTime.containsKey(player)) {
+	    				CombatTracker.combatTime.remove(player);
+	    				Team display = player.getScoreboard().getTeam("status");
+	    				if (display != null) {
 	        				String output = ChatColor.GREEN + "Idle";
 	        				display.setSuffix(output);
-		    			}
-		    		}
+	    				}
+	    			}
 		    	}
 		    	
 		        Bukkit.getServer().unloadWorld(world, false);
@@ -412,7 +388,6 @@ public class WorldManager {
 					WorldCreator creator = new WorldCreator(name);
 					creator.environment(Environment.NETHER);
 					creator.createWorld();
-					countNether = 3600;
 				});
 		    });
 			break;
@@ -421,17 +396,17 @@ public class WorldManager {
 		    if(!world.equals(null)) {
 		    	Location spawn = new Location(Bukkit.getWorld(spawnworld), x, y, z);
 		    	for (Player player : world.getPlayers()) {
-		    		if (player.getWorld().getName().equals(name)) {
-		    			player.teleport(spawn);
-		    			player.sendMessage(ChatColor.YELLOW + "Resetting world...");
-		    			player.sendMessage(ChatColor.YELLOW + "Done!");
-		    			if (CombatTracker.combatTime.containsKey(player)) {
-		    				CombatTracker.combatTime.remove(player);
-		    				Team display = player.getScoreboard().getTeam("status");
+	    			player.teleport(spawn);
+	    			player.sendMessage(ChatColor.YELLOW + "Resetting world...");
+	    			player.sendMessage(ChatColor.YELLOW + "Done!");
+	    			if (CombatTracker.combatTime.containsKey(player)) {
+	    				CombatTracker.combatTime.remove(player);
+	    				Team display = player.getScoreboard().getTeam("status");
+	    				if (display != null) {
 	        				String output = ChatColor.GREEN + "Idle";
 	        				display.setSuffix(output);
-		    			}
-		    		}
+	    				}
+	    			}
 		    	}
 		    	
 		        Bukkit.getServer().unloadWorld(world, false);
@@ -464,7 +439,6 @@ public class WorldManager {
 					WorldCreator creator = new WorldCreator(name);
 					creator.environment(Environment.THE_END);
 					creator.createWorld();
-					countEnd = 3600;
 				});
 			});
 			break;

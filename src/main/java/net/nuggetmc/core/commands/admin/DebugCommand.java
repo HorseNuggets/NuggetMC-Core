@@ -1,9 +1,16 @@
 package net.nuggetmc.core.commands.admin;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -26,6 +33,10 @@ import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.events.FFADeathmatch;
+import net.nuggetmc.core.misc.Credits;
+import net.nuggetmc.core.misc.ItemEffects;
+import net.nuggetmc.core.scoreboard.Sidebar;
 import net.nuggetmc.core.util.TimeConverter;
 
 @SuppressWarnings("all")
@@ -75,11 +86,14 @@ public class DebugCommand implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
-		Player player = (Player) sender;
+		//Credits.prize((Player) sender);
+		Sidebar.enable((Player)sender, (byte) 0);
+		//Bukkit.broadcastMessage(ItemEffects.boomBox.toString());
+		/*Player player = (Player) sender;
 		
 		
 		
-		send(player, bukkitStackToChatComponent(new ItemStack(Material.IRON_SWORD)));
+		send(player, bukkitStackToChatComponent(new ItemStack(Material.IRON_SWORD)));*/
 		
 		
 		
@@ -132,7 +146,7 @@ public class DebugCommand implements CommandExecutor {
 		String nametemp = "";
 		
 		for(String key : config.getConfigurationSection("players").getKeys(false)) {
-			nuggetList.add(config.getInt("players." + key + ".kills"));
+			nuggetList.add(config.getInt("players." + key + ".nuggets"));
 			nameList.add(config.getString("players." + key + ".name"));
 		}
 		
@@ -154,14 +168,14 @@ public class DebugCommand implements CommandExecutor {
 		Collections.reverse(nuggetList);
 		Collections.reverse(nameList);
 		
-		String dir = plugin.getDataFolder().getAbsoluteFile().toString() + "\\playerdata";
+		String dir = plugin.getDataFolder().getAbsoluteFile().toString() + "/playerdata";
 		
 		File folder = new File(dir);
 		if (!folder.exists()) {
 			folder.mkdir();
 		}
 		
-		File fileTxt = new File(dir + "\\" + "lead_kills.txt");
+		File fileTxt = new File(dir + "/" + "lead.txt");
 		
 		if (!fileTxt.exists()) {
 			try {
@@ -183,8 +197,8 @@ public class DebugCommand implements CommandExecutor {
 			itemspw.println("#" + (i + 1) + " - " + nameList.get(i) + ": " + nuggetList.get(i));
 		}
 		
-		itemspw.close();
-		*/
+		itemspw.close();*/
+		
 		return true;
 	}
 }

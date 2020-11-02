@@ -3,14 +3,15 @@ package net.nuggetmc.core.modifiers;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.nuggetmc.core.Main;
+import net.nuggetmc.core.setup.WorldManager;
 
 public class PlayerTracker implements Listener {
 	
@@ -63,8 +64,11 @@ public class PlayerTracker implements Listener {
 					if (player.getWorld() == others.getWorld()) {
 						if (player != others) {
 							try {
-								if ((target == null) || player.getLocation().distance(others.getLocation()) < target.getLocation().distance(player.getLocation())) {
-									target = others;
+								Location loc = others.getLocation();
+								if (!WorldManager.isInSpawn(loc)) {
+									if ((target == null) || player.getLocation().distance(loc) < target.getLocation().distance(player.getLocation())) {
+										target = others;
+									}
 								}
 							} catch (IllegalArgumentException e) {
 								continue;
@@ -83,27 +87,6 @@ public class PlayerTracker implements Listener {
 		});
 		
 		task.get(player).runTaskTimerAsynchronously(plugin, 0, 10);
-		return;
-	}
-	
-	public void onMove(PlayerMoveEvent event){
-		if (targets.get(event.getPlayer()) != null) {
-			if (!event.getPlayer().getCompassTarget().equals(targets.get(event.getPlayer()).getLocation())) {
-				event.getPlayer().setCompassTarget(targets.get(event.getPlayer()).getLocation());
-			}
-		}
-		
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			Player target = targets.get(player);
-			if (target == event.getPlayer()){
-				if (player.getWorld() == event.getPlayer().getWorld()){
-					player.setCompassTarget(event.getPlayer().getLocation());
-				}
-				else {
-					targets.remove(player);
-				}
-			}
-		}
 		return;
 	}
 }

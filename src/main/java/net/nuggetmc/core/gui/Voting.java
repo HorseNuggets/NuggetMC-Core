@@ -40,21 +40,21 @@ public class Voting implements CommandExecutor {
 		
 		meta1.setDisplayName(ChatColor.YELLOW + "Vote on " + ChatColor.AQUA + "MinecraftServers§3.org");
 		ArrayList<String> lore1 = new ArrayList<String>();
-		lore1.add(ChatColor.GRAY + "Reward: " + ChatColor.GOLD + "100 Nuggets");
+		lore1.add(ChatColor.GRAY + "Reward: " + ChatColor.GREEN + "1 Uncommon Nugget");
 		lore1.add("");
 		lore1.add(ChatColor.GRAY + "Click to vote!");
 		meta1.setLore(lore1);
 		
 		meta2.setDisplayName(ChatColor.YELLOW + "Vote on " + ChatColor.AQUA + "MineStatus§3.net");
 		ArrayList<String> lore2 = new ArrayList<String>();
-		lore2.add(ChatColor.GRAY + "Reward: " + ChatColor.GOLD + "100 Nuggets");
+		lore2.add(ChatColor.GRAY + "Reward: " + ChatColor.GREEN + "1 Uncommon Nugget");
 		lore2.add("");
 		lore2.add(ChatColor.GRAY + "Click to vote!");
 		meta2.setLore(lore2);
 		
 		meta3.setDisplayName(ChatColor.YELLOW + "Vote on " + ChatColor.AQUA + "VoteMC§3.com");
 		ArrayList<String> lore3 = new ArrayList<String>();
-		lore3.add(ChatColor.GRAY + "Reward: " + ChatColor.GOLD + "100 Nuggets");
+		lore3.add(ChatColor.GRAY + "Reward: " + ChatColor.GREEN + "1 Uncommon Nugget");
 		lore3.add("");
 		lore3.add(ChatColor.GRAY + "Click to vote!");
 		meta3.setLore(lore3);

@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.player.PlayerChat;
 import net.nuggetmc.core.util.Checks;
 import net.nuggetmc.core.util.ColorCodes;
 import net.nuggetmc.core.util.MathTools;
@@ -230,16 +231,57 @@ public class MSGCommand implements CommandExecutor {
 				plugin.muteCommand.unmute(uuid, null, player.getName());
 			} else {
 				player.sendMessage(ChatColor.RED + "You are server muted for the next"
-						+ ChatColor.YELLOW + TimeConverter.intToString(remaining) + ChatColor.RED + ".");
+						+ ChatColor.YELLOW + TimeConverter.intToStringElongated(remaining) + ChatColor.RED + ".");
 				return;
 			}
 		}
 		
 		String msg = "";
-		String name = to.getName();
 		
 		for (int i = 0; i < args.length; i++)
 			msg = msg + " " + args[i];
+		
+		if (!Checks.checkStaff(player)) {
+			if (PlayerChat.msgTime.containsKey(player)) {
+				Long difference = PlayerChat.msgTime.get(player) - System.currentTimeMillis() / 1000;
+				if (difference > 0) {
+					String s = "s";
+					if (difference == 1) s = "";
+					player.sendMessage(ChatColor.RED + "You are chatting too fast. Try again in " + ChatColor.YELLOW
+							+ difference + ChatColor.RED + " second" + s + ".");
+					return;
+				}
+				
+				else {
+					PlayerChat.msgTime.remove(player);
+				}
+			}
+			
+			if (PlayerChat.msgPrev.containsKey(player)) {
+				if (msg.equals(PlayerChat.msgPrev.get(player))) {
+					if (PlayerChat.msgPrevTime.containsKey(player)) {
+						Long difference = PlayerChat.msgPrevTime.get(player) - System.currentTimeMillis() / 1000;
+						if (difference > 0) {
+							player.sendMessage(ChatColor.RED + "You can't say the same message twice!");
+							return;
+						}
+						
+						else {
+							PlayerChat.msgPrevTime.remove(player);
+						}
+					}
+				}
+			}
+			
+			for (String i : PlayerChat.filter) {
+				if (msg.toLowerCase().replaceAll(" ", "").contains(i)) {
+					player.sendMessage(ChatColor.YELLOW + "Omg that's racist!!!!1 1");
+					return;
+				}
+			}
+		}
+		
+		String name = to.getName();
 		
 		replies.put(player, to);
 		player.sendMessage(ChatColor.YELLOW + "(To " + ChatColor.RESET + ColorCodes.rankNameTag(to.getUniqueId()) + name + ChatColor.YELLOW + ")" + ChatColor.YELLOW + msg);
@@ -247,6 +289,12 @@ public class MSGCommand implements CommandExecutor {
 		if (!ignore.getStringList(to.getUniqueId().toString()).contains(uuid.toString())) {
 			replies.put(to, player);
 			to.sendMessage(ChatColor.YELLOW + "(From " + ChatColor.RESET + ColorCodes.rankNameTag(uuid) + player.getName() + ChatColor.YELLOW + ")" + ChatColor.YELLOW + msg);
+		}
+		
+		if (!Checks.checkXDDD(player)) {
+			PlayerChat.msgTime.put(player, 2 + System.currentTimeMillis() / 1000);
+			PlayerChat.msgPrevTime.put(player, 30 + System.currentTimeMillis() / 1000);
+			PlayerChat.msgPrev.put(player, msg);
 		}
 		return;
 	}

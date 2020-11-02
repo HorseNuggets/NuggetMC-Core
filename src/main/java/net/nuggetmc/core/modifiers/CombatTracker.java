@@ -20,11 +20,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
 
 import net.nuggetmc.core.Main;
+import net.nuggetmc.core.events.FFADeathmatch;
 import net.nuggetmc.core.util.Checks;
 
 public class CombatTracker {
 	
-	private Main plugin;
+	private static Main plugin;
 	private static Map<Player, BukkitRunnable> combatTask;
 	
 	private static Set<Player> kicklist;
@@ -32,7 +33,7 @@ public class CombatTracker {
 	public static Map<Player, Integer> combatTime;
 	
 	public CombatTracker(Main plugin) {
-		this.plugin = plugin;
+		CombatTracker.plugin = plugin;
 		CombatTracker.combatTask = new HashMap<>();
 		CombatTracker.kicklist = new HashSet<>();
 		CombatTracker.combatTime = new HashMap<>();
@@ -52,6 +53,21 @@ public class CombatTracker {
     	
     	if (combatTime.containsKey(player)) {
 			if (Checks.cmCheck2(base)) {
+				
+				if (Checks.checkStaff(player)) {
+					player.sendMessage(ChatColor.RED + "Your rank allows you to bypass this combat-tagged command.");
+		    		return;
+		    	}
+				else {
+					player.sendMessage(ChatColor.RED + "Command disabled during combat!");
+					event.setCancelled(true);
+					return;
+				}
+			}
+    	}
+    	
+    	if (FFADeathmatch.list.contains(player)) {
+    		if (Checks.cmCheck2(base)) {
 				
 				if (Checks.checkStaff(player)) {
 					player.sendMessage(ChatColor.RED + "Your rank allows you to bypass this combat-tagged command.");
@@ -169,14 +185,17 @@ public class CombatTracker {
     	return;
     }
     
-    public void combatCount(Player player, int countdown) {
+    public static void combatCount(Player player, int countdown) {
+    	
+    	if (FFADeathmatch.list.contains(player)) {
+    		return;
+    	}
     	
     	if (combatTime.containsKey(player)) {
     		combatTask.get(player).cancel();
 		}
     	
     	BukkitRunnable combatRunnable = new BukkitRunnable() {
-        	@SuppressWarnings("deprecation")
 			public void run() {
         		if (!combatTime.containsKey(player) || player == null) {
         			if (combatTime.containsKey(player)) combatTime.remove(player);
@@ -188,7 +207,7 @@ public class CombatTracker {
         		Team display = player.getScoreboard().getTeam("status");
         		int time = combatTime.get(player) - 1;
 				String output = time + "s";
-				display.setSuffix(output);
+        		if (display != null) display.setSuffix(output);
         		
                 combatTime.put(player, combatTime.get(player) - 1);
                 if (combatTime.get(player) <= 0) {
@@ -198,12 +217,12 @@ public class CombatTracker {
                     if (player != null) {
                     	display = player.getScoreboard().getTeam("status");
         				output = ChatColor.GREEN + "Idle";
-        				display.setSuffix(output);
+        				if (display != null) display.setSuffix(output);
                 		
-                		Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, () -> {
+                		Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
                 			final Team disp = player.getScoreboard().getTeam("status");
             				final String out = ChatColor.GREEN + "Idle";
-            				disp.setSuffix(out);
+            				if (disp != null) disp.setSuffix(out);
                 		}, 20);
                 	}
                     

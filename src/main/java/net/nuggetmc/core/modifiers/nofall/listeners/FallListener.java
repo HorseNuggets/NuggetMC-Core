@@ -5,6 +5,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import net.nuggetmc.core.Main;
+import net.nuggetmc.core.setup.WorldManager;
 
 public class FallListener {
 
@@ -22,7 +23,9 @@ public class FallListener {
 				if (player.getWorld().getName().equals(plugin.noFall.worlds.get(i))) {
 					if (!plugin.noFall.fallList.contains(player)) {
 						plugin.noFall.fallList.add(player);
-						event.setCancelled(true);
+						if (!WorldManager.isInArena(player.getLocation())) {
+							event.setCancelled(true);
+						}
 					}
 					break;
 				}

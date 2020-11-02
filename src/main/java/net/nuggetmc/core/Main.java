@@ -26,11 +26,16 @@ import net.nuggetmc.core.commands.def.TPACommand;
 import net.nuggetmc.core.commands.mod.BanCommand;
 import net.nuggetmc.core.commands.mod.MuteCommand;
 import net.nuggetmc.core.data.Configs;
+import net.nuggetmc.core.data.Leaderboards;
 import net.nuggetmc.core.economy.ItemShop;
 import net.nuggetmc.core.economy.Kits;
+import net.nuggetmc.core.events.Event;
+import net.nuggetmc.core.events.FFADeathmatch;
+import net.nuggetmc.core.events.Join;
 import net.nuggetmc.core.gui.EnderChest;
 import net.nuggetmc.core.gui.GUIMain;
 import net.nuggetmc.core.gui.Voting;
+import net.nuggetmc.core.misc.Credits;
 import net.nuggetmc.core.misc.FlyVanish;
 import net.nuggetmc.core.misc.ItemEffects;
 import net.nuggetmc.core.misc.TabComplete;
@@ -76,9 +81,12 @@ public class Main extends JavaPlugin implements TabCompleter {
 	public BanCommand banCommand;
 	public CombatTracker combatTracker;
 	public Configs configs;
+	public Credits credits;
 	public DefaultCommand defaultCommand;
 	public EnderChest enderChest;
+	public Event events;
 	public FallListener fallListener;
+	public FFADeathmatch dm;
 	public FlyVanish flyVanish;
 	public GHeads gheads;
 	public GUIMain guiMain;
@@ -109,6 +117,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.worldsEnable();
 		this.announcementsEnable();
 		this.economyEnable();
+		this.eventsEnable();
 		this.guiEnable();
 		this.itemEffectsEnable();
 		this.listenersEnable();
@@ -144,10 +153,10 @@ public class Main extends JavaPlugin implements TabCompleter {
 		getCommand("gmc").setExecutor(adminCommand);
 		getCommand("gms").setExecutor(adminCommand);
 		getCommand("gmsp").setExecutor(adminCommand);
+		getCommand("justice").setExecutor(adminCommand);
 		getCommand("setkills").setExecutor(adminCommand);
 		getCommand("setnuggets").setExecutor(adminCommand);
 		getCommand("tpall").setExecutor(adminCommand);
-		getCommand("votealert").setExecutor(adminCommand);
 		getCommand("wr").setExecutor(adminCommand);
 		getCommand("wrset").setExecutor(adminCommand);
 		
@@ -161,8 +170,10 @@ public class Main extends JavaPlugin implements TabCompleter {
 		getCommand("blocks").setExecutor(defaultCommand);
 		getCommand("boat").setExecutor(defaultCommand);
 		getCommand("discord").setExecutor(defaultCommand);
+		getCommand("lead").setExecutor(defaultCommand);
 		getCommand("levels").setExecutor(defaultCommand);
 		getCommand("rules").setExecutor(defaultCommand);
+		getCommand("shop").setExecutor(defaultCommand);
 		getCommand("spawn").setExecutor(defaultCommand);
 		getCommand("stats").setExecutor(defaultCommand);
 		getCommand("suicide").setExecutor(defaultCommand);
@@ -188,8 +199,22 @@ public class Main extends JavaPlugin implements TabCompleter {
 		getCommand("pardon-ip").setExecutor(banCommand);
 		getCommand("ipbanlist").setExecutor(banCommand);
 		
+		this.credits = new Credits(this);
+		getCommand("credit").setExecutor(credits);
+		getCommand("promo").setExecutor(credits);
+		
+		this.events = new Event(this);
+		getCommand("event").setExecutor(events);
+		
+		this.dm = new FFADeathmatch(this);
+		getCommand("ar").setExecutor(dm);
+		
+		new Leaderboards(this);
+		
 		this.getCommand("ushop").setExecutor(itemShop);
+		
 		this.getCommand("debug").setExecutor(new DebugCommand(this));
+		this.getCommand("join").setExecutor(new Join());
 		this.getCommand("ghead").setExecutor(new GHeadCommand());
 		this.getCommand("head").setExecutor(new HeadCommand());
 		this.getCommand("help").setExecutor(new HelpCommand());
@@ -208,6 +233,11 @@ public class Main extends JavaPlugin implements TabCompleter {
 		return;
 	}
 	
+	private void eventsEnable() {
+		new FFADeathmatch(this);
+		return;
+	}
+	
 	private void guiEnable() {
 		this.guiMain = new GUIMain(this);
 		return;
@@ -215,6 +245,8 @@ public class Main extends JavaPlugin implements TabCompleter {
 	
 	private void tabCompleteEnable() {
 		this.tabComplete = new TabComplete(this);
+		this.getCommand("kit").setTabCompleter(this);
+		this.getCommand("lead").setTabCompleter(this);
 		this.getCommand("nuggetmc").setTabCompleter(this);
 		this.getCommand("rank").setTabCompleter(this);
 		this.getCommand("unignore").setTabCompleter(this);
@@ -268,7 +300,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 		this.sidebar = new Sidebar(this);
 		
 		for (Player all : Bukkit.getOnlinePlayers()) {
-			this.sidebar.enable(all);
+			Sidebar.enable(all, (byte) 0);
 		}
 		return;
 	}

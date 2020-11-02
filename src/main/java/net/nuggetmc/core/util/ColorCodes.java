@@ -118,42 +118,43 @@ public class ColorCodes {
 	public static String rankNameTag(UUID uuid) {
 		String rank = ChatColor.WHITE + "";
 		
-		User user = api.getUserManager().getUser(uuid);
-		
-		switch (user.getPrimaryGroup()) {
-		case "xd":
-			rank = ChatColor.YELLOW + "[" + ChatColor.GOLD + "XD" + ChatColor.YELLOW + "] ";
-			break;
-		case "xdd":
-			rank = ChatColor.GREEN + "[" + ChatColor.GOLD + "XDD" + ChatColor.GREEN + "] ";
-			break;
-		case "xddd":
-			rank = ChatColor.AQUA + "[" + ChatColor.GOLD + "XDDD" + ChatColor.AQUA + "] ";
-			break;
-		case "promo":
-			rank = ChatColor.DARK_AQUA + "[PROMO] ";
-			break;
-		case "twitch":
-			rank = ChatColor.DARK_PURPLE + "[TWITCH] ";
-			break;
-		case "youtube":
-			rank = ChatColor.GOLD + "[YOUTUBE] ";
-			break;
-		case "builder":
-			rank = ChatColor.BLUE + "[BUILDER] ";
-			break;
-		case "spoon":
-			rank = ChatColor.BLUE + "[SPOON] ";
-			break;
-		case "mod":
-			rank = ChatColor.DARK_GREEN + "[MOD] ";
-			break;
-		case "admin":
-			rank = ChatColor.RED + "[ADMIN] ";
-			break;
-		case "owner":
-			rank = ChatColor.RED + "[OWNER] ";
-			break;
+		if (uuid != null) {
+			User user = api.getUserManager().getUser(uuid);
+			switch (user.getPrimaryGroup()) {
+			case "xd":
+				rank = ChatColor.YELLOW + "[" + ChatColor.GOLD + "XD" + ChatColor.YELLOW + "] ";
+				break;
+			case "xdd":
+				rank = ChatColor.GREEN + "[" + ChatColor.GOLD + "XDD" + ChatColor.GREEN + "] ";
+				break;
+			case "xddd":
+				rank = ChatColor.AQUA + "[" + ChatColor.GOLD + "XDDD" + ChatColor.AQUA + "] ";
+				break;
+			case "promo":
+				rank = ChatColor.DARK_AQUA + "[PROMO] ";
+				break;
+			case "twitch":
+				rank = ChatColor.DARK_PURPLE + "[TWITCH] ";
+				break;
+			case "youtube":
+				rank = ChatColor.GOLD + "[YOUTUBE] ";
+				break;
+			case "builder":
+				rank = ChatColor.BLUE + "[BUILDER] ";
+				break;
+			case "spoon":
+				rank = ChatColor.BLUE + "[SPOON] ";
+				break;
+			case "mod":
+				rank = ChatColor.DARK_GREEN + "[MOD] ";
+				break;
+			case "admin":
+				rank = ChatColor.RED + "[ADMIN] ";
+				break;
+			case "owner":
+				rank = ChatColor.RED + "[OWNER] ";
+				break;
+			}
 		}
 		return rank;
 	}
@@ -193,6 +194,46 @@ public class ColorCodes {
 			break;
 		case "owner":
 			rank = ChatColor.RED + "[OWNER] ";
+			break;
+		}
+		return rank;
+	}
+	
+	public static String rankNameColorName(String input) {
+		String rank = "§f";
+		switch (input) {
+		case "xd":
+			rank = "§e";
+			break;
+		case "xdd":
+			rank = "§a";
+			break;
+		case "xddd":
+			rank = "§b";
+			break;
+		case "promo":
+			rank = "§3";
+			break;
+		case "twitch":
+			rank = "§5";
+			break;
+		case "youtube":
+			rank = "§6";
+			break;
+		case "builder":
+			rank = "§9";
+			break;
+		case "spoon":
+			rank = "§9";
+			break;
+		case "mod":
+			rank = "§2";
+			break;
+		case "admin":
+			rank = "§c";
+			break;
+		case "owner":
+			rank = "§c";
 			break;
 		}
 		return rank;

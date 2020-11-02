@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -40,8 +41,8 @@ public class FlyVanish implements CommandExecutor {
 	}
 	
 	private static void fly(Player player) {
-		
-		if (!player.getWorld().getName().equals("main") || !Checks.checkXD(player) || !WorldManager.isInSpawn(player.getLocation())) {
+		Location loc = player.getLocation();
+		if (!player.getWorld().getName().equals("main") || !Checks.checkXD(player) || !(WorldManager.isInSpawn(loc) && !WorldManager.isInArena(loc))) {
 			if (!((player.getGameMode().equals(GameMode.SPECTATOR) || player.getGameMode().equals(GameMode.CREATIVE)))) {
 				if (player.getAllowFlight()) {
 					player.setAllowFlight(false);
@@ -69,8 +70,14 @@ public class FlyVanish implements CommandExecutor {
 			vanish.add(player);
 			
 			for (Player others : Bukkit.getOnlinePlayers()) {
-				if (!Checks.checkStaff(others)) {
-					others.hidePlayer(player);
+				try {
+					if (!Checks.checkStaff(others)) {
+						if (others.canSee(player)) {
+							others.hidePlayer(player);
+						}
+					}
+				} catch (NullPointerException e) {
+					continue;
 				}
 			}
 			
@@ -83,7 +90,9 @@ public class FlyVanish implements CommandExecutor {
 			vanish.remove(player);
 			
 			for (Player others : Bukkit.getOnlinePlayers()) {
-				others.showPlayer(player);
+				if (!others.canSee(player)) {
+					others.showPlayer(player);
+				}
 			}
 			
 			player.sendMessage("You are now out of vanish.");

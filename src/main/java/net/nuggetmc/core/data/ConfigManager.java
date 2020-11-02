@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ConcurrentModificationException;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -83,12 +85,14 @@ public class ConfigManager {
 	}
 	
 	public void saveConfig() {
-		try {
-			fileConfig.save(file);
-		}
-		catch (IOException e) {
-			plugin.log("Failed to save data storage file.");
-		}
+		Bukkit.getScheduler().runTask(plugin, () -> {
+			try {
+				fileConfig.save(file);
+			}
+			catch (IOException | NullPointerException | ConcurrentModificationException e) {
+				Bukkit.getConsoleSender().sendMessage("Failed to save data storage file.");
+			}
+		});
 		return;
 	}
 	

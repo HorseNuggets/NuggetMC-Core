@@ -16,7 +16,7 @@ public class ActionBar {
 		return;
 	}
 	
-	public void Send(Player player) {
+	public void send(Player player) {
 		((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
 		return;
 	}

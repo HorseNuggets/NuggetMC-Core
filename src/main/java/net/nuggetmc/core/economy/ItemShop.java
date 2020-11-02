@@ -251,8 +251,10 @@ public class ItemShop implements CommandExecutor {
 									playerstats.set("players." + uuid + ".nuggets", nuggets - price);
 									Configs.playerstats.saveConfig();
 									Team display = player.getScoreboard().getTeam("nuggets");
-									String output = NumberFormat.getNumberInstance(Locale.US).format(nuggets - price);
-									display.setSuffix(output);
+									if (display != null) {
+										String output = NumberFormat.getNumberInstance(Locale.US).format(nuggets - price);
+										display.setSuffix(output);
+									}
 								}
 							}
 							
@@ -283,8 +285,10 @@ public class ItemShop implements CommandExecutor {
 										playerstats.set("players." + uuid + ".nuggets", nuggets + sells * price);
 										Configs.playerstats.saveConfig();
 										Team display = player.getScoreboard().getTeam("nuggets");
-										String output = NumberFormat.getNumberInstance(Locale.US).format(nuggets + sells * price);
-										display.setSuffix(output);
+										if (display != null) {
+											String output = NumberFormat.getNumberInstance(Locale.US).format(nuggets + sells * price);
+											display.setSuffix(output);
+										}
 
 										player.playSound(location, Sound.CHICKEN_EGG_POP, 1, 1);
 									}
@@ -294,8 +298,10 @@ public class ItemShop implements CommandExecutor {
 										playerstats.set("players." + uuid + ".nuggets", nuggets + price);
 										Configs.playerstats.saveConfig();
 										Team display = player.getScoreboard().getTeam("nuggets");
-										String output = NumberFormat.getNumberInstance(Locale.US).format(nuggets + price);
-										display.setSuffix(output);
+										if (display != null) {
+											String output = NumberFormat.getNumberInstance(Locale.US).format(nuggets + price);
+											display.setSuffix(output);
+										}
 
 										double dX = location.getX();
 										double dY = location.getY();

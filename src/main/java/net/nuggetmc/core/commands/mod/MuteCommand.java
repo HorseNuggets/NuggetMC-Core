@@ -38,6 +38,7 @@ public class MuteCommand implements CommandExecutor {
 				
 				String reason = "No reason specified";
 				int mutetime = TimeConverter.stringToInt("6h");
+				boolean silence = false;
 				
 				if (args.length >= 2) {
 					
@@ -69,7 +70,12 @@ public class MuteCommand implements CommandExecutor {
 					
 					if (ultraSubArgs != null) {
 						for (int i = 0; i < ultraSubArgs.length; i++) {
-							reasonResult = reasonResult + ultraSubArgs[i] + " ";
+							if (ultraSubArgs[i].contains("-s")) {
+								silence = true;
+							}
+							else {
+								reasonResult = reasonResult + ultraSubArgs[i] + " ";
+							}
 						}
 						
 						if (reasonResult.endsWith(" ")) {
@@ -121,9 +127,28 @@ public class MuteCommand implements CommandExecutor {
 					sender.sendMessage(ChatColor.RED + mutedPlayerName + " does not exist!");
 				}
 				
-				Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Alert" + ChatColor.DARK_GRAY + "] " + ChatColor.RED
-						+ sender.getName() + " muted " + mutedPlayerName + ChatColor.RED + " with reason [" + ChatColor.YELLOW
-						+ reason + ChatColor.RED + "] for" + ChatColor.YELLOW + TimeConverter.intToStringElongated(mutetime) + ChatColor.RED + ".");
+				if (silence) {
+					final String bname = mutedPlayerName;
+					final String breason = reason;
+					final int btime = mutetime;
+					Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+						for (Player all : Bukkit.getOnlinePlayers()) {
+							if (Checks.checkStaff(all)) {
+								String msg = ChatColor.DARK_GRAY + "[" + ChatColor.DARK_GREEN + "STAFF" + ChatColor.DARK_GRAY + "] " + ChatColor.RED
+										+ sender.getName() + " muted " + bname + ChatColor.RED + " with reason [" + ChatColor.YELLOW
+										+ breason + ChatColor.RED + "] for" + ChatColor.YELLOW + TimeConverter.intToStringElongated(btime) + ChatColor.RED + ".";
+								all.sendMessage(msg);
+								Bukkit.getConsoleSender().sendMessage(msg);
+							}
+						}
+					});
+				}
+				
+				else {
+					Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Alert" + ChatColor.DARK_GRAY + "] " + ChatColor.RED
+							+ sender.getName() + " muted " + mutedPlayerName + ChatColor.RED + " with reason [" + ChatColor.YELLOW
+							+ reason + ChatColor.RED + "] for" + ChatColor.YELLOW + TimeConverter.intToStringElongated(mutetime) + ChatColor.RED + ".");
+				}
 			}
 			else {
 				sender.sendMessage(ChatColor.RED + "Usage: /mute <player> <time> <reason>");

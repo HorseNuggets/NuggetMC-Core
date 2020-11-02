@@ -47,10 +47,12 @@ public class DefaultCommand implements CommandExecutor {
 	
 	private FileConfiguration worldsettings;
 	private FileConfiguration playerstats;
+	private FileConfiguration lead;
 	
 	private void defineConfigs() {
 		this.worldsettings = Configs.worldsettings.getConfig();
 		this.playerstats = Configs.playerstats.getConfig();
+		this.lead = Configs.lead.getConfig();
 		return;
 	}
 	
@@ -116,6 +118,112 @@ public class DefaultCommand implements CommandExecutor {
 				}
 			}
 			break;
+			
+		case "shop":
+			if (sender instanceof Player) {
+				Player player = (Player) sender;
+				
+				World world = Bukkit.getWorld(spawnworld);
+				if (world == null) {
+					player.sendMessage(ChatColor.RED + "The world you are trying to teleport to is currently inactive!");
+				}
+				else {
+					player.teleport(new Location(Bukkit.getWorld(spawnworld), 30.5, 222, 15.5, 270, 0));
+					plugin.healthboost.healthSetup(player);
+					player.sendMessage(ChatColor.WHITE + "You have warped to " + ChatColor.YELLOW + "spawn" + ChatColor.WHITE + ".");
+				}
+			}
+			break;
+			
+		case "lead":
+			if (args.length > 0) {
+				String type = args[0].toLowerCase();
+				
+				if (type.equals("kills") || type.equals("nuggets")) {
+					Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+						sender.sendMessage("Loading leaderboard...");
+						List<String> msg = new ArrayList<>();
+						msg.add(linspace);
+						msg.add("TOP 20:");
+						
+						for (int i = 1; i <= 20; i++) {
+							
+							String space = " ";
+							if (i >= 10) {
+								space = "";
+							}
+							
+							if (lead.contains(type + "." + i)) {
+								String name = lead.getString(type + "." + i + ".name");
+								int value = Integer.parseInt(lead.getString(type + "." + i + ".value"));
+								
+								Player credit = Bukkit.getPlayer(name);
+								UUID uid = null;
+								
+								if (credit != null) {
+									uid = credit.getUniqueId();
+								}
+								
+								else {
+									OfflinePlayer disc = Bukkit.getOfflinePlayer(name);
+									if (disc != null) {
+										uid = disc.getUniqueId();
+									}
+								}
+								
+								String rank = ColorCodes.getOfflineRankName(uid);
+								String playername = ColorCodes.rankNameTagName(rank) + name;
+								
+								String output = "§e #" + i + space + " §7▪ §f" + playername + " §7- §e"
+										+ NumberFormat.getNumberInstance(Locale.US).format(value);
+								msg.add(output);
+							}
+							
+							else {
+								String output = "§e #" + i + space + " §7▪ ";
+								msg.add(output);
+							}
+						}
+						
+						if (sender instanceof Player) {
+							Player player = (Player) sender;
+							for (int i = 1; i <= lead.getConfigurationSection(type).getKeys(false).size(); i++) {
+								if (lead.getString(type + "." + i + ".name").equals(player.getName())) {
+									msg.add("");
+									msg.add("Your placement:");
+									
+									int value = Integer.parseInt(lead.getString(type + "." + i + ".value"));
+									
+									String space = " ";
+									if (i == 10) {
+										space = "";
+									}
+									
+									UUID uid = player.getUniqueId();
+									String rank = ColorCodes.getOfflineRankName(uid);
+									String playername = ColorCodes.rankNameTagName(rank) + player.getName();
+									
+									String output = "§e #" + i + space + " §7▪ §f" + playername + " §7- §e"
+											+ NumberFormat.getNumberInstance(Locale.US).format(value);
+									msg.add(output);
+								}
+							}
+						}
+						
+						msg.add(linspace);
+						
+						for (String i : msg) {
+							sender.sendMessage(i);
+						}
+					});
+					return true;
+				}
+				else {
+					sender.sendMessage("That leaderboard does not exist!");
+				}
+			}
+			sender.sendMessage("Select a leaderboard to view: §e/lead kills§r, §e/lead nuggets");
+			return true;
 		
 		case "warp":
 			if (args.length == 0) {
@@ -165,8 +273,8 @@ public class DefaultCommand implements CommandExecutor {
 				sender.sendMessage(linspace);
 				sender.sendMessage(ChatColor.WHITE + "World reset times:");
 				sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "Overworld:" + ChatColor.RED + TimeConverter.intToString(WorldManager.count));
-				sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "Nether:" + ChatColor.RED + TimeConverter.intToString(WorldManager.countNether));
-				sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "The End:" + ChatColor.RED + TimeConverter.intToString(WorldManager.countEnd));
+				sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "Nether:" + ChatColor.RED + TimeConverter.intToString(WorldManager.count));
+				sender.sendMessage(ChatColor.GRAY + " ▪ " + ChatColor.YELLOW + "The End:" + ChatColor.RED + TimeConverter.intToString(WorldManager.count));
 				sender.sendMessage(linspace);
 			});
 			break;

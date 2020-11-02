@@ -30,17 +30,18 @@ public class PlayerChat {
 	
 	private Main plugin;
 	private FileConfiguration mutes;
-	private List<String> filter;
-	private Map<Player, Long> msgTime;
-	private Map<Player, String> msgPrev;
-	private Map<Player, Long> msgPrevTime;
+	
+	public static List<String> filter;
+	public static Map<Player, Long> msgTime;
+	public static Map<Player, String> msgPrev;
+	public static Map<Player, Long> msgPrevTime;
 	
 	public PlayerChat(Main plugin) {
 		this.plugin = plugin;
 		this.mutes = Configs.mutes.getConfig();
-		this.msgTime = new HashMap<>();
-		this.msgPrev = new HashMap<>();
-		this.msgPrevTime = new HashMap<>();
+		PlayerChat.msgTime = new HashMap<>();
+		PlayerChat.msgPrev = new HashMap<>();
+		PlayerChat.msgPrevTime = new HashMap<>();
 		this.setupFilter();
 	}
 	
@@ -55,7 +56,7 @@ public class PlayerChat {
 				plugin.muteCommand.unmute(uuid, null, player.getName());
 			} else {
 				player.sendMessage(ChatColor.RED + "You are server muted for the next"
-						+ ChatColor.YELLOW + TimeConverter.intToString(remaining) + ChatColor.RED + ".");
+						+ ChatColor.YELLOW + TimeConverter.intToStringElongated(remaining) + ChatColor.RED + ".");
 				return;
 			}
 		}
@@ -109,7 +110,7 @@ public class PlayerChat {
 		start = playername + ChatColor.WHITE + ": ";
 		
 		int playerkillsnum = Configs.playerstats.getConfig().getInt("players." + uuid + ".kills");
-		plugin.playerStats.allign(player, uuid, playerkillsnum);
+		PlayerStats.allign(player, uuid, playerkillsnum);
 		int playerlevel = Configs.playerstats.getConfig().getInt("players." + uuid + ".level");
 		
 		start = ChatColor.DARK_GRAY + "[" + ColorCodes.levelToTag(playerlevel) + ChatColor.DARK_GRAY + "] " + ColorCodes.rankNameTag(uuid) + start;
@@ -120,12 +121,11 @@ public class PlayerChat {
 		 * Later add tags before the :
 		 */
 		
-		ChatComponentText text = null;
-		
 		if (Checks.checkXD(player)) {
 			message = message.replaceAll("&", "§");
 			if (message.contains("[i]")) {
 				
+				ChatComponentText text = null;
 				ItemStack item = player.getItemInHand();
 				
 				if (!(item == null || item.getType() == Material.AIR)) {
@@ -149,19 +149,44 @@ public class PlayerChat {
 				else {
 					text = new ChatComponentText(message);
 				}
-			}
-			
-			else {
-				text = new ChatComponentText(message);
+				
+				PacketPlayOutChat packet = new PacketPlayOutChat(text);
+				
+				if (Checks.checkStaff(player)) {
+					if (raw.startsWith("#")) {
+						raw = raw.substring(1);
+						if (raw.startsWith(" ")) {
+							raw = raw.substring(1);
+						}
+						if (!raw.equals("")) {
+							staffChat(player, start, raw);
+							return;
+						}
+					}
+					
+					for (Player all : Bukkit.getOnlinePlayers()) {
+						((CraftPlayer) all).getHandle().playerConnection.sendPacket(packet);
+					}
+				}
+				
+				else {
+					for (Player all : Bukkit.getOnlinePlayers()) {
+						if (!Configs.ignore.getConfig().getStringList(all.getUniqueId().toString()).contains(uuid.toString())) {
+							((CraftPlayer) all).getHandle().playerConnection.sendPacket(packet);
+						}
+					}
+					
+					if (!Checks.checkXDDD(player)) {
+						msgTime.put(player, 2 + System.currentTimeMillis() / 1000);
+						msgPrevTime.put(player, 30 + System.currentTimeMillis() / 1000);
+						msgPrev.put(player, raw);
+					}
+				}
+				
+				Bukkit.getConsoleSender().sendMessage(message);
+				return;
 			}
 		}
-		
-		else {
-			text = new ChatComponentText(message);
-		}
-		
-		
-		PacketPlayOutChat packet = new PacketPlayOutChat(text);
 		
 		if (Checks.checkStaff(player)) {
 			if (raw.startsWith("#")) {
@@ -176,20 +201,22 @@ public class PlayerChat {
 			}
 			
 			for (Player all : Bukkit.getOnlinePlayers()) {
-				((CraftPlayer) all).getHandle().playerConnection.sendPacket(packet);
+				all.sendMessage(message);
 			}
 		}
 		
 		else {
 			for (Player all : Bukkit.getOnlinePlayers()) {
 				if (!Configs.ignore.getConfig().getStringList(all.getUniqueId().toString()).contains(uuid.toString())) {
-					((CraftPlayer) all).getHandle().playerConnection.sendPacket(packet);
+					all.sendMessage(message);
 				}
 			}
 			
-			msgTime.put(player, 2 + System.currentTimeMillis() / 1000);
-			msgPrevTime.put(player, 30 + System.currentTimeMillis() / 1000);
-			msgPrev.put(player, raw);
+			if (!Checks.checkXDDD(player)) {
+				msgTime.put(player, 2 + System.currentTimeMillis() / 1000);
+				msgPrevTime.put(player, 30 + System.currentTimeMillis() / 1000);
+				msgPrev.put(player, raw);
+			}
 		}
 		
 		Bukkit.getConsoleSender().sendMessage(message);
@@ -197,21 +224,17 @@ public class PlayerChat {
 	}
 	
 	private void setupFilter() {
-		this.filter = Arrays.asList("nigga", "nigger");
+		PlayerChat.filter = Arrays.asList("nigga", "nigger");
 		return;
 	}
 	
 	private void staffChat(Player player, String start, String message) {
-		for (Player all : Bukkit.getOnlinePlayers()) {
-			if (Checks.checkStaff(all)) {
-				all.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_GREEN + "STAFF" + ChatColor.DARK_GRAY + "] "
-						+ ChatColor.RESET + start + ChatColor.AQUA + message);
-			}
-		}
+		Bukkit.broadcast(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_GREEN + "STAFF" + ChatColor.DARK_GRAY + "] "
+				+ ChatColor.RESET + start + ChatColor.AQUA + message, "nmc.staff");
 		return;
 	}
 	
-	public IChatBaseComponent bukkitStackToChatComponent(ItemStack stack) {
+	public static IChatBaseComponent bukkitStackToChatComponent(ItemStack stack) {
 	    net.minecraft.server.v1_8_R3.ItemStack nms = CraftItemStack.asNMSCopy(stack);
 	    return nms.C();
 	}

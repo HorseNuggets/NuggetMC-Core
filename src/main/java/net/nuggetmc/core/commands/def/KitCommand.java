@@ -82,7 +82,7 @@ public class KitCommand implements CommandExecutor {
 				}
 			}
 			
-			String kitName = args[0].substring(0, 1).toUpperCase() + args[0].substring(1);
+			String kitName = args[0].substring(0, 1).toUpperCase() + args[0].substring(1).toLowerCase();
 			
 			boolean loss = false;
 			boolean notSufficientLevel = false;
@@ -381,7 +381,7 @@ public class KitCommand implements CommandExecutor {
 						pearl.addEnchantment(Enchantment.DURABILITY, 1);
 						pearl.setDurability((short) 250);
 						ItemMeta pearln = pearl.getItemMeta();
-						pearln.setDisplayName(ChatColor.RED + "The Scythe");
+						pearln.setDisplayName(ChatColor.DARK_RED + "The Scythe");
 						ArrayList<String> pearl1 = new ArrayList<String>();
 						pearl1.add(ChatColor.GRAY + "Executioner I");
 						pearl1.add("");
@@ -560,7 +560,7 @@ public class KitCommand implements CommandExecutor {
 					if (totem == 4) {
 						scheduler.scheduleSyncDelayedTask(plugin, () -> {
 							Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "give " + player.getName()
-									+ " nether_wart 1 0 {display:{Name:\"§cBlast Totem§r\",Lore:[\"§7Create an explosion\",\"§7on death.\"]},ench:[{id:34,lvl:1}],HideFlags:1}");
+									+ " nether_wart 1 0 {display:{Name:\"§cBlast Totem\",Lore:[\"§7Create an explosion\",\"§7on death.\"]},ench:[{id:34,lvl:1}],HideFlags:1}");
 						}, 2);
 					}
 					
@@ -836,7 +836,7 @@ public class KitCommand implements CommandExecutor {
 					pearl.addEnchantment(Enchantment.DURABILITY, 1);
 					pearl.setDurability((short) 250);
 					ItemMeta pearln = pearl.getItemMeta();
-					pearln.setDisplayName(ChatColor.RED + "The Scythe");
+					pearln.setDisplayName(ChatColor.DARK_RED + "The Scythe");
 					ArrayList<String> pearl1 = new ArrayList<String>();
 					pearl1.add(ChatColor.GRAY + "Executioner I");
 					pearl1.add("");
@@ -1116,8 +1116,10 @@ public class KitCommand implements CommandExecutor {
 		
 		Configs.playerstats.saveConfig();
 		Team display = player.getScoreboard().getTeam("nuggets");
-		String val = NumberFormat.getNumberInstance(Locale.US).format(Configs.playerstats.getConfig().get("players." + uuid + ".nuggets"));
-		display.setSuffix(val);
+		if (display != null) {
+			String val = NumberFormat.getNumberInstance(Locale.US).format(Configs.playerstats.getConfig().get("players." + uuid + ".nuggets"));
+			display.setSuffix(val);
+		}
 		return true;
 	}
 }

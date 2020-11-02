@@ -94,11 +94,15 @@ public class TPACommand implements CommandExecutor {
 			Player player = (Player) sender;
 			switch (label.toLowerCase()) {
 			case "tpa":
-				preAssign(player, args, "normal");
+				Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+					preAssign(player, args, "normal");
+				});
 				return true;
 				
 			case "tphere":
-				preAssign(player, args, "inverse");
+				Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+					preAssign(player, args, "inverse");
+				});
 				return true;
 				
 			case "tpyes":

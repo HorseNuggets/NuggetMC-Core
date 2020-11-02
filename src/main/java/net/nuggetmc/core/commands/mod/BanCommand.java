@@ -56,6 +56,7 @@ public class BanCommand implements CommandExecutor {
 				
 				String reason = "No reason specified";
 				int bantime = TimeConverter.stringToInt("7d");
+				boolean silence = false;
 				
 				if (args.length >= 2) {
 					
@@ -87,7 +88,12 @@ public class BanCommand implements CommandExecutor {
 					
 					if (ultraSubArgs != null) {
 						for (int i = 0; i < ultraSubArgs.length; i++) {
-							reasonResult = reasonResult + ultraSubArgs[i] + " ";
+							if (ultraSubArgs[i].contains("-s")) {
+								silence = true;
+							}
+							else {
+								reasonResult = reasonResult + ultraSubArgs[i] + " ";
+							}
 						}
 						
 						if (reasonResult.endsWith(" ")) {
@@ -134,9 +140,28 @@ public class BanCommand implements CommandExecutor {
 					}
 				}
 				
-				Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Alert" + ChatColor.DARK_GRAY + "] " + ChatColor.RED
-						+ sender.getName() + " banned " + bannedPlayerName + ChatColor.RED + " with reason [" + ChatColor.YELLOW
-						+ reason + ChatColor.RED + "] for" + ChatColor.YELLOW + TimeConverter.intToStringElongated(bantime) + ChatColor.RED + ".");
+				if (silence) {
+					final String bname = bannedPlayerName;
+					final String breason = reason;
+					final int btime = bantime;
+					Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+						for (Player all : Bukkit.getOnlinePlayers()) {
+							if (Checks.checkStaff(all)) {
+								String msg = ChatColor.DARK_GRAY + "[" + ChatColor.DARK_GREEN + "STAFF" + ChatColor.DARK_GRAY + "] " + ChatColor.RED
+										+ sender.getName() + " banned " + bname + ChatColor.RED + " with reason [" + ChatColor.YELLOW
+										+ breason + ChatColor.RED + "] for" + ChatColor.YELLOW + TimeConverter.intToStringElongated(btime) + ChatColor.RED + ".";
+								all.sendMessage(msg);
+								Bukkit.getConsoleSender().sendMessage(msg);
+							}
+						}
+					});
+				}
+				
+				else {
+					Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Alert" + ChatColor.DARK_GRAY + "] " + ChatColor.RED
+							+ sender.getName() + " banned " + bannedPlayerName + ChatColor.RED + " with reason [" + ChatColor.YELLOW
+							+ reason + ChatColor.RED + "] for" + ChatColor.YELLOW + TimeConverter.intToStringElongated(bantime) + ChatColor.RED + ".");
+				}
 			}
 			else {
 				sender.sendMessage(ChatColor.RED + "Usage: /ban <player> <time> <reason>");
