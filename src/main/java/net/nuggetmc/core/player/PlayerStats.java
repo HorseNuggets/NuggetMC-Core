@@ -65,7 +65,9 @@ public class PlayerStats {
 	    	Configs.playerstats.getConfig().set("players." + uuid + ".level", 12);
 	    }
 		
-		Configs.playerstats.saveConfig();
+		Bukkit.getScheduler().runTask(plugin, () -> {
+			Configs.playerstats.saveConfig();
+		});
 		return;
 	}
 	

@@ -120,6 +120,7 @@ public class TabComplete {
 				List<String> groupnames = new ArrayList<>();
 				groupnames.add("kills");
 				groupnames.add("nuggets");
+				groupnames.add("rating");
 				
 				if (tabConditional(args[0])) {
 					groupnames = autofill(groupnames, args[0]);

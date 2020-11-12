@@ -22,6 +22,8 @@ import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Skull;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -265,6 +267,7 @@ public class WorldManager {
         return;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void worldReload(String worldname, String[] args) {
 		final String name = worldname.toLowerCase();
 		World world = Bukkit.getWorld(name);
@@ -333,11 +336,61 @@ public class WorldManager {
 						player.teleport(spawn);
 						count = 5400;
 					}
+					
+					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ushop");
+						
+						Location loc = new Location(freshWorld, 4, 223, 31);
+						Block skullBlock = loc.getBlock();
+				        skullBlock.setType(Material.SKULL);
+				        skullBlock.setData((byte) 1);
+				        BlockState state = skullBlock.getState();
+				        Skull skull = (Skull) state;
+				        skull.setOwner("ScamStoryteller");
+				        skull.setRotation(BlockFace.NORTH);
+				        skull.update();
+						
+						loc = new Location(freshWorld, 2, 223, 32);
+						skullBlock = loc.getBlock();
+				        skullBlock.setType(Material.SKULL);
+				        skullBlock.setData((byte) 1);
+				        state = skullBlock.getState();
+				        skull = (Skull) state;
+				        skull.setOwner("Superson_and_RFD");
+				        skull.setRotation(BlockFace.NORTH);
+				        skull.update();
+						
+						loc = new Location(freshWorld, 0, 223, 32);
+						skullBlock = loc.getBlock();
+				        skullBlock.setType(Material.SKULL);
+				        skullBlock.setData((byte) 1);
+				        state = skullBlock.getState();
+				        skull = (Skull) state;
+				        skull.setOwner("noKylie");
+				        skull.setRotation(BlockFace.NORTH);
+				        skull.update();
+						
+						loc = new Location(freshWorld, -2, 223, 32);
+						skullBlock = loc.getBlock();
+				        skullBlock.setType(Material.SKULL);
+				        skullBlock.setData((byte) 1);
+				        state = skullBlock.getState();
+				        skull = (Skull) state;
+				        skull.setOwner("Micsenluc");
+				        skull.setRotation(BlockFace.NORTH);
+				        skull.update();
+						
+						loc = new Location(freshWorld, -4, 223, 31);
+						skullBlock = loc.getBlock();
+				        skullBlock.setType(Material.SKULL);
+				        skullBlock.setData((byte) 1);
+				        state = skullBlock.getState();
+				        skull = (Skull) state;
+				        skull.setOwner("SlimyNoah");
+				        skull.setRotation(BlockFace.NORTH);
+				        skull.update();
+					}, 20);
 				});
-				
-				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ushop");
-				}, 20);
 		    });
 		    break;
 		    

@@ -137,9 +137,12 @@ public class DefaultCommand implements CommandExecutor {
 			
 		case "lead":
 			if (args.length > 0) {
-				String type = args[0].toLowerCase();
+				String inp = args[0].toLowerCase();
+				if (args[0].equalsIgnoreCase("elo")) inp = "rating";
 				
-				if (type.equals("kills") || type.equals("nuggets")) {
+				final String type = inp;
+				
+				if (type.equals("kills") || type.equals("nuggets") || type.equals("rating")) {
 					Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 						sender.sendMessage("Loading leaderboard...");
 						List<String> msg = new ArrayList<>();
@@ -222,7 +225,7 @@ public class DefaultCommand implements CommandExecutor {
 					sender.sendMessage("That leaderboard does not exist!");
 				}
 			}
-			sender.sendMessage("Select a leaderboard to view: §e/lead kills§r, §e/lead nuggets");
+			sender.sendMessage("Select a leaderboard to view: §e/lead kills§r, §e/lead nuggets§r, §e/lead rating");
 			return true;
 		
 		case "warp":
@@ -396,15 +399,18 @@ public class DefaultCommand implements CommandExecutor {
 						int level = playerstats.getInt("players." + uuid + ".level");
 						int kills = playerstats.getInt("players." + uuid + ".kills");
 						int nuggets = playerstats.getInt("players." + uuid + ".nuggets");
+						int elo = playerstats.getInt("players." + uuid + ".rating");
 						
 						String killsFormat = NumberFormat.getNumberInstance(Locale.US).format(kills);
 						String nuggetsFormat = NumberFormat.getNumberInstance(Locale.US).format(nuggets);
+						String eloFormat = NumberFormat.getNumberInstance(Locale.US).format(elo);
 						
 						sender.sendMessage(linspace);
 						sender.sendMessage(playername);
 						sender.sendMessage(ChatColor.GRAY + " ▪ Level: " + ChatColor.YELLOW + level);
 						sender.sendMessage(ChatColor.GRAY + " ▪ Kills: " + ChatColor.YELLOW + killsFormat);
 						sender.sendMessage(ChatColor.GRAY + " ▪ Nuggets: " + ChatColor.YELLOW + nuggetsFormat);
+						sender.sendMessage(ChatColor.GRAY + " ▪ Rating: " + ChatColor.YELLOW + eloFormat);
 						sender.sendMessage(linspace);
 					}
 				}

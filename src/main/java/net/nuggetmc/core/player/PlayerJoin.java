@@ -16,20 +16,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.util.ColorCodes;
 import net.nuggetmc.core.util.ItemSerializers;
 
 public class PlayerJoin {
 	
-	private Main plugin;
 	private List<String> joinmsg;
 	private FileConfiguration config;
 	private FileConfiguration defaults;
 	
-	public PlayerJoin(Main plugin) {
-		this.plugin = plugin;
+	public PlayerJoin() {
 		this.configSetup();
 		this.defaultInvSetup();
 	}
@@ -66,46 +63,48 @@ public class PlayerJoin {
 			player.setGameMode(GameMode.SURVIVAL);
 		}
 		
-		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-			try {
-				if (!config.contains("players." + uuid)) {
-					config.set("players." + uuid + ".name", playername);
-					config.set("players." + uuid + ".rank", "default");
-					config.set("players." + uuid + ".level", 1);
-					config.set("players." + uuid + ".kills", 0);
-					config.set("players." + uuid + ".nuggets", 100);
-					config.set("players." + uuid + ".promo", true);
-					
-					int count = config.getInt("count") + 1;
-					config.set("count", count);
-					
-					Bukkit.broadcastMessage("Welcome " + playername + " to NuggetMC! " + ChatColor.GRAY + "(" + ChatColor.YELLOW + "#"
-							+ NumberFormat.getNumberInstance(Locale.US).format(count) + ChatColor.GRAY + ")");
-					
-					player.getInventory().setContents(items);
-					player.getInventory().setArmorContents(armor);
-					
-					randomDiamondArmor(player, ((byte) (Math.random() * 4)));
-				}
+		try {
+			if (!config.contains("players." + uuid)) {
+				config.set("players." + uuid + ".name", playername);
+				config.set("players." + uuid + ".rank", "default");
+				config.set("players." + uuid + ".level", 1);
+				config.set("players." + uuid + ".kills", 0);
+				config.set("players." + uuid + ".nuggets", 100);
+				config.set("players." + uuid + ".promo", true);
 				
-				for (int i = 0; i < joinmsg.size(); i++) {
-					player.sendMessage(joinmsg.get(i));
-				}
+				int count = config.getInt("count") + 1;
+				config.set("count", count);
 				
-				for (Player all : Bukkit.getOnlinePlayers()) {
-					if (player != all) {
-						all.sendMessage(ColorCodes.colorName(uuid, playername) + ChatColor.WHITE + " joined the game.");
-					}
-				}
+				Bukkit.broadcastMessage("Welcome " + playername + " to NuggetMC! " + ChatColor.GRAY + "(" + ChatColor.YELLOW + "#"
+						+ NumberFormat.getNumberInstance(Locale.US).format(count) + ChatColor.GRAY + ")");
 				
-				config.set("players." + uuid + ".rank", ColorCodes.getRankName(uuid));
+				player.getInventory().setContents(items);
+				player.getInventory().setArmorContents(armor);
 				
-				Configs.playerstats.saveConfig();
-			} catch (Exception e) {
-				Bukkit.broadcast("§cERROR in PlayerJoin.java", "nmc");
-				return;
+				randomDiamondArmor(player, ((byte) (Math.random() * 4)));
 			}
-		});
+			
+			else {
+				config.set("players." + uuid + ".name", playername);
+			}
+			
+			for (int i = 0; i < joinmsg.size(); i++) {
+				player.sendMessage(joinmsg.get(i));
+			}
+			
+			for (Player all : Bukkit.getOnlinePlayers()) {
+				if (player != all) {
+					all.sendMessage(ColorCodes.colorName(uuid, playername) + ChatColor.WHITE + " joined the game.");
+				}
+			}
+			
+			config.set("players." + uuid + ".rank", ColorCodes.getRankName(uuid));
+			Configs.playerstats.saveConfig();
+			
+		} catch (Exception e) {
+			Bukkit.broadcast("§cERROR in PlayerJoin.java", "nmc");
+			return;
+		}
 		
 		return;
 	}
@@ -115,30 +114,22 @@ public class PlayerJoin {
 			case 0:
 				final ItemStack helmet = new ItemStack(Material.DIAMOND_HELMET, 1);
 				helmet.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
-				Bukkit.getScheduler().runTask(plugin, () -> {
-					player.getInventory().setHelmet(helmet);
-				});
+				player.getInventory().setHelmet(helmet);
 				return;
 			case 1:
 				final ItemStack chestplate = new ItemStack(Material.DIAMOND_CHESTPLATE, 1);
 				chestplate.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
-				Bukkit.getScheduler().runTask(plugin, () -> {
-					player.getInventory().setChestplate(chestplate);
-				});
+				player.getInventory().setChestplate(chestplate);
 				return;
 			case 2:
 				final ItemStack leggings = new ItemStack(Material.DIAMOND_LEGGINGS, 1);
 				leggings.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
-				Bukkit.getScheduler().runTask(plugin, () -> {
-					player.getInventory().setLeggings(leggings);
-				});
+				player.getInventory().setLeggings(leggings);
 				return;
 			case 3:
 				final ItemStack boots = new ItemStack(Material.DIAMOND_BOOTS, 1);
 				boots.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
-				Bukkit.getScheduler().runTask(plugin, () -> {
-					player.getInventory().setBoots(boots);
-				});
+				player.getInventory().setBoots(boots);
 				return;
 		}
 		return;

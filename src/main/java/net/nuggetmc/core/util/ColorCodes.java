@@ -41,6 +41,9 @@ public class ColorCodes {
 		case "builder":
 			rank = ChatColor.BLUE + "Builder";
 			break;
+		case "donki":
+			rank = ChatColor.LIGHT_PURPLE + "Donki";
+			break;
 		case "spoon":
 			rank = ChatColor.BLUE + "Spoon";
 			break;
@@ -99,6 +102,9 @@ public class ColorCodes {
 		case "builder":
 			rank = ChatColor.BLUE + name;
 			break;
+		case "donki":
+			rank = ChatColor.LIGHT_PURPLE + name;
+			break;
 		case "spoon":
 			rank = ChatColor.BLUE + name;
 			break;
@@ -142,6 +148,9 @@ public class ColorCodes {
 			case "builder":
 				rank = ChatColor.BLUE + "[BUILDER] ";
 				break;
+			case "donki":
+				rank = ChatColor.LIGHT_PURPLE + "[DONKI] ";
+				break;
 			case "spoon":
 				rank = ChatColor.BLUE + "[SPOON] ";
 				break;
@@ -157,6 +166,61 @@ public class ColorCodes {
 			}
 		}
 		return rank;
+	}
+	
+	public static String rankNameTagStrike(UUID uuid) {
+		String rank = ChatColor.WHITE + "§m";
+		
+		if (uuid != null) {
+			User user = api.getUserManager().getUser(uuid);
+			switch (user.getPrimaryGroup()) {
+			case "xd":
+				rank = ChatColor.YELLOW + "§m[" + ChatColor.GOLD + "§mXD" + ChatColor.YELLOW + "§m] ";
+				break;
+			case "xdd":
+				rank = ChatColor.GREEN + "§m[" + ChatColor.GOLD + "§mXDD" + ChatColor.GREEN + "§m] ";
+				break;
+			case "xddd":
+				rank = ChatColor.AQUA + "§m[" + ChatColor.GOLD + "§mXDDD" + ChatColor.AQUA + "§m] ";
+				break;
+			case "promo":
+				rank = ChatColor.DARK_AQUA + "§m[PROMO] ";
+				break;
+			case "twitch":
+				rank = ChatColor.DARK_PURPLE + "§m[TWITCH] ";
+				break;
+			case "youtube":
+				rank = ChatColor.GOLD + "§m[YOUTUBE] ";
+				break;
+			case "builder":
+				rank = ChatColor.BLUE + "§m[BUILDER] ";
+				break;
+			case "donki":
+				rank = ChatColor.LIGHT_PURPLE + "§m[DONKI] ";
+				break;
+			case "spoon":
+				rank = ChatColor.BLUE + "§m[SPOON] ";
+				break;
+			case "mod":
+				rank = ChatColor.DARK_GREEN + "§m[MOD] ";
+				break;
+			case "admin":
+				rank = ChatColor.RED + "§m[ADMIN] ";
+				break;
+			case "owner":
+				rank = ChatColor.RED + "§m[OWNER] ";
+				break;
+			}
+		}
+		return rank;
+	}
+	
+	public static String offlineRankTagUUID(UUID uuid) {
+		return rankNameTagName(getOfflineRankName(uuid));
+	}
+	
+	public static String offlineStrikeRankTagUUID(UUID uuid) {
+		return rankNameTagNameStrike(getOfflineRankName(uuid));
 	}
 	
 	public static String rankNameTagName(String input) {
@@ -183,6 +247,9 @@ public class ColorCodes {
 		case "builder":
 			rank = ChatColor.BLUE + "[BUILDER] ";
 			break;
+		case "donki":
+			rank = ChatColor.LIGHT_PURPLE + "[DONKI] ";
+			break;
 		case "spoon":
 			rank = ChatColor.BLUE + "[SPOON] ";
 			break;
@@ -194,6 +261,49 @@ public class ColorCodes {
 			break;
 		case "owner":
 			rank = ChatColor.RED + "[OWNER] ";
+			break;
+		}
+		return rank;
+	}
+	
+	public static String rankNameTagNameStrike(String input) {
+		String rank = ChatColor.WHITE + "§m";
+		switch (input) {
+		case "xd":
+			rank = ChatColor.YELLOW + "§m[" + ChatColor.GOLD + "§mXD" + ChatColor.YELLOW + "§m] ";
+			break;
+		case "xdd":
+			rank = ChatColor.GREEN + "§m[" + ChatColor.GOLD + "§mXDD" + ChatColor.GREEN + "§m] ";
+			break;
+		case "xddd":
+			rank = ChatColor.AQUA + "§m[" + ChatColor.GOLD + "§mXDDD" + ChatColor.AQUA + "§m] ";
+			break;
+		case "promo":
+			rank = ChatColor.DARK_AQUA + "§m[PROMO] ";
+			break;
+		case "twitch":
+			rank = ChatColor.DARK_PURPLE + "§m[TWITCH] ";
+			break;
+		case "youtube":
+			rank = ChatColor.GOLD + "§m[YOUTUBE] ";
+			break;
+		case "builder":
+			rank = ChatColor.BLUE + "§m[BUILDER] ";
+			break;
+		case "donki":
+			rank = ChatColor.LIGHT_PURPLE + "§m[DONKI] ";
+			break;
+		case "spoon":
+			rank = ChatColor.BLUE + "§m[SPOON] ";
+			break;
+		case "mod":
+			rank = ChatColor.DARK_GREEN + "§m[MOD] ";
+			break;
+		case "admin":
+			rank = ChatColor.RED + "§m[ADMIN] ";
+			break;
+		case "owner":
+			rank = ChatColor.RED + "§m[OWNER] ";
 			break;
 		}
 		return rank;
@@ -222,6 +332,9 @@ public class ColorCodes {
 			break;
 		case "builder":
 			rank = "§9";
+			break;
+		case "donki":
+			rank = "§d";
 			break;
 		case "spoon":
 			rank = "§9";

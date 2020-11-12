@@ -84,6 +84,9 @@ commands:
   kit:
     description: "Command for all kit-related actions."
     usage: /kit
+  tournament:
+    description: "Command for all kit-related actions."
+    usage: /tournament
   stats:
     description: "Displays a user's stats."
     usage: /stats
@@ -160,7 +163,7 @@ commands:
   event:
     description: "Start an event."
     usage: /event <event>
-    permission: nmc
+    permission: nmc.staff
   ar:
     description: "Reset the arena."
     usage: /ar
@@ -172,6 +175,10 @@ commands:
   justice:
     description: "JUSTICE"
     usage: /justice
+    permission: nmc
+  flag:
+    description: "Flag a player for a cheat"
+    usage: /flag
     permission: nmc
   gmc:
     description: "Creative mode."

@@ -21,6 +21,7 @@ import org.bukkit.scoreboard.Team;
 
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.events.FFADeathmatch;
+import net.nuggetmc.core.events.Tournament;
 import net.nuggetmc.core.util.Checks;
 
 public class CombatTracker {
@@ -66,7 +67,7 @@ public class CombatTracker {
 			}
     	}
     	
-    	if (FFADeathmatch.list.contains(player)) {
+    	if (FFADeathmatch.list.contains(player) || Tournament.active.contains(player)) {
     		if (Checks.cmCheck2(base)) {
 				
 				if (Checks.checkStaff(player)) {
@@ -187,7 +188,7 @@ public class CombatTracker {
     
     public static void combatCount(Player player, int countdown) {
     	
-    	if (FFADeathmatch.list.contains(player)) {
+    	if (FFADeathmatch.list.contains(player) || Tournament.active.contains(player)) {
     		return;
     	}
     	

@@ -55,6 +55,7 @@ import net.minecraft.server.v1_8_R3.BlockPosition;
 import net.nuggetmc.core.commands.mod.BanCommand;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.events.FFADeathmatch;
+import net.nuggetmc.core.events.Tournament;
 import net.nuggetmc.core.gui.EnderChest;
 import net.nuggetmc.core.gui.GUIMain;
 import net.nuggetmc.core.misc.Credits;
@@ -88,7 +89,10 @@ public class Listeners implements Listener {
 	
 	@EventHandler
 	public void blockBreakEvent(BlockBreakEvent event) {
-		FFADeathmatch.onBlockBreak(event);
+		if (FFADeathmatch.phase != 0) {
+			FFADeathmatch.onBlockBreak(event);
+		}
+		if (Tournament.enabled) plugin.trn.onBlockBreak(event);
 		return;
 	}
 	
@@ -96,7 +100,10 @@ public class Listeners implements Listener {
 	public void blockPlaceEvent(BlockPlaceEvent event) {
 		plugin.gheads.onHeadPlace(event);
 		ItemEffects.boomBox(event);
-		FFADeathmatch.onBlockPlace(event);
+		if (FFADeathmatch.phase != 0) {
+			FFADeathmatch.onBlockPlace(event);
+		}
+		if (Tournament.enabled) plugin.trn.onBlockPlace(event);
 		return;
 	}
 	
@@ -106,7 +113,10 @@ public class Listeners implements Listener {
 		plugin.combatTracker.playerCombatProjectiles(event);
 		plugin.gheads.headDetectPhysical(event);
 		ItemEffects.onEntityDamage(event);
-		FFADeathmatch.onPlayerDamage(event);
+		if (FFADeathmatch.phase != 0) {
+			FFADeathmatch.onPlayerDamage(event);
+		}
+		if (Tournament.enabled) plugin.trn.onPlayerDamage(event);
 		return;
 	}
 	
@@ -114,7 +124,10 @@ public class Listeners implements Listener {
 	public void entityDamageEvent(EntityDamageEvent event) {
 		plugin.combatTracker.combatContinue(event);
 		plugin.fallListener.onFall(event);
-		FFADeathmatch.onPlayerDamage2(event);
+		if (FFADeathmatch.phase != 0) {
+			FFADeathmatch.onPlayerDamage2(event);
+		}
+		if (Tournament.enabled) plugin.trn.onPlayerDamage2(event);
 		if (event.getEntity() instanceof Player) {
 			if (event.getCause() != DamageCause.ENTITY_ATTACK) {
 				Player victim = (Player) event.getEntity();
@@ -152,7 +165,10 @@ public class Listeners implements Listener {
 	
 	@EventHandler
 	public void playerBucketEmptyEvent(PlayerBucketEmptyEvent event) {
-		FFADeathmatch.onBucketEmpty(event);
+		if (FFADeathmatch.phase != 0) {
+			FFADeathmatch.onBucketEmpty(event);
+		}
+		if (Tournament.enabled) plugin.trn.onBucketEmpty(event);
 		return;
 	}
 	
@@ -178,7 +194,10 @@ public class Listeners implements Listener {
 		plugin.gheads.onDeath(event);
 		plugin.guiMain.hardRemove(player);
 		plugin.playerKill.onKill(event);
-		FFADeathmatch.onDeath(event);
+		if (FFADeathmatch.phase != 0) {
+			FFADeathmatch.onDeath(event);
+		}
+		if (Tournament.enabled) plugin.trn.onDeath(event);
 		ItemEffects.onDeath(event);
 	}
 	
@@ -286,7 +305,10 @@ public class Listeners implements Listener {
 	public void playerMoveEvent(PlayerMoveEvent event) {
 		plugin.moveListener.onMove(event);
 		plugin.worldManager.onMove(event);
-		FFADeathmatch.onMove(event);
+		if (FFADeathmatch.phase != 0) {
+			FFADeathmatch.onMove(event);
+		}
+		if (Tournament.enabled) plugin.trn.onMove(event);
 		FlyVanish.onPlayerMove(event);
 		return;
 	}
@@ -303,7 +325,7 @@ public class Listeners implements Listener {
 		return;
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void playerPortalEvent(PlayerPortalEvent event) {
 		plugin.worldManager.worldPortal(event);
 		return;
@@ -312,7 +334,10 @@ public class Listeners implements Listener {
 	@EventHandler
 	public void playerTeleportEvent(PlayerTeleportEvent event) {
 		plugin.moveListener.onTeleport(event);
-		FFADeathmatch.onTeleport(event);
+		if (FFADeathmatch.phase != 0) {
+			FFADeathmatch.onTeleport(event);
+		}
+		if (Tournament.enabled) plugin.trn.onTeleport(event);
 		FlyVanish.onPlayerTeleport(event);
 		
 		Player player = event.getPlayer();
@@ -367,7 +392,11 @@ public class Listeners implements Listener {
 			vehicle.eject();
 		}
 		
-		FFADeathmatch.onQuit(event);
+		if (FFADeathmatch.phase != 0) {
+			FFADeathmatch.onQuit(event);
+		}
+		
+		if (Tournament.enabled) plugin.trn.onQuit(event);
 		plugin.guiMain.hardRemove(event.getPlayer());
 		//plugin.packetHandler.removePlayer(player);
 		if (plugin.playerTracker != null) {

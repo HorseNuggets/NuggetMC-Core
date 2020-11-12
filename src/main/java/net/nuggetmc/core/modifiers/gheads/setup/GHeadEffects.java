@@ -1,29 +1,36 @@
 package net.nuggetmc.core.modifiers.gheads.setup;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.setup.WorldManager;
 import net.nuggetmc.core.util.ActionBar;
 
 public class GHeadEffects {
 	
+	private Main plugin;
 	private FileConfiguration config;
 	private HashMap<String, Integer[]> headEffects = new HashMap<String, Integer[]>();
 	private HashMap<String, Integer[]> gheadEffects = new HashMap<String, Integer[]>();
 	private Map<Player, Long> cooldown;
+	private Set<Player> spam;
 	private String gheadName;
 	
-	public GHeadEffects() {
+	public GHeadEffects(Main plugin) {
+		this.plugin = plugin;
 		this.config = Configs.gheads.getConfig();
 		this.gheadName = config.getString("gheads.ghead-name").replaceAll("&", "§");
 		this.cooldown = new HashMap<>();
+		this.spam = new HashSet<>();
 		this.assignEffects();
 	}
 	
@@ -76,27 +83,37 @@ public class GHeadEffects {
 			break;
 			
 		case "ghead":
-			if (cooldown.containsKey(player) && !WorldManager.isInArena(player.getLocation())) {
-				Long difference = cooldown.get(player) - System.currentTimeMillis() / 1000;
-				if (difference > 0) {
-					ActionBar actionBar = new ActionBar("You are on a cooldown! (§e" + difference + "s§r)");
-					actionBar.send(player);
-					return;
+			if (!spam.contains(player)) {
+				spam.add(player);
+				
+				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+					spam.remove(player);
+				}, 10);
+				
+				if (cooldown.containsKey(player) && !WorldManager.isInArena(player.getLocation())) {
+					Long difference = cooldown.get(player) - System.currentTimeMillis() / 1000;
+					if (difference > 0) {
+						ActionBar actionBar = new ActionBar("You are on a cooldown! (§e" + difference + "s§r)");
+						actionBar.send(player);
+						return;
+					}
+					
+					else {
+						cooldown.remove(player);
+					}
 				}
 				
-				else {
-					cooldown.remove(player);
+				cooldown.put(player, (System.currentTimeMillis() / 1000) + 10);
+				
+				for (String key : gheadEffects.keySet()) {
+					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "effect " + player.getName() + " " + key
+							+ " " + gheadEffects.get(key)[0] + " " + gheadEffects.get(key)[1]);
 				}
+				success = true;
+				break;
 			}
 			
-			cooldown.put(player, (System.currentTimeMillis() / 1000) + 10);
-			
-			for (String key : gheadEffects.keySet()) {
-				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "effect " + player.getName() + " " + key
-						+ " " + gheadEffects.get(key)[0] + " " + gheadEffects.get(key)[1]);
-			}
-			success = true;
-			break;
+			return;
 		}
 		
 		if (success) {

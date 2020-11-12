@@ -131,7 +131,10 @@ public class MSGCommand implements CommandExecutor {
 								
 								ignorelist.add(uuidIgnore.toString());
 								ignore.set(uuid.toString(), ignorelist);
-								Configs.ignore.saveConfig();
+								
+								Bukkit.getScheduler().runTask(plugin, () -> {
+									Configs.ignore.saveConfig();
+								});
 								player.sendMessage(ChatColor.YELLOW + "You have ignored " + ChatColor.GOLD + igPlayerName + ChatColor.YELLOW + ".");
 							} else {
 								player.sendMessage(ChatColor.YELLOW + "You already have " + ChatColor.GOLD + igPlayerName + ChatColor.YELLOW + " ignored!");
@@ -181,7 +184,10 @@ public class MSGCommand implements CommandExecutor {
 							if (ignorelist.contains(uuidIgnore.toString())) {
 								ignorelist.remove(uuidIgnore.toString());
 								ignore.set(uuid.toString(), ignorelist);
-								Configs.ignore.saveConfig();
+								
+								Bukkit.getScheduler().runTask(plugin, () -> {
+									Configs.ignore.saveConfig();
+								});
 								player.sendMessage(ChatColor.YELLOW + "You have unignored " + ChatColor.GOLD + igPlayerName + ChatColor.YELLOW + ".");
 							} else {
 								player.sendMessage(ChatColor.YELLOW + "You never had " + ChatColor.GOLD + igPlayerName + ChatColor.YELLOW + " ignored!");
@@ -203,7 +209,10 @@ public class MSGCommand implements CommandExecutor {
 						if (args[0].equals("clear")) {
 							ignore.set(player.getUniqueId().toString(), null);
 							player.sendMessage(ChatColor.YELLOW + "You ignore list has been cleared!");
-							Configs.ignore.saveConfig();
+							
+							Bukkit.getScheduler().runTask(plugin, () -> {
+								Configs.ignore.saveConfig();
+							});
 							return;
 						}
 					}
@@ -291,7 +300,7 @@ public class MSGCommand implements CommandExecutor {
 			to.sendMessage(ChatColor.YELLOW + "(From " + ChatColor.RESET + ColorCodes.rankNameTag(uuid) + player.getName() + ChatColor.YELLOW + ")" + ChatColor.YELLOW + msg);
 		}
 		
-		if (!Checks.checkXDDD(player)) {
+		if (!Checks.checkPog(player)) {
 			PlayerChat.msgTime.put(player, 2 + System.currentTimeMillis() / 1000);
 			PlayerChat.msgPrevTime.put(player, 30 + System.currentTimeMillis() / 1000);
 			PlayerChat.msgPrev.put(player, msg);

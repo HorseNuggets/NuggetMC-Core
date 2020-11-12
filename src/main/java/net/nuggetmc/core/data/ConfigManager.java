@@ -85,14 +85,12 @@ public class ConfigManager {
 	}
 	
 	public void saveConfig() {
-		Bukkit.getScheduler().runTask(plugin, () -> {
-			try {
-				fileConfig.save(file);
-			}
-			catch (IOException | NullPointerException | ConcurrentModificationException e) {
-				Bukkit.getConsoleSender().sendMessage("Failed to save data storage file.");
-			}
-		});
+		try {
+			fileConfig.save(file);
+		}
+		catch (IOException | NullPointerException | ConcurrentModificationException e) {
+			Bukkit.getConsoleSender().sendMessage("Failed to save data storage file.");
+		}
 		return;
 	}
 	

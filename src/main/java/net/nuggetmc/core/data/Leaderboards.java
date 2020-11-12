@@ -79,6 +79,28 @@ public class Leaderboards {
 					lead.set("kills." + (sizek - i) + ".value", entries[1]);
 				}
 				
+				Map<String, Integer> elo = new HashMap<>();
+				for(String key : config.getConfigurationSection("players").getKeys(false)) {
+					elo.put(config.getString("players." + key + ".name"), config.getInt("players." + key + ".rating"));
+				}
+				
+				List<Entry<String, Integer>> liste = new LinkedList<Entry<String, Integer>>(elo.entrySet());
+				Collections.sort(liste, new Comparator<Entry<String, Integer>>() {
+					
+					@Override
+					public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
+						return o1.getValue().compareTo(o2.getValue());
+					}
+				});
+				
+				int sizee = liste.size();
+				
+				for (int i = 0; i < sizee; i++) {
+					String[] entries = liste.get(i).toString().split("=");
+					lead.set("rating." + (sizee - i) + ".name", entries[0]);
+					lead.set("rating." + (sizee - i) + ".value", entries[1]);
+				}
+				
 				Configs.lead.saveConfig();
 				Bukkit.getConsoleSender().sendMessage("Done!");
 			}

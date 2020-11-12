@@ -31,7 +31,7 @@ public class GHeads {
 	public GHeads(Main plugin) {
 		this.plugin = plugin;
 		this.config = Configs.gheads.getConfig();
-		this.gheadEffects = new GHeadEffects();
+		this.gheadEffects = new GHeadEffects(plugin);
 		this.setup();
 	}
 	

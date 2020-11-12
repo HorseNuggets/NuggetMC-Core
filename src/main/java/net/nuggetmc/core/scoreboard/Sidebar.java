@@ -17,6 +17,7 @@ import org.bukkit.scoreboard.Team;
 import net.nuggetmc.core.Main;
 import net.nuggetmc.core.data.Configs;
 import net.nuggetmc.core.events.FFADeathmatch;
+import net.nuggetmc.core.events.Tournament;
 import net.nuggetmc.core.player.PlayerStats;
 import net.nuggetmc.core.util.ColorCodes;
 
@@ -56,9 +57,6 @@ public class Sidebar {
 			stats.setDisplaySlot(DisplaySlot.SIDEBAR);
 			
 			int playerlevel = Configs.playerstats.getConfig().getInt("players." + uuid + ".level");
-			
-			if (playerkills.equals("69")) playerkills += ChatColor.LIGHT_PURPLE + " (NICE)";
-			if (playernuggets.equals("69")) playernuggets += ChatColor.LIGHT_PURPLE + " (NICE)";
 			
 			String status = ChatColor.GREEN + "Idle";
 			
@@ -138,6 +136,47 @@ public class Sidebar {
 			stats.getScore(" ").setScore(3);
 			stats.getScore(ChatColor.GRAY + "nuggetmc.net").setScore(2);
 			stats.getScore(ChatColor.GRAY + "" + ChatColor.BOLD + "-----------------").setScore(1);
+			break;
+			
+		case 2:
+			rank = ColorCodes.rankNameSidebar(uuid);
+			
+			stats = scoreboard.registerNewObjective("stats", "dummy");
+			stats.setDisplayName("§6§l NuggetMC §f");
+			stats.setDisplaySlot(DisplaySlot.SIDEBAR);
+			
+			nameDisplay = scoreboard.registerNewTeam("name");
+			nameDisplay.addEntry(ChatColor.GOLD + playername);
+			
+			rankDisplay = scoreboard.registerNewTeam("rank");
+			rankDisplay.addEntry(ChatColor.GRAY + " ▪ Rank: ");
+			rankDisplay.setSuffix(rank);
+			
+			combat = scoreboard.registerNewTeam("status");
+			combat.addEntry("§7 ▪ Combat: ");
+			combat.setSuffix("§aIdle");
+			
+			p = scoreboard.registerNewTeam("p");
+			p.addEntry(": §e");
+			p.setSuffix(String.valueOf(Tournament.cont.size()));
+			p.setPrefix("§7 ▪ Players");
+			
+			c = scoreboard.registerNewTeam("c");
+			c.addEntry(": §r§e");
+			c.setSuffix(Tournament.timers.get((byte) 0).getTime() + "s");
+			c.setPrefix("§7 ▪ Starting in");
+			
+			stats.getScore(ChatColor.WHITE + "" + ChatColor.GRAY + "" + ChatColor.BOLD + "-----------------").setScore(13);
+			stats.getScore(ChatColor.GOLD + playername).setScore(12);
+			stats.getScore(ChatColor.GRAY + " ▪ Rank: ").setScore(11);
+			stats.getScore("§7 ▪ Combat: ").setScore(10);
+			stats.getScore("").setScore(9);
+			stats.getScore(ChatColor.GOLD + "Tournament").setScore(8);
+			stats.getScore(": §e").setScore(7);
+			stats.getScore(": §r§e").setScore(6);
+			stats.getScore(" ").setScore(5);
+			stats.getScore(ChatColor.GRAY + "nuggetmc.net").setScore(1);
+			stats.getScore(ChatColor.GRAY + "" + ChatColor.BOLD + "-----------------").setScore(0);
 			break;
 		}
 		

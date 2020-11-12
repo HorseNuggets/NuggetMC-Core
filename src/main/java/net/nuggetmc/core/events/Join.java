@@ -14,14 +14,6 @@ import net.nuggetmc.core.util.ColorCodes;
 
 public class Join implements CommandExecutor {
 	
-	private void joinFFA(Player player) {
-		FFADeathmatch.list.add(player);
-		if (!FFADeathmatch.list.contains(player)) {
-			joinFFA(player);
-		}
-		return;
-	}
-	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
 			if (args.length >= 1) {
@@ -30,7 +22,7 @@ public class Join implements CommandExecutor {
 				case "ffa":
 					if (FFADeathmatch.phase == 1) {
 						if (!FFADeathmatch.list.contains(player)) {
-							joinFFA(player);
+							FFADeathmatch.list.add(player);
 							Location loc = new Location(Bukkit.getWorld("main"), 21.5, 227, -69.5, 180, 0);
 							player.teleport(loc);
 							Sidebar.enable(player, (byte) 1);
@@ -51,7 +43,36 @@ public class Join implements CommandExecutor {
 					else {
 						player.sendMessage(ChatColor.RED + "This event has already started!");
 					}
-					break;
+					return true;
+					
+				case "tournament":
+					if (Tournament.enabled) {
+						if (!Tournament.cont.contains(player)) {
+							Tournament.cont.add(player);
+							Location loc = new Location(Bukkit.getWorld("main"), 21.5, 227, -69.5, 180, 0);
+							player.teleport(loc);
+							Sidebar.enable(player, (byte) 2);
+
+							int playerCount = Tournament.cont.size();
+							for (Player others : Tournament.cont) {
+								Team playersWaiting = others.getScoreboard().getTeam("p");
+								if (playersWaiting != null) {
+									playersWaiting.setSuffix(String.valueOf(playerCount));
+								}
+								others.sendMessage(ColorCodes.colorName(player.getUniqueId(), player.getName()) + ChatColor.YELLOW + " joined the event.");
+							}
+							
+							player.sendMessage("§6If you leave the game at any time, you will be disqualified!");
+							player.sendMessage("§6You can view the current tournament statistics with §e/tournament§6.");
+						}
+						else {
+							player.sendMessage(ChatColor.RED + "You have already joined this event!");
+						}
+					}
+					else {
+						player.sendMessage(ChatColor.RED + "This event has already started!");
+					}
+					return true;
 				}
 			}
 		}

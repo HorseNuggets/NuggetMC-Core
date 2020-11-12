@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.BanEntry;
 import org.bukkit.BanList;
@@ -16,7 +17,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
@@ -28,11 +28,11 @@ import net.nuggetmc.core.util.TimeConverter;
 
 public class BanCommand implements CommandExecutor {
 	
-	private Main plugin;
+	private static Main plugin;
 	private static FileConfiguration ips;
 	
 	public BanCommand(Main plugin) {
-		this.plugin = plugin;
+		BanCommand.plugin = plugin;
 		BanCommand.ips = Configs.ips.getConfig();
 	}
 	
@@ -220,36 +220,48 @@ public class BanCommand implements CommandExecutor {
 					}
 				}
 				
-				Player bannedPlayer = Bukkit.getPlayer(args[0]);
-				String bannedPlayerName = args[0];
+				Player bp = Bukkit.getPlayer(args[0]);
+				String name = args[0];
+				UUID uid = null;
 				
-				if (bannedPlayer != null) {
-					bannedPlayerName = bannedPlayer.getName();
-					if (bannedPlayer.isOnline()) {
-						bannedPlayer.kickPlayer(permbanmsg(reason));
+				if (bp != null) {
+					name = bp.getName();
+					uid = bp.getUniqueId();
+					if (bp.isOnline()) {
+						bp.kickPlayer(permbanmsg(reason));
+					}
+				} else {
+					OfflinePlayer bop = Bukkit.getOfflinePlayer(args[0]);
+					uid = bop.getUniqueId();
+					if (bop != null) {
+						name = bop.getName();
 					}
 				}
-				else {
-					OfflinePlayer bannedOfflinePlayer = Bukkit.getOfflinePlayer(args[0]);
-					if (bannedOfflinePlayer != null) {
-						bannedPlayerName = bannedOfflinePlayer.getName();
+				
+				if (uid != null) {
+					String ip = ips.getString(uid + ".ip");
+					
+					List<String> ipbans = ips.getStringList("ipbans");
+					if (ipbans != null) {
+						if (!ipbans.contains(ip)) {
+							ipbans.add(ip);
+							ips.set("ipbans", ipbans);
+							Configs.ips.saveConfig();
+						}
 					}
-					sender.sendMessage(ChatColor.RED + bannedPlayerName + " is not online!");
-					return true;
+					
+					ips.set(uid + ".ban.status", true);
+					ips.set(uid + ".ban.reason", reason);
+					ips.set(uid + ".ban.by", sender.getName());
+					Configs.ips.saveConfig();
+					
+					Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Alert" + ChatColor.DARK_GRAY + "] " + ChatColor.RED
+							+ sender.getName() + " IP-banned " + name + ChatColor.RED + " with reason [" + ChatColor.YELLOW
+							+ reason + ChatColor.RED + "].");
+				} else {
+					sender.sendMessage("§c" + name + " does not exist!");
 				}
-				
-				String ip = ((CraftPlayer) bannedPlayer).getHandle().playerConnection.networkManager.getRawAddress().toString();
-				ip = ip.split(":")[0];
-				ips.set(bannedPlayerName + ".ip", ip);
-				ips.set(bannedPlayerName + ".reason", reason);
-				ips.set(bannedPlayerName + ".by", sender.getName());
-				Configs.ips.saveConfig();
-				
-				Bukkit.broadcastMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Alert" + ChatColor.DARK_GRAY + "] " + ChatColor.RED
-						+ sender.getName() + " permanently banned " + bannedPlayerName + ChatColor.RED + " with reason [" + ChatColor.YELLOW
-						+ reason + ChatColor.RED + "].");
-			}
-			else {
+			} else {
 				sender.sendMessage(ChatColor.RED + "Usage: /ban-ip <player> <reason>");
 			}
 			break;
@@ -257,27 +269,38 @@ public class BanCommand implements CommandExecutor {
 		case "pardon-ip":
 			if (args.length >= 1) {
 				
-				Player bannedPlayer = Bukkit.getPlayer(args[0]);
-				String bannedPlayerName = args[0];
+				Player bp = Bukkit.getPlayer(args[0]);
+				UUID uid = null;
+				String name = args[0];
 				
-				if (bannedPlayer != null) {
-					bannedPlayerName = bannedPlayer.getName();
-					if (bannedPlayer.isOnline()) {
+				if (bp != null) {
+					name = bp.getName();
+					uid = bp.getUniqueId();
+					if (bp.isOnline()) {
+					}
+				} else {
+					OfflinePlayer bop = Bukkit.getOfflinePlayer(args[0]);
+					if (bop != null) {
+						name = bop.getName();
+						uid = bop.getUniqueId();
 					}
 				}
-				else {
-					OfflinePlayer bannedOfflinePlayer = Bukkit.getOfflinePlayer(args[0]);
-					if (bannedOfflinePlayer != null) {
-						bannedPlayerName = bannedOfflinePlayer.getName();
-					}
-				}
 				
-				for (String names : ips.getKeys(false)) {
-					if (names.equals(bannedPlayerName)) {
-						ips.set(bannedPlayerName, null);
-						Configs.ips.saveConfig();
-						sender.sendMessage("Pardoned player " + bannedPlayerName);
+				if (uid != null) {
+					ips.set(uid + ".ban", null);
+					List<String> ipbans = ips.getStringList("ipbans");
+					String ip = ips.getString(uid + ".ip");
+					if (ipbans != null) {
+						if (ipbans.contains(ip)) {
+							ipbans.remove(ip);
+							ips.set("ipbans", ipbans);
+							Configs.ips.saveConfig();
+						}
 					}
+					Configs.ips.saveConfig();
+					sender.sendMessage("IP-pardoned player " + name);
+				} else {
+					sender.sendMessage("§c" + name + " does not exist!");
 				}
 			}
 			else {
@@ -287,14 +310,18 @@ public class BanCommand implements CommandExecutor {
 			
 		case "ipbanlist":
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+				sender.sendMessage("Loading IP-bans...");
 				List<String> msgList = new ArrayList<>();
 				int count = 0;
-				for (String names : ips.getKeys(false)) {
-					String reason = ips.getString(names + ".reason");
-					String by = ips.getString(names + ".by");
-					msgList.add(names + " (by " + ChatColor.YELLOW + by + ChatColor.RESET + ") [" + ChatColor.YELLOW + reason
-					+ ChatColor.RESET + "]");
-					count++;
+				for (String uid : ips.getKeys(false)) {
+					if (ips.contains(uid + ".ban")) {
+						String name = ips.getString(uid + ".name");
+						String reason = ips.getString(uid + ".ban.reason");
+						String by = ips.getString(uid + ".ban.by");
+						msgList.add(name + " (by " + ChatColor.YELLOW + by + ChatColor.RESET + ") [" + ChatColor.YELLOW + reason
+								+ ChatColor.RESET + "]");
+						count++;
+					}
 				}
 				
 				sender.sendMessage("There are " + count + " total banned players:");
@@ -321,23 +348,46 @@ public class BanCommand implements CommandExecutor {
 	}
 	
 	private static String permbanmsg(String reason) {
-		String result = ChatColor.RED + "You have been permanently banned from the network."
-				+ "\n\n" + ChatColor.WHITE + "Reason: " + ChatColor.YELLOW + reason;
+		String extra = "\n\n" + ChatColor.WHITE + "Reason: " + ChatColor.YELLOW + reason;
+		if (reason.equals("null")) {
+			extra = "";
+		}
+		String result = ChatColor.RED + "You have been permanently banned from the network." + extra;
 		return result;
 	}
 	
 	@SuppressWarnings("deprecation")
 	public static void onConnect(AsyncPlayerPreLoginEvent event) {
-		OfflinePlayer player = Bukkit.getOfflinePlayer(event.getName());
+		String name = event.getName();
+		OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+		String uid = player.getUniqueId().toString();
+		String ip = event.getAddress().toString().split(":")[0];
 		
-		String ip = event.getAddress().toString();
+		List<String> ipbans = ips.getStringList("ipbans");
 		
-		for (String names : ips.getKeys(false)) {
-			if (ips.getString(names + ".ip").equals(ip)) {
-				String reason = ips.getString(names + ".reason");
+		ips.set(uid + ".name", name);
+		ips.set(uid + ".ip", ip);
+		
+		try {
+			if (ips.contains(uid + ".ban") || ipbans.contains(ip)) {
+				String reason = ips.getString(uid + ".ban.reason");
+				if (reason == null) reason = "null";
 				event.disallow(Result.KICK_BANNED, permbanmsg(reason));
+				if (!ipbans.contains(ip)) {
+					ipbans.add(ip);
+					ips.set("ipbans", ipbans);
+					Bukkit.getScheduler().runTask(plugin, () -> {
+						Configs.ips.saveConfig();
+					});
+				}
 			}
+		} catch (NullPointerException e) {
+			Bukkit.getConsoleSender().sendMessage("IP-banlist is empty");
 		}
+		
+		Bukkit.getScheduler().runTask(plugin, () -> {
+			Configs.ips.saveConfig();
+		});
 		
 		if (player.isBanned()) {
 			BanList list = Bukkit.getBanList(BanList.Type.NAME);

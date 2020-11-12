@@ -176,7 +176,7 @@ public class PlayerChat {
 						}
 					}
 					
-					if (!Checks.checkXDDD(player)) {
+					if (!Checks.checkPog(player)) {
 						msgTime.put(player, 2 + System.currentTimeMillis() / 1000);
 						msgPrevTime.put(player, 30 + System.currentTimeMillis() / 1000);
 						msgPrev.put(player, raw);
@@ -212,7 +212,7 @@ public class PlayerChat {
 				}
 			}
 			
-			if (!Checks.checkXDDD(player)) {
+			if (!Checks.checkPog(player)) {
 				msgTime.put(player, 2 + System.currentTimeMillis() / 1000);
 				msgPrevTime.put(player, 30 + System.currentTimeMillis() / 1000);
 				msgPrev.put(player, raw);

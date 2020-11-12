@@ -32,10 +32,12 @@ import net.nuggetmc.core.economy.Kits;
 import net.nuggetmc.core.events.Event;
 import net.nuggetmc.core.events.FFADeathmatch;
 import net.nuggetmc.core.events.Join;
+import net.nuggetmc.core.events.Tournament;
 import net.nuggetmc.core.gui.EnderChest;
 import net.nuggetmc.core.gui.GUIMain;
 import net.nuggetmc.core.gui.Voting;
 import net.nuggetmc.core.misc.Credits;
+import net.nuggetmc.core.misc.Flags;
 import net.nuggetmc.core.misc.FlyVanish;
 import net.nuggetmc.core.misc.ItemEffects;
 import net.nuggetmc.core.misc.TabComplete;
@@ -109,6 +111,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 	public PlayerTracker playerTracker;
 	public Sidebar sidebar;
 	public TabComplete tabComplete;
+	public Tournament trn;
 	public TPACommand tpaCommand;
 	public WorldManager worldManager;
 	
@@ -211,7 +214,10 @@ public class Main extends JavaPlugin implements TabCompleter {
 		
 		new Leaderboards(this);
 		
+		this.getCommand("flag").setExecutor(new Flags(this));
+		
 		this.getCommand("ushop").setExecutor(itemShop);
+		this.getCommand("tournament").setExecutor(trn);
 		
 		this.getCommand("debug").setExecutor(new DebugCommand(this));
 		this.getCommand("join").setExecutor(new Join());
@@ -234,7 +240,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 	}
 	
 	private void eventsEnable() {
-		new FFADeathmatch(this);
+		this.trn = new Tournament(this);
 		return;
 	}
 	
@@ -285,7 +291,7 @@ public class Main extends JavaPlugin implements TabCompleter {
 	private void playerEventsEnable() {
 		this.levelup = new Levelup();
 		this.playerChat = new PlayerChat(this);
-		this.playerJoin = new PlayerJoin(this);
+		this.playerJoin = new PlayerJoin();
 		this.playerKill = new PlayerKill(this);
 		this.playerSpawnLocation = new PlayerSpawnLocation(this);
 		this.playerStats = new PlayerStats(this);

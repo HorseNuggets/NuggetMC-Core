@@ -18,11 +18,13 @@ public class Event implements CommandExecutor {
 	}
 	
 	private void timer() {
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+		/*Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
 			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "event ffa");
-		}, 100, 19000);
+		}, 100, 19000);*/
 		return;
 	}
+	
+	public static boolean arena = false;
 	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (args.length >= 1) {
@@ -30,12 +32,24 @@ public class Event implements CommandExecutor {
 				String event = args[0].toLowerCase();
 				switch (event) {
 				case "ffa":
-					if (FFADeathmatch.phase == 0) {
+					if (!arena) {
+						arena = true;
 						plugin.dm.a();
 						return true;
 					}
 					else {
-						sender.sendMessage("§cThis event has already begun!");
+						sender.sendMessage("§cAn arena event has already begun!");
+						return true;
+					}
+					
+				case "tournament":
+					if (!arena) {
+						arena = true;
+						plugin.trn.a();
+						return true;
+					}
+					else {
+						sender.sendMessage("§cAn arena event has already begun!");
 						return true;
 					}
 				}

@@ -28,6 +28,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
 
@@ -224,7 +226,6 @@ public class FFADeathmatch implements CommandExecutor {
 							if (player != winner) {
 								Bukkit.getScheduler().runTask(plugin, () -> {
 									Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kill " + player.getName());
-									player.getWorld().strikeLightningEffect(player.getLocation());
 								});
 							}
 						}
@@ -278,6 +279,7 @@ public class FFADeathmatch implements CommandExecutor {
 		switch (list.size()) {
 		case 0:
 			phase = 0;
+			Event.arena = false;
 			return;
 		
 		case 1:
@@ -292,6 +294,7 @@ public class FFADeathmatch implements CommandExecutor {
 			}
 			list.clear();
 			phase = 0;
+			Event.arena = false;
 			return;
 			
 		default:
@@ -324,6 +327,12 @@ public class FFADeathmatch implements CommandExecutor {
 			Location loc = new Location(Bukkit.getServer().getWorld("main"), x + 21.5, 215, y - 89.5, degrees + 90, 0);
 			Bukkit.getScheduler().runTask(plugin, () -> {
 				player.closeInventory();
+				for (PotionEffect effect : player.getActivePotionEffects()) {
+					PotionEffectType type = effect.getType();
+					if (!type.equals(PotionEffectType.HEALTH_BOOST) && !type.equals(PotionEffectType.NIGHT_VISION)) {
+						player.removePotionEffect(type);
+					}
+				}
 				player.teleport(loc);
 			});
 			holdAreas.put(player, loc);
@@ -374,6 +383,7 @@ public class FFADeathmatch implements CommandExecutor {
 			Location loc = new Location(Bukkit.getWorld("main"), 0.5, 223, 0.5);
 			Bukkit.getScheduler().runTask(plugin, () -> {
 				player.closeInventory();
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect " + player.getName() + " 6 6 6");
 				player.teleport(loc);
 			});
 			for (Entity e : world.getEntities()) {
@@ -386,6 +396,7 @@ public class FFADeathmatch implements CommandExecutor {
 			list.clear();
 			holdAreas.clear();
 			phase = 0;
+			Event.arena = false;
 			for (byte i = 0; i < 3; i++) {
 				BukkitRunnable task = timers.get(i).getTask();
 				if (Bukkit.getScheduler().isCurrentlyRunning(task.getTaskId())) {
@@ -406,7 +417,7 @@ public class FFADeathmatch implements CommandExecutor {
 	private static com.sk89q.worldedit.Vector origin = new com.sk89q.worldedit.Vector(21, 226, -70);
 	
 	@SuppressWarnings("deprecation")
-	private static void loadArea(World world, String str) {
+	public static void loadArea(World world, String str) {
         File file = new File(str);
         com.sk89q.worldedit.EditSession es = new com.sk89q.worldedit.EditSession(new com.sk89q.worldedit.bukkit.BukkitWorld(world), 99999);
         com.sk89q.worldedit.CuboidClipboard cc = null;
@@ -455,7 +466,7 @@ public class FFADeathmatch implements CommandExecutor {
 		return;
 	}
 	
-	private static boolean uhcBlocks(Material type) {
+	public static boolean uhcBlocks(Material type) {
 		switch (type) {
 		case COBBLESTONE:
 			return true;
@@ -494,9 +505,11 @@ public class FFADeathmatch implements CommandExecutor {
 	
 	public static void onMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
-		if (!WorldManager.isInSpawn(player.getLocation())) {
-			leave(player);
-			return;
+		if (list.contains(player)) {
+			if (!WorldManager.isInSpawn(player.getLocation())) {
+				leave(player);
+				return;
+			}
 		}
 		if (holdAreas.containsKey(player)) {
 			if (player.getLocation().distance(holdAreas.get(player)) >= 1) {
@@ -512,8 +525,10 @@ public class FFADeathmatch implements CommandExecutor {
 	
 	public static void onTeleport(PlayerTeleportEvent event) {
 		Player player = event.getPlayer();
-		if (event.getTo().getBlockY() < 130) {
-			leave(player);
+		if (list.contains(player)) {
+			if (event.getTo().getBlockY() < 130) {
+				leave(player);
+			}
 		}
 		return;
 	}
@@ -537,48 +552,56 @@ public class FFADeathmatch implements CommandExecutor {
 	}
 	
 	public static void onDeath(PlayerDeathEvent event) {
-		leave(event.getEntity());
+		if (list.contains(event.getEntity())) {
+			leave(event.getEntity());
+		}
 	}
 	
 	public static void onRespawn(PlayerRespawnEvent event) {
-		leave(event.getPlayer());
+		if (list.contains(event.getPlayer())) {
+			leave(event.getPlayer());
+		}
 	}
 	
 	public static void onQuit(PlayerQuitEvent event) {
-		leave(event.getPlayer());
+		if (list.contains(event.getPlayer())) {
+			leave(event.getPlayer());
+		}
 	}
 	
 	private static void leave(Player player) {
-		if (list.contains(player)) {
-			list.remove(player);
-			if (player != null) {
-				if (phase == 1) player.sendMessage("§eYou left the event.");
-				Sidebar.enable(player, (byte) 0);
+		list.remove(player);
+		if (player != null) {
+			if (phase == 1) player.sendMessage("§eYou left the event.");
+			Sidebar.enable(player, (byte) 0);
+		}
+		int playerCount = FFADeathmatch.list.size();
+		for (Player others : list) {
+			Team playersWaiting = others.getScoreboard().getTeam("p");
+			if (playersWaiting != null) {
+				playersWaiting.setSuffix(String.valueOf(playerCount));
 			}
-			int playerCount = FFADeathmatch.list.size();
-			for (Player others : list) {
-				Team playersWaiting = others.getScoreboard().getTeam("p");
-				if (playersWaiting != null) {
-					playersWaiting.setSuffix(String.valueOf(playerCount));
+			
+			int size = list.size();
+			switch (phase) {
+			case 1:
+				others.sendMessage(ColorCodes.colorName(player.getUniqueId(), player.getName())
+						+ "§e left the event.");
+				break;
+			case 2:
+				if (!player.isDead()) {
+					player.setHealth(0);
 				}
-				
-				int size = list.size();
-				switch (phase) {
-				case 1:
-					others.sendMessage(ColorCodes.colorName(player.getUniqueId(), player.getName())
-							+ "§e left the event.");
-					break;
-				case 2:
-					String remain = " §c" + size + "§e players remain!";
-					if (size == 1) {
-						remain = "";
-					}
-					others.sendMessage(ColorCodes.colorName(player.getUniqueId(), player.getName())
-							+ "§e has been eliminated!" + remain);
+				player.getWorld().strikeLightningEffect(player.getLocation());
+				String remain = " §c" + size + "§e players remain!";
+				if (size == 1) {
+					remain = "";
 				}
-				if (size <= 1) {
-					win(others);
-				}
+				others.sendMessage(ColorCodes.colorName(player.getUniqueId(), player.getName())
+						+ "§e has been eliminated!" + remain);
+			}
+			if (size <= 1) {
+				win(others);
 			}
 		}
 		return;
@@ -589,8 +612,23 @@ public class FFADeathmatch implements CommandExecutor {
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 			list.clear();
 			phase = 0;
+			Event.arena = false;
 			for (byte i = 0; i < 3; i++) {
 				BukkitRunnable task = timers.get(i).getTask();
+				if (Bukkit.getScheduler().isCurrentlyRunning(task.getTaskId())) {
+					task.cancel();
+				}
+			}
+			
+			Tournament.i = 0;
+			Tournament.adv.clear();
+			Tournament.active.clear();
+			Tournament.cont.clear();
+			Tournament.holdAreas.clear();
+			Tournament.enabled = false;
+			
+			for (byte i = 0; i < 3; i++) {
+				BukkitRunnable task = Tournament.timers.get(i).getTask();
 				if (Bukkit.getScheduler().isCurrentlyRunning(task.getTaskId())) {
 					task.cancel();
 				}
